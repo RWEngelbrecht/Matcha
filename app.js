@@ -1,21 +1,32 @@
-// App Setup
+// REQUIRES.
 const express	= require('express');
-const app		= express();
+const session	= require('express-session')
 const path		= require('path');
-const server	= require('http').Server(app);
+const flash		= require('connect-flash');
+const Mongodb	= require('connect-mongodb-session')(session);
+const mongoose	= require('mongoose');
+MONGODB_URI		= "mongodb+srv://Yano:80058024@cluster0-jszpy.mongodb.net/matcha";
+const app = express();
 
-// Routes Requires
-const index		= require('./matcha/routes/index.js');
+// APP SETUP.
+app.use(session({ secret: 'matcha', resave: false, saveUninitialized: false}));
+app.use(flash());
 
-// app.use is a way to register one or more instances of middleware
-app.use(index);
+// ROUTES
+const user = require('./routes/user');
+const uhandle = require('./routes/uhandle');
 
-// just tells you the app is running on port 8000
-app.listen(8000, function () {
-  console.log('Example app listening on port 8000!');
-});
+app.use(user);
+app.use(uhandle);
 
-// Not sure if its necessary for now
-module.exports = {
-	app: app
-}
+mongoose
+	.connect(MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true})
+	.then(result => {
+		app.listen(8000);
+	})
+	.then(result => {
+		console.log("Server has started, Sending it!");
+	})
+	.catch(err => {
+		console.log(err)
+	});
