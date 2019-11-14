@@ -1,8 +1,10 @@
 // REQUIRES.
 const express	= require('express');
 const router	= express.Router();
-const uhandle	= require('../controllers/uhandle');
+const uhandle	= require('../controllers/uhandle.js');
 
-// router.get('/login', uhandle.login);
+console.log("uhandle reached(Routes)");
+
+router.get('/login', uhandle.login);
 
 module.exports = router;
