@@ -10,7 +10,14 @@ exports.home = (req, res, next) => {
 	} else {
 		message = null;
 	}
-	res.render(path.resolve('views/index'));
+	if (!req.session.user_vkey) {
+		console.log("should get here, no session yet");
+		req.session.user_vkey = "0";
+		return (res.redirect('/login'));
+	} if (req.session.user_vkey == 0) {
+		return (res.redirect('/login'));
+	}
+	return (res.render(path.resolve('views/index')));
 }
 
 exports.login = (req, res, next) => {
@@ -21,7 +28,12 @@ exports.login = (req, res, next) => {
 	} else {
 		message = null;
 	}
-	res.render(path.resolve('views/login'));
+	if (req.session.user_vkey != 0) {
+		console.log("should not get here, user_vkey cookie is 0");
+		// TODO, Need to take to home page or to my account page
+		// return (res.redirect('/login'));
+	}
+	return (res.render(path.resolve('views/login')));
 }
 
 exports.register = (req, res, next) => {
@@ -32,5 +44,5 @@ exports.register = (req, res, next) => {
 	} else {
 		message = null;
 	}
-	res.render(path.resolve('views/register'));
+	return (res.render(path.resolve('views/register')));
 }
