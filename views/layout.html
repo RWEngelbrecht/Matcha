@@ -10,17 +10,16 @@
 </head>
 <body>
 	<header>
-		<h1>{% block title %}{% endblock %}</h1>
-			{% block title %}{% endblock %}
+		<h1>{%block header %}{% endblock %}</h1>
 		<nav>
 			<ul>
-				<li><a href="/">Home Page</a></li>
+				<li><a href="/">Home</a></li>
 				<li><a href="/login">Login</a></li>
 				<li><a href="/register">register</a></li>
 			</ul>
 		</nav>
 	</header>
 	<section role="main">
-		{% block title %}{% endblock %}
+		{% block body %}{% endblock %}
 	</section>
 </body>
