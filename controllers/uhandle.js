@@ -1,5 +1,6 @@
 const User	= require('../models/umod');
 const path	= require('path');
+const swig	= require('../app.js');
 
 exports.home = (req, res, next) => {
 	console.log("uhandle home reached(Controller)");
@@ -9,7 +10,7 @@ exports.home = (req, res, next) => {
 	} else {
 		message = null;
 	}
-	res.sendfile(path.resolve('views/index.html'));
+	res.render(path.resolve('views/index'));
 }
 
 exports.login = (req, res, next) => {
@@ -20,7 +21,7 @@ exports.login = (req, res, next) => {
 	} else {
 		message = null;
 	}
-	res.sendfile(path.resolve('views/login.html'));
+	res.render(path.resolve('views/login'));
 }
 
 exports.register = (req, res, next) => {
@@ -31,5 +32,5 @@ exports.register = (req, res, next) => {
 	} else {
 		message = null;
 	}
-	res.sendfile(path.resolve('views/register.html'));
+	res.render(path.resolve('views/register'));
 }
