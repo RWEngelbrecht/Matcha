@@ -1,2 +1,2 @@
-https://expressjs.com/en/api.html#res
-res.redirect('matcha/routes/index.js') <--- Caused me so much pain today
+For uhandle we need to figure out how were going to link the front and backend.
+Im too tired to do that now
