@@ -13,10 +13,10 @@ app.use(session({ secret: 'matcha', resave: false, saveUninitialized: false}));
 app.use(flash());
 
 // ROUTES
-const user = require('./routes/user');
+// const user = require('./routes/user');
 const uhandle = require('./routes/uhandle');
 
-app.use(user);
+// app.use(user);
 app.use(uhandle);
 
 mongoose
