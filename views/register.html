@@ -1,1 +1,54 @@
-<h1>Matcha Registration</h1>
+{% extends 'layout.html' %}
+
+{% block title %}Matcha{% endblock %}
+
+{% block body %}
+<form action="" method="POST" novalidate>
+	<div class="form-control">
+		<label for="email">E-Mail</label>
+		<input type="email" name="email" id="email">
+	</div>
+	<div class="form-control">
+		<label for="password">Password</label>
+		<input type="password" name="password" id="password" >
+	</div>
+	<div class="form-control">
+		<label for="confirm_password">Confirm Password</label>
+		<input type="password" name="confirm_password" id="confirm_password" >
+	</div>
+	<div class="form-control">
+		<label for="username">Username</label>
+		<input type="text" name="username" id="username" >
+	</div>
+	<div class="form-control">
+		<label for="firstname">Firstname</label>
+		<input type="text" name="firstname" id="firstname" >
+	</div>
+	<div class="form-control">
+		<label for="surname">Surname</label>
+		<input type="text" name="surname" id="surname" >
+	</div>
+	<div class="form-control">
+		<label for="age">Age</label>
+		<input type="number" name="age" id="age" >
+	</div>
+	<div class="form-control">
+		<label for="gender">Gender</label>
+		<input type="text" name="gender" id="gender" >
+	</div>
+	<div class="form-control">
+		<label for="gender_pref">Gender Prefrence</label>
+		<input type="text" name="gender_pref" id="gender_pref" >
+	</div>
+	<div class="form-control">
+		<label for="dist">Max Distance</label>
+		<input type="number" name="dist" id="dist" >
+	</div>
+	<div class="form-control">
+		<label for="about">Bio</label>
+		<input type="text" name="about" id="about" >
+	</div>
+	<input type="hidden" name="_csrf" value="<%= csrfToken %>">
+	<button type="submit">Register Now</button>
+</form>
+{% endblock %}
