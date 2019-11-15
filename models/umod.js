@@ -37,23 +37,24 @@ const usertable = new Schema({
 	// 	type: String,
 	// 	required: true
 	// },
-	// photocount: {
-	// 	type: Number,
-	// 	required: true
-	// },
-	// fame: {
-	// 	type: Number,
-	// 	required: true,
-	// 	default: 0
-	// },
-	// agepreflower: {
-	// 	type: Number,
-	// 	required: true
-	// },
-	// ageprefupper: {
-	// 	type: Number,
-	// 	required: true
-	// },
+	photocount: {
+		type: Number,
+		required: true,
+		default: 0,
+	},
+	fame: {
+		type: Number,
+		required: true,
+		default: 0
+	},
+	agepreflower: {
+		type: Number,
+		required: true
+	},
+	ageprefupper: {
+		type: Number,
+		required: true
+	},
 	about: {
 		type: String,
 		required: true
@@ -62,16 +63,16 @@ const usertable = new Schema({
 	// 	type: String,
 	// 	required: true
 	// },
-	// verified: {
-	// 	type: Boolean,
-	// 	required: true,
-	// 	default: 0
-	// },
+	verified: {
+		type: Boolean,
+		required: true,
+		default: 0
+	},
 	maxdist: {
 		type: Number,
 		required: true,
 		default: 50,
-	},
+	}
 	// interests: {
 	// 	type: String,
 	// 	required: true

@@ -36,4 +36,4 @@ mongoose
 		console.log(err)
 	});
 
-module.exports = swig
+// module.exports = swig
