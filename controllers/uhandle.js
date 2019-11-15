@@ -81,8 +81,7 @@ exports.postregister = (req, res, next) => {
 		console.log("User registration Successful")
 		return (res.redirect('/login'));
 	}).catch(err => {
-		res.status(400).send(err);
+		console.log(res.status(400).send(err));
+		return (res.redirect('/'));
 	});
-	console.log("HERE");
-	// return (res.redirect('/login'));
 }
