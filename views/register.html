@@ -3,7 +3,7 @@
 {% block title %}Matcha{% endblock %}
 
 {% block body %}
-<form action="" method="POST" novalidate>
+<form action="" method="POST" enctype="multipart/form-data" novalidate>
 	<div class="form-control">
 		<label for="email">E-Mail</label>
 		<input type="email" name="email" id="email">
@@ -47,6 +47,10 @@
 	<div class="form-control">
 		<label for="about">Bio</label>
 		<input type="text" name="about" id="about" >
+	</div>
+	<div class="form-control">
+		<label for="photo">Profile Picture</label>
+		<input type="file" name="photo" id="photo" accept="image/*">
 	</div>
 	<input type="hidden" name="_csrf" value="<%= csrfToken %>">
 	<button type="submit">Register Now</button>
