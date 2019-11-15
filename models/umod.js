@@ -59,10 +59,10 @@ const usertable = new Schema({
 		type: String,
 		required: true
 	},
-	// verifkey: {
-	// 	type: String,
-	// 	required: true
-	// },
+	verifkey: {
+		type: String,
+		required: true
+	},
 	verified: {
 		type: Boolean,
 		required: true,
