@@ -54,17 +54,6 @@ exports.getregister = (req, res, next) => {
 // POST method
 exports.postregister = (req, res, next) => {
 	console.log("uhandle postregister reached(Controller)");
-	console.log(req.body.email);
-	console.log(req.body.password);
-	console.log(req.body.confirm_password);
-	console.log(req.body.username);
-	console.log(req.body.firstname);
-	console.log(req.body.surname);
-	console.log(req.body.age);
-	console.log(req.body.gender);
-	console.log(req.body.gender_pref);
-	console.log(req.body.dist);
-	console.log(req.body.about);
 	let message = req.flash('Something went wrong, please try again later!');
 	if (message.length > 0) {
 		message = message[0];
@@ -81,20 +70,18 @@ exports.postregister = (req, res, next) => {
 		age: req.body.age,
 		gender: req.body.gender,
 		genderpref: req.body.gender_pref,
-		// photocount: 0,
-		// fame: 0,
-		// agepreflower: 18,
-		// agepreflower: 99,
+		agepreflower: req.body.age - 5,
+		ageprefupper: parseInt(req.body.age) + 10,
 		about: req.body.about,
 		// verifkey: 'abcdefg',
-		// verified: 0,
-		maxdist: req.body.dist,
+		maxdist: req.body.dist
 		// interests: 'test',
 	});
 	user.save().then(item => {
-		res.send("item saved to database");
+		console.log("User registration Successful")
+		return (res.redirect('/login'));
 	}).catch(err => {
-		res.status(400).send("unable to save to database");
+		res.status(400).send(err);
 	});
 	console.log("HERE");
 	// return (res.redirect('/login'));
