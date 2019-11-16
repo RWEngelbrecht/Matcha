@@ -62,29 +62,35 @@ exports.postregister = (req, res, next) => {
 		message = null;
 	}
 	var hash = crypto.createHash('whirlpool').update(req.body.username).digest('hex');
-	// Do checks like passwords must match, encryot the passwords, send email.
-	const user = new User({
-		username: req.body.username,
-		password: req.body.password,
-		email: req.body.email,
-		firstname: req.body.firstname,
-		surname: req.body.surname,
-		age: req.body.age,
-		gender: req.body.gender,
-		genderpref: req.body.gender_pref,
-		profilephoto: req.file.buffer.toString('base64'),
-		agepreflower: req.body.age - 5,
-		ageprefupper: parseInt(req.body.age) + 10,
-		about: req.body.about,
-		verifkey: hash,
-		maxdist: req.body.dist,
-		// interests: 'test',
-	});
-	user.save().then(item => {
-		console.log("User registration Successful")
-		return (res.redirect('/login'));
-	}).catch(err => {
-		console.log(res.status(400).send(err));
-		return (res.redirect('/'));
-	});
+	if (req.body.password != req.body.confirm_password) {
+		// DISPLAY ERROR MESSAGE.
+		console.log("Passwords do not match");
+		return (res.redirect('/register'));
+		// TODO encrypt the passwords, send email.
+	} else {
+		const user = new User({
+			username: req.body.username,
+			password: req.body.password,
+			email: req.body.email,
+			firstname: req.body.firstname,
+			surname: req.body.surname,
+			age: req.body.age,
+			gender: req.body.gender,
+			genderpref: req.body.gender_pref,
+			profilephoto: req.file.buffer.toString('base64'),
+			agepreflower: req.body.age - 5,
+			ageprefupper: parseInt(req.body.age) + 10,
+			about: req.body.about,
+			verifkey: hash,
+			maxdist: req.body.dist,
+			// interests: 'test',
+		});
+		user.save().then(item => {
+			console.log("User registration Successful")
+			return (res.redirect('/login'));
+		}).catch(err => {
+			console.log(res.status(400).send(err));
+			return (res.redirect('/'));
+		});
+	}
 }
