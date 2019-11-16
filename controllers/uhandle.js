@@ -63,10 +63,6 @@ exports.postregister = (req, res, next) => {
 	}
 	var hash = crypto.createHash('whirlpool').update(req.body.username).digest('hex');
 	// Do checks like passwords must match, encryot the passwords, send email.
-	console.log(req.file);
-	console.log("\n");
-	console.log(toString(req.file.buffer));
-	console.log("\n");
 	const user = new User({
 		username: req.body.username,
 		password: req.body.password,
@@ -76,7 +72,7 @@ exports.postregister = (req, res, next) => {
 		age: req.body.age,
 		gender: req.body.gender,
 		genderpref: req.body.gender_pref,
-		// profile_pic: req.body.profile_pic,
+		profilephoto: req.file.buffer.toString('base64'),
 		agepreflower: req.body.age - 5,
 		ageprefupper: parseInt(req.body.age) + 10,
 		about: req.body.about,

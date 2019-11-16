@@ -33,10 +33,10 @@ const usertable = new Schema({
 		type: String,
 		required: true
 	},
-	// profilephoto: {
-	// 	type: String,
-	// 	required: true
-	// },
+	profilephoto: {
+		type: String,
+		required: true
+	},
 	photocount: {
 		type: Number,
 		required: true,
@@ -73,10 +73,7 @@ const usertable = new Schema({
 		required: true,
 		default: 50,
 	}
-	// interests: {
-	// 	type: String,
-	// 	required: true
-	// },
+	// TODO INTERESTS
 	// TODO LOCATION.
 });
 

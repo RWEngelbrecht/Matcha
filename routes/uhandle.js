@@ -33,7 +33,7 @@ router.post('/register', upload.single('photo'), [
 	body('photo'),
 	body('dist').isNumeric(),
 	body('about').isAlphanumeric().trim(),
-],
+], 
 uhandle.postregister);
 
 module.exports = router;
