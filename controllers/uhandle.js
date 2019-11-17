@@ -38,6 +38,18 @@ exports.postlogin = (req, res, next) => {
 	} else {
 		message = null;
 	}
+	User.findOne({email: req.body.email, password: req.body.password}, (err, user) => {
+		if (err) {
+			console.log(res.status(400).send(err));
+		}
+		else if (user) {
+			console.log('Login Success!');
+			return res.redirect('/');
+		} else {
+			console.log('Invalid login');
+			return res.redirect('/login');
+		}
+	});
 	// NEED TO ADD DB QUERY AND SESSION SET HERE.
 }
 // Register
@@ -99,7 +111,6 @@ exports.postregister = (req, res, next) => {
 					return (res.redirect('/'));
 				});
 			}
-		})
-
+		});
 	}
 }
