@@ -85,12 +85,21 @@ exports.postregister = (req, res, next) => {
 			maxdist: req.body.dist,
 			// interests: 'test',
 		});
-		user.save().then(item => {
-			console.log("User registration Successful")
-			return (res.redirect('/login'));
-		}).catch(err => {
-			console.log(res.status(400).send(err));
-			return (res.redirect('/'));
-		});
+		// query schema to see if username or email exists
+		User.find({$or: [ {username: user.username}, {email: user.email} ]}, (err, docs) => {
+			if (!docs.isEmpty) {
+				console.log("Invalid username or password.");
+				return (res.redirect('/register'));
+			} else {
+				user.save().then(item => {
+					console.log("User registration Successful")
+					return (res.redirect('/login'));
+				}).catch(err => {
+					console.log(res.status(400).send(err));
+					return (res.redirect('/'));
+				});
+			}
+		})
+
 	}
 }
