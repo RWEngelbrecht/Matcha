@@ -73,16 +73,17 @@ exports.postregister = (req, res, next) => {
 	} else {
 		message = null;
 	}
-	var hash = crypto.createHash('whirlpool').update(req.body.username).digest('hex');
+	var vkey = crypto.createHash('whirlpool').update(req.body.username).digest('hex');
 	if (req.body.password != req.body.confirm_password) {
 		// DISPLAY ERROR MESSAGE.
 		console.log("Passwords do not match");
 		return (res.redirect('/register'));
-		// TODO encrypt the passwords, send email.
+		// TODO check for complex password, send email.
 	} else {
+		var hashedpw = crypto.createHash('whirlpool').update(req.body.password).digest('hex');
 		const user = new User({
 			username: req.body.username,
-			password: req.body.password,
+			password: hashedpw,
 			email: req.body.email,
 			firstname: req.body.firstname,
 			surname: req.body.surname,
@@ -93,7 +94,7 @@ exports.postregister = (req, res, next) => {
 			agepreflower: req.body.age - 5,
 			ageprefupper: parseInt(req.body.age) + 10,
 			about: req.body.about,
-			verifkey: hash,
+			verifkey: vkey,
 			maxdist: req.body.dist,
 			// interests: 'test',
 		});
