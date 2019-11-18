@@ -156,3 +156,15 @@ exports.postregister = (req, res, next) => {
 		});
 	}
 }
+// Confirm Account.
+// GET method
+exports.getconfirm = (req, res, next) => {
+	var key = req.query.key;
+	User.findOneAndUpdate({verifkey: key}, {$set:{verified:"1"}},function(err, doc){
+		if(err){
+			console.log("Something wrong when updating data!");
+		}
+		console.log(doc);
+	});
+	return (res.redirect('/'));
+}

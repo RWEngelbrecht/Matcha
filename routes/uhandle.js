@@ -36,4 +36,6 @@ router.post('/register', upload.single('photo'), [
 ], 
 uhandle.postregister);
 
+router.get('/confirm', uhandle.getconfirm);
+
 module.exports = router;
