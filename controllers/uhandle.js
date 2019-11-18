@@ -40,7 +40,8 @@ exports.postlogin = (req, res, next) => {
 	} else {
 		message = null;
 	}
-	User.findOne({email: req.body.email, password: req.body.password}, (err, user) => {
+	var hashpw = crypto.createHash('whirlpool').update(req.body.password).digest('hex');
+	User.findOne({email: req.body.email, password: hashpw}, (err, user) => {
 		if (err) {
 			console.log(res.status(400).send(err));
 		}
@@ -90,7 +91,7 @@ exports.postregister = (req, res, next) => {
 		.has().uppercase()
 		.has().lowercase()
 		.has().digits()
-		.has().not().spaces()
+		.has().not().spaces()  //lol
 		if (pwcheck.validate(req.body.password) == 0) {
 			console.log("Password must contain upper, lowercase characters and at least one digit");
 			return (res.redirect('/register'));
@@ -102,7 +103,7 @@ exports.postregister = (req, res, next) => {
 			  user: "wethinkcodematcha@gmail.com",
 			  pass: "Matcha1matcha"
 			}
-		});  
+		});
 		var mailOptions = {
 			from: 'wethinkcodematcha@gmail.com',
 			to: req.body.email,
