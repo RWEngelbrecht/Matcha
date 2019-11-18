@@ -95,6 +95,7 @@ exports.postregister = (req, res, next) => {
 			console.log("Password must contain upper, lowercase characters and at least one digit");
 			return (res.redirect('/register'));
 		}
+		// MAYBE DO SOME CHECKS BECUASE THIS ONLY WORKS WITH GMAIL ACCOUNTS
 		var transporter = nodemailer.createTransport({
 			service: 'gmail',
 			auth: {
