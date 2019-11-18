@@ -1,8 +1,10 @@
 const User	= require('../models/umod');
 const path	= require('path');
 const swig	= require('../app.js');
+const crypto = require('crypto');
+const PasswordValidator = require('password-validator');
+const nodemailer = require('nodemailer');
 const { validationResult } = require("express-validator");
-var crypto = require('crypto');
 
 // Home
 exports.gethome = (req, res, next) => {
@@ -73,16 +75,54 @@ exports.postregister = (req, res, next) => {
 	} else {
 		message = null;
 	}
-	var hash = crypto.createHash('whirlpool').update(req.body.username).digest('hex');
+	var vkey = crypto.createHash('whirlpool').update(req.body.username).digest('hex');
 	if (req.body.password != req.body.confirm_password) {
 		// DISPLAY ERROR MESSAGE.
 		console.log("Passwords do not match");
 		return (res.redirect('/register'));
-		// TODO encrypt the passwords, send email.
+		// TODO send email.
 	} else {
+		// checks for password strength.
+		var pwcheck = new PasswordValidator();
+		pwcheck
+		.is().min(8)
+		.is().max(20)
+		.has().uppercase()
+		.has().lowercase()
+		.has().digits()
+		.has().not().spaces()
+		if (pwcheck.validate(req.body.password) == 0) {
+			console.log("Password must contain upper, lowercase characters and at least one digit");
+			return (res.redirect('/register'));
+		}
+		// MAYBE DO SOME CHECKS BECUASE THIS ONLY WORKS WITH GMAIL ACCOUNTS
+		var transporter = nodemailer.createTransport({
+			service: 'gmail',
+			auth: {
+			  user: "wethinkcodematcha@gmail.com",
+			  pass: "Matcha1matcha"
+			}
+		});  
+		var mailOptions = {
+			from: 'wethinkcodematcha@gmail.com',
+			to: req.body.email,
+			subject: 'Confirm Your matcha account',
+			html: `
+        	  <h1>You successfully signed up!</h1>
+        	  <p>Click this <a href="http://localhost:8000/confirm?key=${vkey}">link</a> to confirm your account.</p>
+        	`
+		};
+		transporter.sendMail(mailOptions, function(error, info){
+			if (error) {
+			  console.log(error);
+			} else {
+			  console.log('Email sent: ' + info.response);
+			}
+		});
+		var hashedpw = crypto.createHash('whirlpool').update(req.body.password).digest('hex');
 		const user = new User({
 			username: req.body.username,
-			password: req.body.password,
+			password: hashedpw,
 			email: req.body.email,
 			firstname: req.body.firstname,
 			surname: req.body.surname,
@@ -93,13 +133,14 @@ exports.postregister = (req, res, next) => {
 			agepreflower: req.body.age - 5,
 			ageprefupper: parseInt(req.body.age) + 10,
 			about: req.body.about,
-			verifkey: hash,
+			verifkey: vkey,
 			maxdist: req.body.dist,
 			// interests: 'test',
 		});
 		// query schema to see if username or email exists
-		User.find({$or: [ {username: user.username}, {email: user.email} ]}, (err, docs) => {
-			if (!docs.isEmpty) {
+		User.findOne({$or: [ {username: user.username}, {email: user.email} ]}, (err, docs) => {
+			console.log(docs);
+			if (docs != null) {
 				console.log("Invalid username or password.");
 				return (res.redirect('/register'));
 			} else {
