@@ -37,6 +37,7 @@ router.post('/register', upload.single('photo'), [
 uhandle.postregister);
 
 router.get('/confirm', uhandle.getconfirm);
+router.get('/logout', uhandle.getlogout);
 
 router.get('/userdata', uhandle.getUserData);
 

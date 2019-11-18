@@ -22,11 +22,19 @@ session.user = 0;
 // ROUTES
 // const user = require('./routes/user');
 const uhandle = require('./routes/uhandle');
+<<<<<<< HEAD
+const user_info = require('./routes/user_info');
+
+// app.use(user);
+app.use(uhandle);
+app.use(user_info);
+=======
 const umatch = require('./routes/matchroutes');
 
 // app.use(user);
 app.use(uhandle);
 app.use(umatch);
+>>>>>>> da880c529875995bd0dbe17d332177cac1000be0
 
 mongoose
 	.connect(MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true})

@@ -183,6 +183,12 @@ exports.getconfirm = (req, res, next) => {
 	// Doesnt have to go to home, should probably set user logged in or out and take to login or my account
 	return (res.redirect('/'));
 }
+// Logout
+// GET method. Doesnt really matter get, post, all.
+exports.getlogout = (req, res, next) => {
+	req.session.user = 0;
+	return (res.redirect('/'));
+}
 
 //test to see how session works
 exports.getUserData = (req, res, next) => {
