@@ -24,7 +24,6 @@ exports.gethome = (req, res, next) => {
 	console.log ("\n");
 	console.log ("req.session.user is ->");
 	console.log (req.session.user);
-	console.log ("\n");
 	return (res.render(path.resolve('views/index')));
 }
 // Login
