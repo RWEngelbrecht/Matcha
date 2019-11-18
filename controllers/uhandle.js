@@ -5,6 +5,7 @@ const crypto = require('crypto');
 const PasswordValidator = require('password-validator');
 const nodemailer = require('nodemailer');
 const { validationResult } = require("express-validator");
+var sessionData;
 
 // Home
 exports.gethome = (req, res, next) => {
@@ -21,9 +22,9 @@ exports.gethome = (req, res, next) => {
 	if (req.session.user === 0) {
 		return (res.redirect('/login'));
 	}
-	console.log ("\n");
-	console.log ("req.session.user is ->");
-	console.log (req.session.user);
+	// console.log ("\n");
+	// console.log ("req.session.user is ->");
+	// console.log (req.session.user);
 	return (res.render(path.resolve('views/index')));
 }
 // Login
@@ -56,7 +57,8 @@ exports.postlogin = (req, res, next) => {
 		}
 		else if (user && user.verified == true) {
 			console.log('Login Success!');
-			req.session.user = user.verifkey;
+			sessionData = req.session;
+			sessionData.user = user;
 			return res.redirect('/');
 		} else {
 			console.log('Invalid login');
@@ -186,4 +188,12 @@ exports.getconfirm = (req, res, next) => {
 exports.getlogout = (req, res, next) => {
 	req.session.user = 0;
 	return (res.redirect('/'));
+}
+
+//test to see how session works
+exports.getUserData = (req, res, next) => {
+	console.log('Reached getUserData');
+	sessionData = req.session;
+	console.log(sessionData.user.username);
+	return (res.render(path.resolve('views/userdata')));
 }
