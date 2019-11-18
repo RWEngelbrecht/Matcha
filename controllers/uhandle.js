@@ -58,7 +58,7 @@ exports.postlogin = (req, res, next) => {
 		else if (user && user.verified == true) {
 			console.log('Login Success!');
 			sessionData = req.session;
-			sessionData.currUser = user;
+			sessionData.user = user;
 			return res.redirect('/');
 		} else {
 			console.log('Invalid login');
@@ -188,6 +188,6 @@ exports.getconfirm = (req, res, next) => {
 exports.getUserData = (req, res, next) => {
 	console.log('Reached getUserData');
 	sessionData = req.session;
-	console.log(sessionData.currUser.username);
+	console.log(sessionData.user.username);
 	return (res.render(path.resolve('views/userdata')));
 }
