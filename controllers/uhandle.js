@@ -1,8 +1,10 @@
 const User	= require('../models/umod');
 const path	= require('path');
 const swig	= require('../app.js');
+const crypto = require('crypto');
+const PasswordValidator = require('password-validator');
+const nodemailer = require('nodemailer');
 const { validationResult } = require("express-validator");
-var crypto = require('crypto');
 
 // Home
 exports.gethome = (req, res, next) => {
@@ -78,8 +80,44 @@ exports.postregister = (req, res, next) => {
 		// DISPLAY ERROR MESSAGE.
 		console.log("Passwords do not match");
 		return (res.redirect('/register'));
-		// TODO check for complex password, send email.
+		// TODO send email.
 	} else {
+		// checks for password strength.
+		var pwcheck = new PasswordValidator();
+		pwcheck
+		.is().min(8)
+		.is().max(20)
+		.has().uppercase()
+		.has().lowercase()
+		.has().digits()
+		.has().not().spaces()
+		if (pwcheck.validate(req.body.password) == 0) {
+			console.log("Password must contain upper, lowercase characters and at least one digit");
+			return (res.redirect('/register'));
+		}
+		var transporter = nodemailer.createTransport({
+			service: 'gmail',
+			auth: {
+			  user: "wethinkcodematcha@gmail.com",
+			  pass: "Matcha1matcha"
+			}
+		});  
+		var mailOptions = {
+			from: 'wethinkcodematcha@gmail.com',
+			to: req.body.email,
+			subject: 'Confirm Your matcha account',
+			html: `
+        	  <h1>You successfully signed up!</h1>
+        	  <p>Click this <a href="http://localhost:8000/confirm?key=${vkey}">link</a> to confirm your account.</p>
+        	`
+		};
+		transporter.sendMail(mailOptions, function(error, info){
+			if (error) {
+			  console.log(error);
+			} else {
+			  console.log('Email sent: ' + info.response);
+			}
+		});
 		var hashedpw = crypto.createHash('whirlpool').update(req.body.password).digest('hex');
 		const user = new User({
 			username: req.body.username,

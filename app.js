@@ -8,6 +8,7 @@ const mongoose	= require('mongoose');
 const swig		= require('swig');
 const bodyParser= require('body-parser');
 MONGODB_URI		= "mongodb+srv://Yano:80058024@cluster0-jszpy.mongodb.net/matcha";
+const PasswordValidator = require('password-validator');
 const app = express();
 
 // APP SETUP.
@@ -35,5 +36,3 @@ mongoose
 	.catch(err => {
 		console.log(err)
 	});
-
-// module.exports = swig
