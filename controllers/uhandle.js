@@ -98,8 +98,9 @@ exports.postregister = (req, res, next) => {
 			// interests: 'test',
 		});
 		// query schema to see if username or email exists
-		User.find({$or: [ {username: user.username}, {email: user.email} ]}, (err, docs) => {
-			if (!docs.isEmpty) {
+		User.findOne({$or: [ {username: user.username}, {email: user.email} ]}, (err, docs) => {
+			console.log(docs);
+			if (docs != null) {
 				console.log("Invalid username or password.");
 				return (res.redirect('/register'));
 			} else {
