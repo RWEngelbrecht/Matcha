@@ -8,4 +8,5 @@ exports.getMatches = (req, res, next) => {
 	//			match.agepreflower < user.age < match.ageprefupper
 	//	-	at least 1 user.interests[] in match.interests[]
 	//	-	match.location within range of user.location + maxdist
+	//	-	order by fame desc
 }
