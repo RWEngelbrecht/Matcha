@@ -22,9 +22,9 @@ exports.gethome = (req, res, next) => {
 	if (req.session.user === 0) {
 		return (res.redirect('/login'));
 	}
-	console.log ("\n");
-	console.log ("req.session.user is ->");
-	console.log (req.session.user);
+	// console.log ("\n");
+	// console.log ("req.session.user is ->");
+	// console.log (req.session.user);
 	return (res.render(path.resolve('views/index')));
 }
 // Login

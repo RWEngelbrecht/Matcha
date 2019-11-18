@@ -1,5 +1,6 @@
 const User = require('../models/umod');
-var sessionData;
+const path	= require('path');
+var currUser;
 
 exports.getMatches = (req, res, next) => {
 	// find all from users where:
@@ -9,4 +10,9 @@ exports.getMatches = (req, res, next) => {
 	//	-	at least 1 user.interests[] in match.interests[]
 	//	-	match.location within range of user.location + maxdist
 	//	-	order by fame desc
+	currUser = req.session.user;
+	// should not be able to access matches page without being logged in, so no user authentication needed?
+	
+	return (res.render(path.resolve('views/matches')));
 }
+
