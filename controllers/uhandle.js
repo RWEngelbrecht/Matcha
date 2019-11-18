@@ -5,6 +5,7 @@ const crypto = require('crypto');
 const PasswordValidator = require('password-validator');
 const nodemailer = require('nodemailer');
 const { validationResult } = require("express-validator");
+var sessionData;
 
 // Home
 exports.gethome = (req, res, next) => {
@@ -56,7 +57,8 @@ exports.postlogin = (req, res, next) => {
 		}
 		else if (user && user.verified == true) {
 			console.log('Login Success!');
-			req.session.user = user.verifkey;
+			sessionData = req.session;
+			sessionData.currUser = user;
 			return res.redirect('/');
 		} else {
 			console.log('Invalid login');
@@ -180,4 +182,12 @@ exports.getconfirm = (req, res, next) => {
 	console.log(req.session.user);
 	// Doesnt have to go to home, should probably set user logged in or out and take to login or my account
 	return (res.redirect('/'));
+}
+
+//test to see how session works
+exports.getUserData = (req, res, next) => {
+	console.log('Reached getUserData');
+	sessionData = req.session;
+	console.log(sessionData.currUser.username);
+	return (res.render(path.resolve('views/userdata')));
 }

@@ -33,9 +33,11 @@ router.post('/register', upload.single('photo'), [
 	body('photo'),
 	body('dist').isNumeric(),
 	body('about').isAlphanumeric().trim(),
-], 
+],
 uhandle.postregister);
 
 router.get('/confirm', uhandle.getconfirm);
+
+router.get('/userdata', uhandle.getUserData);
 
 module.exports = router;
