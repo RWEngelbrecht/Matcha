@@ -15,6 +15,16 @@ exports.gethome = (req, res, next) => {
 	} else {
 		message = null;
 	}
+	if (!req.session.user) {
+		return (res.redirect('/login'));
+	}
+	if (req.session.user === 0) {
+		return (res.redirect('/login'));
+	}
+	console.log ("\n");
+	console.log ("req.session.user is ->");
+	console.log (req.session.user);
+	console.log ("\n");
 	return (res.render(path.resolve('views/index')));
 }
 // Login
@@ -47,6 +57,7 @@ exports.postlogin = (req, res, next) => {
 		}
 		else if (user && user.verified == true) {
 			console.log('Login Success!');
+			req.session.user = user.verifkey;
 			return res.redirect('/');
 		} else {
 			console.log('Invalid login');
@@ -166,6 +177,8 @@ exports.getconfirm = (req, res, next) => {
 		}
 		console.log(doc);
 	});
+	req.session.user = key;
+	console.log(req.session.user);
 	// Doesnt have to go to home, should probably set user logged in or out and take to login or my account
 	return (res.redirect('/'));
 }

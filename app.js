@@ -17,6 +17,7 @@ app.set('view engine', 'html');
 app.use(session({ secret: 'matcha', resave: false, saveUninitialized: false}));
 app.use(flash());
 app.use(bodyParser.urlencoded({extended: false}));
+session.user = 0;
 
 // ROUTES
 // const user = require('./routes/user');
