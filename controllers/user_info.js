@@ -46,3 +46,32 @@ exports.postusername = (req, res, next) => {
 	});
 	return (res.redirect('/updateinfo'));
 }
+// GET name & surname
+exports.getname = (req, res, next) => {
+    console.log("getname controller reached reached");
+	let message = req.flash('Something went wrong, please try again later!');
+	if (message.length > 0) {
+		message = message[0];
+	} else {
+		message = null;
+	}
+	return (res.render(path.resolve('views/update_name')));
+}
+// POST name & surname
+exports.postname = (req, res, next) => {
+    console.log("postusername controller reached reached");
+	let message = req.flash('Something went wrong, please try again later!');
+	if (message.length > 0) {
+		message = message[0];
+	} else {
+		message = null;
+    }
+    key = req.session.user.verifkey;
+    User.findOneAndUpdate({verifkey: key}, {$set:{firstname:req.body.new_firstname, surname:req.body.new_surname}},function(err, doc){
+		if(err){
+			console.log("Something wrong when updating data!");
+		}
+		console.log("Name & Surname updated successfully");
+	});
+	return (res.redirect('/updateinfo'));
+}

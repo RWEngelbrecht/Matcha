@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block title %}Matcha{% endblock %}
+
+{% block body %}
+<form action="" method="POST" novalidate>
+	<div class="form-control">
+		<label for="new_firstname">New Firstname</label>
+		<input type="new_firstname" name="new_firstname" id="new_firstname" required>
+    </div>
+    <div class="form-control">
+		<label for="new_surname">New Surname</label>
+		<input type="new_surname" name="new_surname" id="new_surname" required>
+	</div>
+	<input type="hidden" name="_csrf" value="<%= csrfToken %>">
+	<button type="submit">Update Name</button>
+</form>
+
+<div>
+	<li><a href="/">Back to home</a></li>
+</div>
+{% endblock %}

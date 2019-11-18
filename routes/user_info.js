@@ -14,5 +14,11 @@ router.post('/username', [
     body('new_username').isAlphanumeric().trim(),
 ]
 ,update.postusername);
-
+// Name & Surname updating page
+router.get('/name', update.getname);
+router.post('/name', [
+    body('new_firstname').isAlpha().trim(),
+    body('new_surname').isAlpha().trim(),
+]
+,update.postname);
 module.exports = router;
