@@ -21,7 +21,7 @@ router.post('/name', [
     body('new_surname').isAlpha().trim(),
 ]
 ,update.postname);
-// GET Age pref updating page
+// Age & Age Pref updating page
 router.get('/age', update.getage);
 router.post('/age', [
     body('new_age').isNumeric(),
@@ -29,4 +29,17 @@ router.post('/age', [
     body('new_ageupper').isNumeric(),
 ]
 ,update.postage);
+// Maxdist updating page
+router.get('/maxdist', update.getmaxdist);
+router.post('/maxdist', [
+    body('new_maxdist').isNumeric(),
+]
+,update.postmaxdist);
+// Email updating page.
+router.get('/email', update.getemail);
+router.post('/email', [
+    body('new_email', 'Please enter a valid email address').isEmail().normalizeEmail(),
+]
+,update.postemail);
+
 module.exports = router;
