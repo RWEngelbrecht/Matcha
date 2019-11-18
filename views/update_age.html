@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block title %}Matcha{% endblock %}
+
+{% block body %}
+<form action="" method="POST">
+	<div class="form-control">
+		<label for="new_age">New Age</label>
+		<input type="number" name="new_age" id="new_age" required min="18">
+    </div>
+    <div class="form-control">
+		<label for="new_agelower">New Age Pref Lower</label>
+		<input type="number" name="new_agelower" id="new_agelower" required min="18">
+	</div>
+    <div class="form-control">
+		<label for="new_ageupper">New Age Pref Upper</label>
+		<input type="number" name="new_ageupper" id="new_ageupper" required max="99">
+	</div>
+	<input type="hidden" name="_csrf" value="<%= csrfToken %>">
+	<button type="submit">Update Age and Preferences</button>
+</form>
+
+<div>
+	<li><a href="/">Back to home</a></li>
+</div>
+{% endblock %}

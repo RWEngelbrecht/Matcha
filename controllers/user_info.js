@@ -75,3 +75,32 @@ exports.postname = (req, res, next) => {
 	});
 	return (res.redirect('/updateinfo'));
 }
+// GET age, and age pref.
+exports.getage = (req, res, next) => {
+    console.log("getname controller reached reached");
+	let message = req.flash('Something went wrong, please try again later!');
+	if (message.length > 0) {
+		message = message[0];
+	} else {
+		message = null;
+	}
+	return (res.render(path.resolve('views/update_age')));
+}
+// POST age, and age pref.
+exports.postage = (req, res, next) => {
+    console.log("postusername controller reached reached");
+	let message = req.flash('Something went wrong, please try again later!');
+	if (message.length > 0) {
+		message = message[0];
+	} else {
+		message = null;
+    }
+    key = req.session.user.verifkey;
+    User.findOneAndUpdate({verifkey: key}, {$set:{age:req.body.new_age, agepreflower:req.body.new_agelower, ageprefupper:req.body.new_ageupper}},function(err, doc){
+		if(err){
+			console.log("Something wrong when updating data!");
+		}
+		console.log("Age & Preferences updated successfully");
+	});
+	return (res.redirect('/updateinfo'));
+}
