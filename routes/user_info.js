@@ -29,4 +29,9 @@ router.post('/age', [
     body('new_ageupper').isNumeric(),
 ]
 ,update.postage);
+router.get('/maxdist', update.getmaxdist);
+router.post('/maxdist', [
+    body('new_maxdist').isNumeric(),
+]
+,update.postmaxdist);
 module.exports = router;

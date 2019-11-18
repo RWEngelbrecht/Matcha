@@ -59,7 +59,7 @@ exports.getname = (req, res, next) => {
 }
 // POST name & surname
 exports.postname = (req, res, next) => {
-    console.log("postusername controller reached reached");
+    console.log("postname controller reached reached");
 	let message = req.flash('Something went wrong, please try again later!');
 	if (message.length > 0) {
 		message = message[0];
@@ -77,7 +77,7 @@ exports.postname = (req, res, next) => {
 }
 // GET age, and age pref.
 exports.getage = (req, res, next) => {
-    console.log("getname controller reached reached");
+    console.log("getage controller reached reached");
 	let message = req.flash('Something went wrong, please try again later!');
 	if (message.length > 0) {
 		message = message[0];
@@ -88,7 +88,7 @@ exports.getage = (req, res, next) => {
 }
 // POST age, and age pref.
 exports.postage = (req, res, next) => {
-    console.log("postusername controller reached reached");
+    console.log("postage controller reached reached");
 	let message = req.flash('Something went wrong, please try again later!');
 	if (message.length > 0) {
 		message = message[0];
@@ -104,3 +104,33 @@ exports.postage = (req, res, next) => {
 	});
 	return (res.redirect('/updateinfo'));
 }
+// GET maxdist
+exports.getmaxdist = (req, res, next) => {
+    console.log("getmaxdist controller reached reached");
+	let message = req.flash('Something went wrong, please try again later!');
+	if (message.length > 0) {
+		message = message[0];
+	} else {
+		message = null;
+	}
+	return (res.render(path.resolve('views/update_maxdist')));
+}
+// POST maxdist
+exports.postmaxdist = (req, res, next) => {
+    console.log("postmaxdist controller reached reached");
+	let message = req.flash('Something went wrong, please try again later!');
+	if (message.length > 0) {
+		message = message[0];
+	} else {
+		message = null;
+    }
+    key = req.session.user.verifkey;
+    User.findOneAndUpdate({verifkey: key}, {$set:{maxdist:req.body.new_maxdist}},function(err, doc){
+		if(err){
+			console.log("Something wrong when updating data!");
+		}
+		console.log("Maximum Distance updated successfully");
+	});
+	return (res.redirect('/updateinfo'));
+}
+
