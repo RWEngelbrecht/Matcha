@@ -45,7 +45,7 @@ exports.postlogin = (req, res, next) => {
 		if (err) {
 			console.log(res.status(400).send(err));
 		}
-		else if (user) {
+		else if (user && user.verified == true) {
 			console.log('Login Success!');
 			return res.redirect('/');
 		} else {
