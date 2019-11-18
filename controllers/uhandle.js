@@ -166,5 +166,6 @@ exports.getconfirm = (req, res, next) => {
 		}
 		console.log(doc);
 	});
+	// Doesnt have to go to home, should probably set user logged in or out and take to login or my account
 	return (res.redirect('/'));
 }
