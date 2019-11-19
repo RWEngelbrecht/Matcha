@@ -7,7 +7,7 @@ const Mongodb	= require('connect-mongodb-session')(session);
 const mongoose	= require('mongoose');
 const swig		= require('swig');
 const bodyParser= require('body-parser');
-MONGODB_URI		= "mongodb+srv://Yano:80058024@cluster0-jszpy.mongodb.net/matcha";
+MONGODB_URI		= "mongodb+srv://Rigardt:80058024@cluster0-e6mik.mongodb.net/matcha";
 const PasswordValidator = require('password-validator');
 const app = express();
 
@@ -23,10 +23,12 @@ session.user = 0;
 // const user = require('./routes/user');
 const uhandle = require('./routes/uhandle');
 const user_info = require('./routes/user_info');
+const umatch = require('./routes/matchroutes');
 
 // app.use(user);
 app.use(uhandle);
 app.use(user_info);
+app.use(umatch);
 
 mongoose
 	.connect(MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true})
@@ -34,7 +36,7 @@ mongoose
 		app.listen(8000);
 	})
 	.then(result => {
-		console.log("Server has started, Sending it!");
+		console.log(`Server has started, Port: 8000`);
 	})
 	.catch(err => {
 		console.log(err)
