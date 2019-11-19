@@ -22,11 +22,11 @@ exports.getMatches = (req, res, next) => {
 			else if (!matches) {
 				console.log('No matches for you!');
 			}
-			else {
-				matches.forEach(element => {
-					console.log(element.username);
-				});
-			}
+			// else {
+			// 	matches.forEach(element => {
+			// 		console.log(element.username);
+			// 	});
+			// }
 			return (res.render(path.resolve('views/matches'), {matches: matches}));
 		});
 	}
@@ -36,7 +36,14 @@ exports.getMatches = (req, res, next) => {
 }
 
 exports.like = (req, res, next) => {
-	let liked = req.body.user;
-	// console.log(liked);
+	var likedkey = req.body.potmatch;
+	User.findOneAndUpdate({verifkey: likedkey}, {$inc:{fame:1}}, (err, doc) => {
+		if(err){
+			console.log("Something went wrong when updating match data!");
+		}
+		else
+			console.log("Match fame updated");
+	});
+	return (res.redirect('/matches'));
 }
 

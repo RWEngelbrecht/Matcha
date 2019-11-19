@@ -6,12 +6,15 @@
 	{% if matches %}
 		<h1>Potential matches based on arbitrary stuff: </h1>
 		<table>
+			{% macro input(type, name, id, value) %}
+				<input type="{{ type }}" name="{{ name }}" id="{{ id }}" value="{{ value }}">
+			{% endmacro %}
 			{% for match in matches %}
 				<tr>
-					<form>
+					<form action="" method="POST">
 						<td>{{match.username}}</td>
-						<td><input type="hidden" name="user" value="{{match.username}}"></td>
-						<td><input type="submit" name="like" value="Like"></td>
+						<td>{{ input("hidden", "potmatch", "potmatch", match.verifkey) }}</td>
+						<td>{{ input("submit", "like", "like", "Like") }}</td>
 					</form>
 				</tr>
 			{% endfor %}
