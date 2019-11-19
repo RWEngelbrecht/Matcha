@@ -21,23 +21,20 @@ exports.getMatches = (req, res, next) => {
 
 	// should not be able to access matches page without being logged in, so no user authentication needed?
 
-	// User.aggregate().group({
-	// 	"matchList": {
-	// 		$addToSet: {
-	// 			gender: currUser.genderpref
-	// 		}
-	// 	}
-	// })
-
-	User.find({gender: currUser.genderpref}, (err, matches) => {
-		if (!matches)
+	User.find({$where: age > currUser.agepreflower}, {gender: currUser.genderpref, genderpref: currUser.gender}, (err, matches) => {
+		if (err) {
+			console.log(res.status(400).send(err));
+		}
+		else if (!matches) {
 			console.log('No matches for you!');
-		else
+		}
+		else {
 			matches.forEach(element => {
 				console.log(element.username);
 			});
+		}
+		return (res.render(path.resolve('views/matches'), {locals: {matches: matches}}));
 	});
 
-	return (res.render(path.resolve('views/matches'), {matches: matches}));
 }
 

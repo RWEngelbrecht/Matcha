@@ -4,9 +4,13 @@
 
 {% block body %}
 
-look at all these matches i dont have yet
-{% for element in matches %}
-	<h2>match made!</h2>
-{% endfor %}
+{% if matches %}
+	{% for match in matches %}
+		<h1>{{match.username}}</h1>
+	{% endfor %}
+{% else %}
+	<h2>look at all these matches i dont have yet</h2>
+{% endif %}
+
 
 {% endblock %}
