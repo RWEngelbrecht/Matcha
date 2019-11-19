@@ -3,14 +3,20 @@
 {% block title %}Matches{% endblock %}
 
 {% block body %}
-
-{% if matches %}
-	{% for match in matches %}
-		<h1>{{match.username}}</h1>
-	{% endfor %}
-{% else %}
-	<h2>look at all these matches i dont have yet</h2>
-{% endif %}
-
-
+	{% if matches %}
+		<h1>Potential matches based on arbitrary stuff: </h1>
+		<table>
+			{% for match in matches %}
+				<tr>
+					<form>
+						<td>{{match.username}}</td>
+						<td><input type="hidden" name="user" value="{{match.username}}"></td>
+						<td><input type="submit" name="like" value="Like"></td>
+					</form>
+				</tr>
+			{% endfor %}
+		</table>
+	{% else %}
+		<h2>look at all these matches i dont have yet</h2>
+	{% endif %}
 {% endblock %}
