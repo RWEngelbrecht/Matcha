@@ -1,4 +1,5 @@
 const User = require('../models/umod');
+const Likes = require('../models/likemod');
 const path	= require('path');
 var currUser;
 
@@ -37,12 +38,35 @@ exports.getMatches = (req, res, next) => {
 
 exports.like = (req, res, next) => {
 	var likedkey = req.body.potmatch;
-	User.findOneAndUpdate({verifkey: likedkey}, {$inc:{fame:1}}, (err, doc) => {
+	currUser = req.session.user;
+	console.log('currUser is %s', currUser.username);
+
+	User.findOneAndUpdate({verifkey: likedkey}, {$inc:{fame:1}}, {new: true}, (err, doc) => {
 		if(err){
 			console.log("Something went wrong when updating match data!");
 		}
-		else
+		else {
 			console.log("Match fame updated");
+			const like = new Likes({
+				likeBy: currUser._id,
+				likedUser: doc._id
+			});
+			like.save((err) => {
+				if (err){
+					console.log(res.status(400).send(err));
+				}
+			});
+			console.log(like.likeBy);
+		}
+	});
+	Likes.findOne({likeBy: currUser._id}).
+	populate('likeBy').
+	populate('likedUser').
+	exec((err, like) => {
+		if (err) {
+			console.log(res.status(400).send(err));
+		}
+		console.log('%s likes %s', like.likeBy.username, like.likedUser.username);
 	});
 	return (res.redirect('/matches'));
 }
