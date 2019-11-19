@@ -42,8 +42,6 @@ exports.getlogin = (req, res, next) => {
 // POST method
 exports.postlogin = (req, res, next) => {
 	console.log("uhandle postlogin reached(Controller)");
-	console.log(req.body.email);
-	console.log(req.body.password);
 	let message = req.flash('Something went wrong, please try again later!');
 	if (message.length > 0) {
 		message = message[0];
@@ -140,8 +138,8 @@ exports.postregister = (req, res, next) => {
 			firstname: req.body.firstname,
 			surname: req.body.surname,
 			age: req.body.age,
-			gender: req.body.gender,
-			genderpref: req.body.gender_pref,
+			gender: req.body.gender.toLowerCase(),
+			genderpref: req.body.gender_pref.toLowerCase(),
 			profilephoto: req.file.buffer.toString('base64'),
 			agepreflower: req.body.age - 5,
 			ageprefupper: parseInt(req.body.age) + 10,
