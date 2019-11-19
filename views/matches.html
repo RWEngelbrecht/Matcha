@@ -2,4 +2,11 @@
 
 {% block title %}Matches{% endblock %}
 
-{% block body %}look at all these matches i dont have yet{% endblock %}
+{% block body %}
+
+look at all these matches i dont have yet
+{% for element in matches %}
+	<h2>match made!</h2>
+{% endfor %}
+
+{% endblock %}
