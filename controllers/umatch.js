@@ -7,7 +7,6 @@ exports.getMatches = (req, res, next) => {
 	//	-	match.gender == user.genderpref && match.genderpref == user.gender
 	//	-	user.agepreflower < match.age < user.ageprefupper &&
 	//			match.agepreflower < user.age < match.ageprefupper
-	//	-	at least 1 user.interests[] in match.interests[]
 	//	-	match.location within range of user.location + maxdist
 	//	-	order by fame desc
 	let message = req.flash('Something went wrong, please try again later!');
@@ -21,7 +20,9 @@ exports.getMatches = (req, res, next) => {
 
 	// should not be able to access matches page without being logged in, so no user authentication needed?
 
-	User.find({$where: age > currUser.agepreflower}, {gender: currUser.genderpref, genderpref: currUser.gender}, (err, matches) => {
+	User.find(
+		{gender: currUser.genderpref, genderpref: currUser.gender, age: {$gt: currUser.agepreflower, $lt: currUser.ageprefupper}},
+		{}, {sort: {fame: -1}},(err, matches) => {
 		if (err) {
 			console.log(res.status(400).send(err));
 		}
@@ -35,6 +36,5 @@ exports.getMatches = (req, res, next) => {
 		}
 		return (res.render(path.resolve('views/matches'), {locals: {matches: matches}}));
 	});
-
 }
 
