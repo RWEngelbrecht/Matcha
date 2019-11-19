@@ -6,6 +6,7 @@ const PasswordValidator = require('password-validator');
 const nodemailer = require('nodemailer');
 const { validationResult } = require("express-validator");
 var sessionData;
+var logged;
 
 // Home
 exports.gethome = (req, res, next) => {
@@ -17,15 +18,15 @@ exports.gethome = (req, res, next) => {
 		message = null;
 	}
 	if (!req.session.user) {
+		logged = false;
 		return (res.redirect('/login'));
+	} else {
+		logged = true;
 	}
 	if (req.session.user === 0) {
 		return (res.redirect('/login'));
 	}
-	// console.log ("\n");
-	// console.log ("req.session.user is ->");
-	// console.log (req.session.user);
-	return (res.render(path.resolve('views/index')));
+	return (res.render(path.resolve('views/index'), {userLogged: logged}));
 }
 // Login
 // GET method

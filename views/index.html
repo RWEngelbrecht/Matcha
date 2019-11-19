@@ -2,4 +2,19 @@
 
 {% block title %}Matcha - Home{% endblock %}
 
-{% block body %}body{% endblock %}
+{% block navlist %}
+	<li><a href="/">Home</a></li>
+	{% if userLogged == false %}
+		<li><a href="/login">Login</a></li>
+		<li><a href="/register">Register</a></li>
+	{% else %}
+		<li><a href="/matches">Matcha Me, Mario</a></li>
+	{% endif %}
+
+{% endblock %}
+
+{% block body %}
+
+body
+
+{% endblock %}
