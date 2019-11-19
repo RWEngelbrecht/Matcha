@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+
+{% block title %}Matcha{% endblock %}
+
+{% block body %}
+
+{% if photocount < 5 %}
+    <h1>Upload or Take a photo</h1>
+    <form method="POST" action="" enctype="multipart/form-data">
+        <input type="file" name="new_photo" id="new_photo" accept="image/*"><br>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button type="submit">Add new photo</button><br><br><br>
+    </form>
+    <a href="/takephoto">Take a photo</a>
+{% elseif photocount >= 5 %}
+    <h1>Delete a photo</h1>
+{% endif %}
+
+
+<div>
+	<li><a href="/">Back to home</a></li>
+</div>
+{% endblock %}

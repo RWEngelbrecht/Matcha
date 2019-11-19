@@ -41,5 +41,12 @@ router.post('/email', [
     body('new_email', 'Please enter a valid email address').isEmail().normalizeEmail(),
 ]
 ,update.postemail);
-
+// Password updating page
+router.get('/password', update.getpassword);
+router.post('/password', [
+    body('old_password').isAlphanumeric().trim().isLength({ min: 8}),
+    body('new_password', 'Password must have at least 8 characters alphanumeric').isAlphanumeric().trim().isLength({ min: 8}),
+    body('confirm_new_password').isAlphanumeric().trim().isLength({ min: 8}),
+]
+,update.postpassword);
 module.exports = router;

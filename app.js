@@ -7,7 +7,7 @@ const Mongodb	= require('connect-mongodb-session')(session);
 const mongoose	= require('mongoose');
 const swig		= require('swig');
 const bodyParser= require('body-parser');
-MONGODB_URI		= "mongodb+srv://Rigardt:80058024@cluster0-e6mik.mongodb.net/matcha";
+MONGODB_URI		= "mongodb+srv://Yano:80058024@cluster0-jszpy.mongodb.net/matcha";
 const PasswordValidator = require('password-validator');
 const app = express();
 
@@ -23,12 +23,13 @@ session.user = 0;
 // const user = require('./routes/user');
 const uhandle = require('./routes/uhandle');
 const user_info = require('./routes/user_info');
+const photo = require('./routes/photos');
 const umatch = require('./routes/matchroutes');
 
-// app.use(user);
 app.use(uhandle);
 app.use(user_info);
 app.use(umatch);
+app.use(photo);
 
 mongoose
 	.connect(MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true})
