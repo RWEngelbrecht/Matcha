@@ -23,12 +23,13 @@ session.user = 0;
 // const user = require('./routes/user');
 const uhandle = require('./routes/uhandle');
 const user_info = require('./routes/user_info');
+const photo = require('./routes/photos');
 const umatch = require('./routes/matchroutes');
 
-// app.use(user);
 app.use(uhandle);
 app.use(user_info);
 app.use(umatch);
+app.use(photo);
 
 mongoose
 	.connect(MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true})

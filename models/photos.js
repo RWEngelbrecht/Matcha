@@ -4,12 +4,12 @@ const phototable = new Schema({
 	photo: {
         // meh you know what this is...
 		type: String,
-		required: true
+		required: true,
     },
     photoid: {
         // please keep to verifkey+hashed (photocount of user).
         type: String,
-        required: true
+        required: true,
     },
     user: {
         // will pass this the object_id of the person posting

@@ -7,4 +7,9 @@ var storage = multer.memoryStorage();
 var upload = multer({ storage: storage });
 
 router.get('/photos', photo.getphoto);
+router.post('/photos', upload.single('new_photo'), [
+    body('new_photo'),
+],
+photo.postphoto);
+
 module.exports = router;
