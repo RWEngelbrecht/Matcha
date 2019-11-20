@@ -69,10 +69,10 @@ const usertable = new Schema({
 		required: true,
 		default: 50,
 	},
-	interests: [{
-		type: String,
-		default: "Not interesting"
-	}],
+	interests: {
+		type: Boolean,
+		default: 0,
+	},
 	lastSeen: {
 		type: Date,
 		default: Date.now()

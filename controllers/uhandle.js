@@ -27,6 +27,9 @@ exports.gethome = (req, res, next) => {
 	if (req.session.user === 0) {
 		return (res.redirect('/login'));
 	}
+	// if (req.session.user.interests === 0) {
+	// 	return (res.redirect('/interests'));
+	// }
 	loggedUser = req.session.user.username 
 	return (res.render(path.resolve('views/index'),{
 		user: loggedUser
@@ -329,4 +332,3 @@ exports.getUserData = (req, res, next) => {
 	console.log(sessionData.user.interests);
 	return (res.render(path.resolve('views/index')));
 }
-
