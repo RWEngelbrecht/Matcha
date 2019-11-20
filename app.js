@@ -16,8 +16,8 @@ app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
 app.use(session({ secret: 'matcha', resave: false, saveUninitialized: false}));
 app.use(flash());
-app.use(express.static('static'))
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.static('static'));
+app.use(bodyParser.urlencoded({extended: false, limit: '5mb'}));
 session.user = 0;
 
 // ROUTES

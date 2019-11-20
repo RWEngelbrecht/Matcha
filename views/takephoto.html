@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+
+{% block title %}Matcha{% endblock %}
+
+{% block body %}
+
+<h1>Take a photo</h1>
+<div class = "box column has-text-centered is-10 is-offset-1">
+    <h3>Live Image</h3> 
+    <video id="video" width="400" height="300" autoplay></video>
+    <br/>
+    <button class = "button is-rounded is-small" id="snap">Take Photo</button><br>
+    <h3 class = "subtitle">Current Image</h3>
+    <canvas id="canvas" width="400" height="300"></canvas>
+    <form method="post" action="">
+        <input type="hidden" name="webcamimage" id="webcamimage" accept="image/*"><br>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button type="submit" id="submitphoto">Add new photo</button><br><br><br>
+    </form>
+</div>
+<script src="js/webcam.js"></script>
+<div>
+	<li><a href="/">Back to home</a></li>
+</div>
+{% endblock %}
