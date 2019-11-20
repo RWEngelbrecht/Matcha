@@ -15,4 +15,11 @@ photo.postphoto);
 // DELETE photos
 router.get('/deletephoto', photo.getdeletephoto);
 router.post('/deletephoto', photo.postdeletephoto);
+// PROFILE photo
+router.get('/editprofilepicture', photo.geteditprofilepicture);
+router.post('/editprofilepicture', upload.single('new_profile_photo'), [
+    body('new_photo'),
+],
+photo.posteditprofilepicture);
+
 module.exports = router;

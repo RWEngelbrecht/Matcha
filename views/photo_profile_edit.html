@@ -4,19 +4,15 @@
 
 {% block body %}
 
-<a href="/editprofilepicture">Update profile picture</a><br >
-
-{% if photocount <= 4 %}
-    <h1>Upload or Take a photo</h1>
+    <h1>Update your profile photo</h1>
+    <h2>Upload a photo</h2>
     <form method="POST" action="" enctype="multipart/form-data">
-        <input type="file" name="new_photo" id="new_photo" accept="image/*"><br>
+        <input type="file" name="new_profile_photo" id="new_profile_photo" accept="image/*"><br>
         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-        <button type="submit">Add new photo</button><br><br><br>
+        <button type="submit">Update profile photo</button><br><br><br>
     </form>
+    <h2>OR</h2>
     <a href="/takephoto">Take a photo</a>
-{% else %}
-    <a href="/deletephoto">Delete a photo</a>
-{% endif %}
 
 
 <div>
