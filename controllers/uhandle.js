@@ -1,4 +1,5 @@
 const User	= require('../models/umod');
+const Photo	= require('../models/photos');
 const path	= require('path');
 const swig	= require('../app.js');
 const crypto = require('crypto');
@@ -146,7 +147,6 @@ exports.postregister = (req, res, next) => {
 			age: req.body.age,
 			gender: req.body.gender.toLowerCase(),
 			genderpref: req.body.gender_pref.toLowerCase(),
-			profilephoto: req.file.buffer.toString('base64'),
 			agepreflower: req.body.age - 5,
 			ageprefupper: parseInt(req.body.age) + 10,
 			about: req.body.about,
@@ -161,8 +161,21 @@ exports.postregister = (req, res, next) => {
 				return (res.redirect('/register'));
 			} else {
 				user.save().then(item => {
+					id_to_user = item._id;
+					date = Date.now();
+					const new_photo = new Photo({
+						photo: req.file.buffer.toString('base64'),
+						photoid: date,
+						user: id_to_user,
+						isprofile: 1,
+					});
+					new_photo.save().then(item => {
+						console.log("Profile Photo Addition Successful")
+					}).catch(err => {
+						console.log(res.status(400).send(err));
+						return (res.redirect('/'));
+					});
 					console.log("User registration Successful")
-					return (res.redirect('/login'));
 				}).catch(err => {
 					console.log(res.status(400).send(err));
 					return (res.redirect('/'));
