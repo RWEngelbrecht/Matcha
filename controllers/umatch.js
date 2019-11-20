@@ -4,6 +4,17 @@ const path	= require('path');
 var currUser;
 
 
+function getInterestMatches(user, matches) {
+	var userInterests = user.interests;
+	var matchInterests = [];
+	for (var i = 0; i < matches.length; i += 1) {
+		if (matches[i].interests.some(e => userInterests.indexOf(e) >= 0)) {
+			matchInterests.push(matches[i]);
+		}
+	}
+	return (matchInterests);
+}
+
 exports.getMatchSuggestions = (req, res, next) => {
 	let message = req.flash('Something went wrong, please try again later!');
 	if (message.length > 0) {
@@ -22,13 +33,14 @@ exports.getMatchSuggestions = (req, res, next) => {
 			else if (!matches) {
 				console.log('No matches for you!');
 			}
-			// else {
-			// 	Likes.find()
-			// 	matches.forEach(element => {
-			// 		console.log(element.username);
-			// 	});
-			// }
-			return (res.render(path.resolve('views/matches'), {matches: matches}));
+			else {
+				// matches.forEach(element => {
+				// 	console.log(element.username);
+				// });
+				var interestMatches = getInterestMatches(currUser, matches);
+
+				}
+			return (res.render(path.resolve('views/matches'), {matches: interestMatches}));
 		});
 	}
 	else {
