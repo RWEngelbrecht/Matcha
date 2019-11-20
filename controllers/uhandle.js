@@ -210,7 +210,54 @@ exports.getlogout = (req, res, next) => {
 	req.session.user = 0;
 	return (res.redirect('/'));
 }
-
+// Reset Password
+// GET method
+exports.getresetpwd = (req, res, next) => {
+	return (res.render(path.resolve('views/reset_password')));
+}
+// POST method
+exports.postresetpwd = (req, res, next) => {
+	console.log("uhandle postresetpwd reached(Controller)");
+	let message = req.flash('Something went wrong, please try again later!');
+	if (message.length > 0) {
+		message = message[0];
+	} else {
+		message = null;
+	}
+	User.findOne({email: req.body.resetpwd_email}, (err, user) => {
+		if (err) {
+			console.log(res.status(400).send(err));
+		} else if (user != null) {		
+			var transporter = nodemailer.createTransport({
+				service: 'gmail',
+			auth: {
+				user: "wethinkcodematcha@gmail.com",
+				pass: "Matcha1matcha"
+			}
+			});
+			var mailOptions = {
+				from: 'wethinkcodematcha@gmail.com',
+				to: req.body.resetpwd_email,
+				subject: 'Reset your matcha account password',
+				html: `
+				<h1>Reset Your Matcha Password</h1>
+				<p>Click this <a href="http://localhost:8000/resetpassword">link</a> to reset you password.</p>
+				`
+			};
+			transporter.sendMail(mailOptions, function(error, info){
+				if (error) {
+					console.log(error);
+				} else {
+					console.log('Email sent: ' + info.response);
+				}
+			});
+		} 
+		else {
+			console.log('Invalid email');
+			return res.redirect('/login');
+		}
+	});
+}
 //test to see how session works
 exports.getUserData = (req, res, next) => {
 	console.log('Reached getUserData');
