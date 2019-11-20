@@ -33,14 +33,10 @@ const usertable = new Schema({
 		type: String,
 		required: true
 	},
-	profilephoto: {
-		type: String,
-		required: true
-	},
 	photocount: {
 		type: Number,
 		required: true,
-		default: 0,
+		default: 1,
 	},
 	fame: {
 		type: Number,

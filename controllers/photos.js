@@ -21,12 +21,9 @@ exports.getphoto = (req, res, next) => {
 // POST photo landing page
 exports.postphoto = (req, res, next) => {
     date = Date.now();
-    user = req.session.user.username
-    tohash = toString(date) + toString(user);
-    photoid = crypto.createHash('whirlpool').update(tohash).digest('hex');
     const image = new Photo({
         photo: req.file.buffer.toString('base64'),
-        photoid: photoid,
+        photoid: date,
         user: req.session.user._id,
     });
     image.save().then(item => {
@@ -40,9 +37,70 @@ exports.postphoto = (req, res, next) => {
             }
             console.log("photocount updated successfully");
         });
-        return (res.redirect('/'));
+        return (res.redirect('/photos'));
     }).catch(err => {
         console.log(res.status(400).send(err));
         return (res.redirect('/'));
+    });
+}
+// GET deletephoto page
+exports.getdeletephoto = (req, res, next) => {
+	console.log("getdeletephoto controller reached reached");
+	let message = req.flash('Something went wrong, please try again later!');
+	if (message.length > 0) {
+		message = message[0];
+	} else {
+		message = null;
+    }
+    curr_user = req.session.user._id;
+	Photo.find(
+		{user: curr_user}, (err, photos) => {
+		if (err) {
+			console.log(res.status(400).send(err));
+		}
+		else if (!photos) {
+			console.log('You Have No Photos, maybe its me being dumb though');
+		}
+		else {
+			photos.forEach(element => {
+				console.log(element._id);
+			});
+		}
+		return (res.render(path.resolve('views/photos_delete'), {photo: photos}));
+	});
+	// return (res.render(path.resolve('views/photos_delete')));
+
+}
+// POST deletephoto page
+exports.postdeletephoto = (req, res, next) => {
+    userphotocount = req.session.user.photocount;
+	console.log("postdeletephoto controller reached reached");
+	let message = req.flash('Something went wrong, please try again later!');
+	if (message.length > 0) {
+		message = message[0];
+	} else {
+		message = null;
+    }
+    curr_user = req.session.user._id;
+    to_delete = req.body.photo;
+    console.log(curr_user);
+    console.log(to_delete);
+    Photo.deleteOne({photoid: to_delete}, function(err) {
+        if (err) {
+            console.log(err);
+            return (res.redirect('/deletephoto'));
+        } else {
+            pc = req.session.user.photocount - 1;
+            req.session.user.photocount = pc;
+            key = req.session.user.verifkey;
+            console.log("Deletion Successful");
+            User.findOneAndUpdate({verifkey: key}, {$set:{photocount:pc}},function(err, doc){
+                if(err){
+                    console.log("Something wrong when updating data!");
+                }
+                console.log("photocount updated successfully");
+            });
+            return (res.redirect('/photos'))
+        }
     });
 }
