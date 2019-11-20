@@ -15,7 +15,11 @@ exports.getphoto = (req, res, next) => {
 		message = null;
     }
     userphotocount = req.session.user.photocount;
-	return (res.render(path.resolve('views/photos'), {photocount: userphotocount}));
+	loggedUser = req.session.user.username 
+	return (res.render(path.resolve('views/photos'), {
+        photocount: userphotocount, 
+        user: loggedUser
+    }));
 }
 // POST photo landing page
 exports.postphoto = (req, res, next) => {
@@ -64,8 +68,12 @@ exports.getdeletephoto = (req, res, next) => {
 			photos.forEach(element => {
 				console.log(element._id);
 			});
-		}
-		return (res.render(path.resolve('views/photos_delete'), {photo: photos}));
+        }
+        loggedUser = req.session.user.username 
+		return (res.render(path.resolve('views/photos_delete'), {
+            photo: photos,
+            user: loggedUser
+        }));
 	});
 	// return (res.render(path.resolve('views/photos_delete')));
 

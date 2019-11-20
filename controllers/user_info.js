@@ -15,7 +15,10 @@ exports.updateinfo = (req, res, next) => {
 	} else {
 		message = null;
 	}
-	return (res.render(path.resolve('views/update_info')));
+	loggedUser = req.session.user.username 
+	return (res.render(path.resolve('views/update_info'),{
+		user: loggedUser
+	}));
 }
 // GET username (updates)
 exports.getusername = (req, res, next) => {

@@ -3,21 +3,37 @@
 {% block title %}Delete A Photo{% endblock %}
 
 {% block body %}
-    {% if photo %}
-		<h1>Select a photo to delete</h1>
-            {% macro input(type, name, id, value) %}
-                <input type="{{ type }}" name="{{ name }}" id="{{ id }}" value="{{ value }}">
-            {% endmacro %}    
-            {% for current in photo %}
-                <img src="data:image/jpg;base64,{{current.photo}}" width="180" height="180">
-                {% if current.isprofile == 0%}
-				<form action="" method="POST">
-                    {{ input("hidden", "photo", "photo", current.photoid) }}
-					{{ input("submit", "delete", "delete", "delete") }}
-                </form>
+    <div class = "container mt-4">
+        <div class = "row">
+            <div class = "col-10 mx-auto bg-danger rounded">
+                <br />
+                {% if photo %}
+                <h1 class="text-warning display-4"> Choose a photo to delete</h2>
+                <br />
+                {% macro input(type, name, id, value) %}
+                    <input type="{{ type }}" name="{{ name }}" id="{{ id }}" value="{{ value }}">
+                {% endmacro %} 
+                {% for current in photo %}
+                <div class="row ml-4 mb-4">   
+                    <img class="rounded" src="data:image/jpg;base64,{{current.photo}}" width="180" height="180">
+                    {% if current.isprofile == 0%}
+				    <form action="" method="POST">
+                        {{ input("hidden", "photo", "photo", current.photoid) }}
+                        {{ input("submit", "delete", "delete", "delete") }}
+                    </form>
+                    <br />
+                    {% else %}
+                        <h4 class="text-warning ml-2">This is your profile pic</h3>
+                        <br />
+                    {% endif %}
+                    <br />
+                </div>
+                {% endfor %}
                 {% else %}
-                    <h3>This is your profile pic</h3>
-                {% endif %}
-			{% endfor %}
-	{% endif %}
+                <h1 class="text-warning display-4">  You don't have any photos to delete</h1>
+	            {% endif %}
+            </div>
+        </div>
+    </div>    
+		
 {% endblock %}
