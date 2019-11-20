@@ -68,9 +68,30 @@
 				<input type="hidden" name="_csrf" value="<%= csrfToken %>">
 				<br />
 				<button class="btn btn-warning" type="submit">Register Now</button>
+				<br />
 			</form>
 			<br />
 		</div>	
+	</div>
+	<div class="row">
+		<div class="col">
+			<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#mymodal">Click me</button>
+		</div>
+		<div class="modal fade" id="mymodal">
+			<div class="modal-dialogue">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3>Popup title</h3>
+					</div>
+					<div class="modal-body">
+						<p>yay, tis working!</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 {% endblock %}
