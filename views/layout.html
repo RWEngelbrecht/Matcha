@@ -7,15 +7,20 @@
 	<!-- Following meta tag probably not needed as IE has been updated -->
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>Matcha</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 </head>
 <body>
 	<header>
-		<h1>{%block title %}{% endblock %}</h1>
-		<nav>
-			<ul>
-				{% block navlist %}{% endblock %}
-			</ul>
-		</nav>
+		<div class="row">
+			<img class="col" src="../images/matcha_logo.png"/>
+				<div class="btn-group mr-2" role="group">
+					<button class= "btn btn-warning"><a href="/" class="text-danger">Home</a></button>
+					<button class= "btn btn-warning"><a href="/login" class="text-danger">Login</a></button>
+					<button class= "btn btn-warning"><a href="/register" class="text-danger">Register</a></button>
+				</div>
+		</div>
 	</header>
 	<section role="main">
 		{% block body %}{% endblock %}

@@ -72,8 +72,19 @@ const usertable = new Schema({
 		type: Number,
 		required: true,
 		default: 50,
+	},
+	interests: [{
+		type: String,
+		default: "Not interesting"
+	}],
+	lastSeen: {
+		type: Date,
+		default: Date.now()
+	},
+	loggedIn: {
+		type: Boolean,
+		default: false
 	}
-	// TODO INTERESTS
 	// TODO LOCATION.
 });
 

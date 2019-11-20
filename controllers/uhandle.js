@@ -56,6 +56,11 @@ exports.postlogin = (req, res, next) => {
 		}
 		else if (user && user.verified == true) {
 			console.log('Login Success!');
+			User.findOneAndUpdate({_id: user._id}, {$set: {loggedIn: true}}, err => {
+				if (err){
+					console.log('Something went wrong while updating logged in status!');
+				}
+			});
 			sessionData = req.session;
 			sessionData.user = user;
 			return res.redirect('/');
@@ -147,11 +152,10 @@ exports.postregister = (req, res, next) => {
 			about: req.body.about,
 			verifkey: vkey,
 			maxdist: req.body.dist,
-			// interests: 'test',
+			interests: req.body.interests
 		});
 		// query schema to see if username or email exists
 		User.findOne({$or: [ {username: user.username}, {email: user.email} ]}, (err, docs) => {
-			console.log(docs);
 			if (docs != null) {
 				console.log("Invalid username or password.");
 				return (res.redirect('/register'));
@@ -185,6 +189,11 @@ exports.getconfirm = (req, res, next) => {
 // Logout
 // GET method. Doesnt really matter get, post, all.
 exports.getlogout = (req, res, next) => {
+	User.findOneAndUpdate({_id: req.session.user._id}, {$set: {lastSeen: Date.now(), loggedIn: false}}, err => {
+		if (err) {
+			console.log("Something went wrong while logging out!");
+		}
+	})
 	req.session.user = 0;
 	return (res.redirect('/'));
 }
@@ -193,6 +202,6 @@ exports.getlogout = (req, res, next) => {
 exports.getUserData = (req, res, next) => {
 	console.log('Reached getUserData');
 	sessionData = req.session;
-	console.log(sessionData.user.username);
-	return (res.render(path.resolve('views/userdata')));
+	console.log(sessionData.user.interests);
+	return (res.render(path.resolve('views/index')));
 }
