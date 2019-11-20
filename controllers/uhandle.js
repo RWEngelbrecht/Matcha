@@ -180,7 +180,8 @@ exports.postregister = (req, res, next) => {
 						isprofile: 1,
 					});
 					new_photo.save().then(item => {
-						console.log("Profile Photo Addition Successful")
+						console.log("Profile Photo Addition Successful");
+						return (res.redirect('/'));
 					}).catch(err => {
 						console.log(res.status(400).send(err));
 						return (res.redirect('/'));
