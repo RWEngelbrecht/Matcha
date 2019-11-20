@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+
+{% block title %}Delete A Photo{% endblock %}
+
+{% block body %}
+	{% if photo %}
+		<h1>Select a photo to delete</h1>
+            {% for current in photo %}
+                <img src="data:image/jpg;base64,{{current.photo}}" width="180" height="180">
+				<form>
+					<input type="hidden" name="photo" value="{{current._id}}">
+					<input type="submit" name="delete" value="delete">
+				</form>
+			{% endfor %}
+	{% endif %}
+{% endblock %}

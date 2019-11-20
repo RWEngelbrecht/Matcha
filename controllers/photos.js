@@ -40,9 +40,58 @@ exports.postphoto = (req, res, next) => {
             }
             console.log("photocount updated successfully");
         });
-        return (res.redirect('/'));
+        return (res.redirect('/photos'));
     }).catch(err => {
         console.log(res.status(400).send(err));
         return (res.redirect('/'));
     });
+}
+// GET deletephoto page
+exports.getdeletephoto = (req, res, next) => {
+	console.log("getdeletephoto controller reached reached");
+	let message = req.flash('Something went wrong, please try again later!');
+	if (message.length > 0) {
+		message = message[0];
+	} else {
+		message = null;
+    }
+    curr_user = req.session.user._id;
+	Photo.find(
+		{user: curr_user}, (err, photos) => {
+		if (err) {
+			console.log(res.status(400).send(err));
+		}
+		else if (!photos) {
+			console.log('You Have No Photos, maybe its me being dumb though');
+		}
+		else {
+			photos.forEach(element => {
+				console.log(element._id);
+			});
+		}
+		return (res.render(path.resolve('views/photos_delete'), {photo: photos}));
+	});
+	// return (res.render(path.resolve('views/photos_delete')));
+
+}
+// POST deletephoto page
+exports.postdeletephoto = (req, res, next) => {
+	console.log("postdeletephoto controller reached reached");
+	let message = req.flash('Something went wrong, please try again later!');
+	if (message.length > 0) {
+		message = message[0];
+	} else {
+		message = null;
+    }
+    curr_user = req.session.user._id;
+    Photo.deleteOne({user: curr_user}, function(err) {
+        if (err) {
+            console.log("Deletion Failed");
+            return (res.redirect('/deletephoto'));
+        }
+        req.session.user.photocount--;
+        console.log("Deletion Successful");
+        return (res.redirect('/deletephoto'));
+    });
+    return (res.redirect('/photos'));
 }

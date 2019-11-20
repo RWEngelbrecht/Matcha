@@ -4,7 +4,7 @@
 
 {% block body %}
 
-{% if photocount <= 4 %}
+{% if photocount < 4 %}
     <h1>Upload or Take a photo</h1>
     <form method="POST" action="" enctype="multipart/form-data">
         <input type="file" name="new_photo" id="new_photo" accept="image/*"><br>
@@ -13,7 +13,7 @@
     </form>
     <a href="/takephoto">Take a photo</a>
 {% else %}
-    <h1>Delete a photo</h1>
+    <a href="/deletephoto">Delete a photo</a>
 {% endif %}
 
 
