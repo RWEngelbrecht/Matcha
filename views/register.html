@@ -57,6 +57,23 @@
 		<label for="photo">Profile Picture</label>
 		<input type="file" name="photo" id="photo" accept="image/*">
 	</div>
+	<div class="form-control">
+		<label for="interests">Interests</label>
+		<div class="interests">
+			<label for="Travel">Travel</label>
+				<input type="checkbox" name="Travel" id="interests" value="Travel">
+			<label for="International politics">International politics</label>
+				<input type="checkbox" name="International politics" id="interests" value="International politics">
+			<input type="checkbox" name="Repetitive Music" id="interests" value="Repetitive Music">
+			<input type="checkbox" name="Salami" id="interests" value="Salami">
+			<input type="checkbox" name="Octopi/Octopuses/Octopodes" id="interests" value="Octopi/Octopuses/Octopodes">
+			<input type="checkbox" name="Dating Apps" id="interests" value="Dating Apps">
+			<input type="checkbox" name="Western ideas of meditation" id="interests" value="Western ideas of meditation">
+			<input type="checkbox" name="Alcohol" id="interests" value="Alcohol">
+			<input type="checkbox" name="Things" id="interests" value="Things">
+			<input type="checkbox" name="Interesting things" id="interests" value="Interesting things">
+		</div>
+	</div>
 	<input type="hidden" name="_csrf" value="<%= csrfToken %>">
 	<button type="submit">Register Now</button>
 </form>
