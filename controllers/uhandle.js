@@ -161,33 +161,26 @@ exports.postregister = (req, res, next) => {
 				return (res.redirect('/register'));
 			} else {
 				user.save().then(item => {
+					id_to_user = item._id;
+					date = Date.now();
+					const new_photo = new Photo({
+						photo: req.file.buffer.toString('base64'),
+						photoid: date,
+						user: id_to_user,
+						isprofile: 1,
+					});
+					new_photo.save().then(item => {
+						console.log("Profile Photo Addition Successful")
+					}).catch(err => {
+						console.log(res.status(400).send(err));
+						return (res.redirect('/'));
+					});
 					console.log("User registration Successful")
 				}).catch(err => {
 					console.log(res.status(400).send(err));
 					return (res.redirect('/'));
 				});
 			}
-		});
-		User.findOne({email: req.body.email}, (err, person) => {
-			if (err || person == null) {
-				console.log("ERROR WHEN TRYING TO FIND THE USER OWNER IN THE REG CONTROLLER");
-			}
-			// Adding profile photo to the photos document instead of the users document
-			date = Date.now();
-			const new_photo = new Photo({
-				photo: req.file.buffer.toString('base64'),
-				photoid: date,
-				user: person._id,
-				isprofile: 1,
-			});
-			new_photo.save().then(item => {
-				// req.session.user.photocount = 1;
-				console.log("Profile Photo Addition Successful")
-				// return (res.redirect('/photos'));
-			}).catch(err => {
-				console.log(res.status(400).send(err));
-				return (res.redirect('/'));
-			});
 		});
 	}
 }
