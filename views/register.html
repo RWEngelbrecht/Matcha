@@ -46,7 +46,10 @@
 					</div>
 				</div>
 				<br />
-				<div >
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<span class="input-group-text" id="basic-addon1">@</span>
+					</div>
 					<input class="form-control" type="text" name="username" id="username" placeholder="Username">
 				</div>
 				<br />
@@ -79,29 +82,25 @@
 				</div>
 				<br />
 				<label class="h4 text-warning" for="photo">Interests</label>
-					<div class="interests">
-						<table class="text-warning">
-							<tr>
-								{{ interest("Travel") }}
-								{{ interest("International politics") }}
-							</tr>
-							<tr>
-								{{ interest("Salami") }}
-								{{ interest("Octopi/Octopuses/Octopodes") }}
-							</tr>
-							<tr>
-								{{ interest("Alcohol") }}
-								{{ interest("Western ideas of meditation") }}
-							</tr>
-							<tr>
-								{{ interest("Repetitive Music") }}
-								{{ interest("Dating Apps") }}
-							</tr>
-							<tr>
-								{{ interest("Interesting Things") }}
-							</tr>
-						</table>
+				<div class="interests text-danger">
+					<div class="row mt-2">
+						<div class="col-6 mx-auto ml-3 bg-warning rounded-pill text-center">{{ interest("Octopi/Octopuses/Octopodes") }}</div>
+						<div class="col-3 mx-auto ml-3 bg-warning rounded-pill text-center">{{ interest("Alcohol") }}</div>
 					</div>
+					<div class="row  mt-2">
+						<div class="col-2 mx-auto bg-warning rounded-pill text-center">{{ interest("Travel") }}</div>
+						<div class="col-5 mx-auto ml-3 bg-warning rounded-pill text-center">{{ interest("International politics") }}</div>
+						<div class="col-2 mx-auto ml-3 bg-warning rounded-pill text-center">{{ interest("Salami") }}</div>
+					</div>
+					<div class="row mt-2">
+						<div class="col-4 mx-auto ml-3 bg-warning rounded-pill text-center">{{ interest("Dating Apps") }}</div>
+						<div class="col-4 mx-auto ml-3 bg-warning rounded-pill text-center">{{ interest("Interesting Things") }}</div>
+					</div>
+					<div class="row mt-2">
+						<div class="col-6 mx-auto ml-3 bg-warning rounded-pill text-center">{{ interest("Western ideas of meditation") }}</div>
+						<div class="col-4 mx-auto ml-3 bg-warning rounded-pill text-center">{{ interest("Repetitive Music") }}</div>
+					</div>
+				</div>
 				<input type="hidden" name="_csrf" value="<%= csrfToken %>">
 				<br />
 				<button class="btn btn-warning" type="submit">Register Now</button>
