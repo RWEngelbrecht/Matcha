@@ -10,21 +10,59 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
-<body>
+<body class="bg-light mt-4">
 	<header>
-		<div class="row">
-			<img class="col" src="/images/matcha_logo.png"/>
-			<div class="btn-group mr-2" role="group">
-				<button class= "btn btn-warning"><a href="/" class="text-danger">Home</a></button>
-				<button class= "btn btn-warning"><a href="/login" class="text-danger">Login</a></button>
-				<button class= "btn btn-warning"><a href="/register" class="text-danger">Register</a></button>
+		<!-- Not working for mobile yet-->
+		<nav class="navbar navbar-light bg-light">
+			<a class="navbar-brand" href="/index.html">
+				
+			</a>
+		</nav>
+		<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
+			<a class="navbar-brand" href="/index">
+				<img width="240" height="60" src="/images/matcha_logo.png"/>
+			</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+			  <span class="navbar-toggler-icon"></span>
+			</button>
+			<!-- Navbar links -->
+			<div class="collapse navbar-collapse" id="navbarNav">
+			  	<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link text-danger" href="/">Profile</a>
+					</li>
+					<li class="nav-item">
+					  <a class="nav-link text-danger" href="/">Messages</a>
+					</li>
+					<li class="nav-item active">
+						<a class="nav-link text-danger" href="/">Matches</a>
+					</li>
+			  	</ul>
 			</div>
-		</div>
+			<!-- Navbar links end -->
+			<!-- Search bar -->
+			<form class="form-inline">
+				<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+				<button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Search</button>
+			</form>
+			<!-- Search bar ends -->
+		</nav>
 	</header>
-	<section role="main">
+	<section class="mt-4 mb-4"role="main">
+		<br />
 		{% block body %}{% endblock %}
+		<br />
 	</section>
+	<footer>
+		<br />
+		<nav class="navbar fixed-bottom bg-light">
+			<div class="row mx-auto float-right">
+				<button class="btn btn-warning text-danger font-weight-bold" href="/logout">Logout</button>
+				<button class="ml-2 btn btn-warning text-danger font-weight-bold" href="/login">Login</button>
+				<button class="ml-2 btn btn-warning text-danger font-weight-bold" href="/updateinfo">Update my info</button>
+				<button class="ml-2 btn btn-warning text-danger font-weight-bold" href="/register">Register</button>
+			</div>
+		</nav>
+	</footer>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 </body>
-<li><a href="/logout">Logout</a></li>
-<li><a href="/updateinfo">Update My Info</a></li>

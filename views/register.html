@@ -76,34 +76,35 @@
 				</div>
 				<br />
 				<div>
-					<label class="h4 text-warning" for="photo">Profile Picture</label>
+					<h4 class="text-warning text-center" for="photo">Profile Picture</h4>
 					<br />
-					<input type="file" name="photo" id="photo" accept="image/*">
+					<input class="mx-auto" type="file" name="photo" id="photo" accept="image/*">
 				</div>
 				<br />
-				<label class="h4 text-warning" for="photo">Interests</label>
+				<h4 class="text-warning text-center" for="photo">Interests</h4>
+				<br />
 				<div class="interests text-danger">
 					<div class="row mt-2">
-						<div class="col-6 mx-auto ml-3 bg-warning rounded-pill text-center">{{ interest("Octopi/Octopuses/Octopodes") }}</div>
-						<div class="col-3 mx-auto ml-3 bg-warning rounded-pill text-center">{{ interest("Alcohol") }}</div>
+						<div class="font-weight-bold col-6 mx-auto ml-3 bg-warning rounded-pill text-center">{{ interest("Octopi/Octopuses/Octopodes") }}</div>
+						<div class="font-weight-bold col-3 mx-auto ml-3 bg-warning rounded-pill text-center">{{ interest("Alcohol") }}</div>
 					</div>
 					<div class="row  mt-2">
-						<div class="col-2 mx-auto bg-warning rounded-pill text-center">{{ interest("Travel") }}</div>
-						<div class="col-5 mx-auto ml-3 bg-warning rounded-pill text-center">{{ interest("International politics") }}</div>
-						<div class="col-2 mx-auto ml-3 bg-warning rounded-pill text-center">{{ interest("Salami") }}</div>
+						<div class="font-weight-bold col-2 mx-auto bg-warning rounded-pill text-center">{{ interest("Travel") }}</div>
+						<div class="font-weight-bold col-5 mx-auto ml-3 bg-warning rounded-pill text-center">{{ interest("International politics") }}</div>
+						<div class="font-weight-bold col-2 mx-auto ml-3 bg-warning rounded-pill text-center">{{ interest("Salami") }}</div>
 					</div>
 					<div class="row mt-2">
-						<div class="col-4 mx-auto ml-3 bg-warning rounded-pill text-center">{{ interest("Dating Apps") }}</div>
-						<div class="col-4 mx-auto ml-3 bg-warning rounded-pill text-center">{{ interest("Interesting Things") }}</div>
+						<div class="font-weight-bold col-4 mx-auto ml-3 bg-warning rounded-pill text-center">{{ interest("Dating Apps") }}</div>
+						<div class="font-weight-bold col-4 mx-auto ml-3 bg-warning rounded-pill text-center">{{ interest("Interesting Things") }}</div>
 					</div>
 					<div class="row mt-2">
-						<div class="col-6 mx-auto ml-3 bg-warning rounded-pill text-center">{{ interest("Western ideas of meditation") }}</div>
-						<div class="col-4 mx-auto ml-3 bg-warning rounded-pill text-center">{{ interest("Repetitive Music") }}</div>
+						<div class="font-weight-bold col-6 mx-auto ml-3 bg-warning rounded-pill text-center">{{ interest("Western ideas of meditation") }}</div>
+						<div class="font-weight-bold col-4 mx-auto ml-3 bg-warning rounded-pill text-center">{{ interest("Repetitive Music") }}</div>
 					</div>
 				</div>
 				<input type="hidden" name="_csrf" value="<%= csrfToken %>">
 				<br />
-				<button class="btn btn-warning" type="submit">Register Now</button>
+				<button class="mx-auto btn btn-warning text-danger font-weight-bold" type="submit">Register Now</button>
 				<br />
 			</form>
 			<br />
