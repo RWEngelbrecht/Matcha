@@ -27,7 +27,10 @@ exports.gethome = (req, res, next) => {
 	if (req.session.user === 0) {
 		return (res.redirect('/login'));
 	}
-	return (res.render(path.resolve('views/index'), {userLogged: logged}));
+	loggedUser = req.session.user.username 
+	return (res.render(path.resolve('views/index'),{
+		user: loggedUser
+	}));
 }
 // Login
 // GET method
@@ -39,7 +42,10 @@ exports.getlogin = (req, res, next) => {
 	} else {
 		message = null;
 	}
-	return (res.render(path.resolve('views/login')));
+	loggedUser = 0;
+	return (res.render(path.resolve('views/login'),{
+		user: loggedUser
+	}));
 }
 // POST method
 exports.postlogin = (req, res, next) => {
@@ -82,7 +88,11 @@ exports.getregister = (req, res, next) => {
 	} else {
 		message = null;
 	}
-	return (res.render(path.resolve('views/register')));
+	loggedUser = 0;
+	return (res.render(path.resolve('views/register'),{
+		user: loggedUser
+	}));
+	return (res.render(path.resolve('views/register'))); 
 }
 // POST method
 exports.postregister = (req, res, next) => {
@@ -218,3 +228,4 @@ exports.getUserData = (req, res, next) => {
 	console.log(sessionData.user.interests);
 	return (res.render(path.resolve('views/index')));
 }
+
