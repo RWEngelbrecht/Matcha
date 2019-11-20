@@ -5,11 +5,13 @@ const Schema = mongoose.Schema;
 const liketable = new Schema({
 	likeBy: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: 'User'
+		ref: 'User',
+		required: true
 	},
 	likedUser: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: 'User'
+		ref: 'User',
+		required: true
 	},
 	dateLiked: {
 		type: Date,
