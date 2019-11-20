@@ -8,17 +8,16 @@ var storage = multer.memoryStorage();
 var upload = multer({ storage: storage });
 
 console.log("uhandle reached(Routes)");
-// user router.all so it can handle GET, POST and PUT requests,
-// this way we dont have to have a controller for GET and POST seperately.
+// HOME
 router.get('/', uhandle.gethome);
-
+// LOGIN
 router.get('/login', uhandle.getlogin);
 router.post('/login', [
 	body('email', 'Please enter a valid email address').isEmail().normalizeEmail(),
 	body('password', 'Password must have at least 8 characters alphanumeric').isAlphanumeric().trim().isLength({ min: 8})
 ],
 uhandle.postlogin);
-
+// REGISTER
 router.get('/register', uhandle.getregister);
 router.post('/register', upload.single('photo'), [
 	body('email', 'Please enter a valid email address').isEmail().normalizeEmail(),
@@ -35,10 +34,24 @@ router.post('/register', upload.single('photo'), [
 	body('about').isAlphanumeric().trim(),
 ],
 uhandle.postregister);
-
+// CONFIRM EMAIL
 router.get('/confirm', uhandle.getconfirm);
+// LOGOUT
 router.get('/logout', uhandle.getlogout);
-
+// IDK @ RIGARDT?
 router.get('/userdata', uhandle.getUserData);
-
+// SEND RESET PASSWORD.
+router.get('/resetpwd', uhandle.getresetpwd);
+router.post('/resetpwd', [
+	body('resetpwd_email', 'Please enter a valid email address').isEmail().normalizeEmail(),
+],
+uhandle.postresetpwd);
+// ACTUALLY RESET PASSWORD
+router.get('/resetpassword', uhandle.getresetpassword);
+router.post('/resetpassword', [
+	body('confirm_email', 'Please enter a valid email address').isEmail().normalizeEmail(),
+	body('new_pass_forgot', 'Password must have at least 8 characters alphanumeric').isAlphanumeric().trim().isLength({ min: 8}),
+	body('confirm_new_pass_forgot', 'Password must have at least 8 characters alphanumeric').isAlphanumeric().trim().isLength({ min: 8}),
+],
+uhandle.postresetpassword);
 module.exports = router;
