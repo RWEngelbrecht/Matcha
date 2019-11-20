@@ -147,7 +147,7 @@ exports.postregister = (req, res, next) => {
 			about: req.body.about,
 			verifkey: vkey,
 			maxdist: req.body.dist,
-			// interests: 'test',
+			interests: req.body.Travel
 		});
 		// query schema to see if username or email exists
 		User.findOne({$or: [ {username: user.username}, {email: user.email} ]}, (err, docs) => {
@@ -193,6 +193,6 @@ exports.getlogout = (req, res, next) => {
 exports.getUserData = (req, res, next) => {
 	console.log('Reached getUserData');
 	sessionData = req.session;
-	console.log(sessionData.user.username);
-	return (res.render(path.resolve('views/userdata')));
+	console.log(sessionData.user.interests);
+	return (res.render(path.resolve('views/index')));
 }
