@@ -69,8 +69,12 @@ exports.getdeletephoto = (req, res, next) => {
 			photos.forEach(element => {
 				console.log(element._id);
 			});
-		}
-		return (res.render(path.resolve('views/photos_delete'), {photo: photos}));
+        }
+        loggedUser = req.session.user.username 
+		return (res.render(path.resolve('views/photos_delete'), {
+            photo: photos,
+            user: loggedUser
+        }));
 	});
 	// return (res.render(path.resolve('views/photos_delete')));
 
