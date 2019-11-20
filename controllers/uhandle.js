@@ -147,11 +147,10 @@ exports.postregister = (req, res, next) => {
 			about: req.body.about,
 			verifkey: vkey,
 			maxdist: req.body.dist,
-			interests: req.body.Travel
+			interests: req.body.interests
 		});
 		// query schema to see if username or email exists
 		User.findOne({$or: [ {username: user.username}, {email: user.email} ]}, (err, docs) => {
-			console.log(docs);
 			if (docs != null) {
 				console.log("Invalid username or password.");
 				return (res.redirect('/register'));
