@@ -57,12 +57,36 @@
 		<br />
 		<nav class="navbar fixed-bottom bg-light">
 			<div class="row mx-auto float-right">
-				<button class="btn btn-warning text-danger font-weight-bold"><a href="/logout">Logout</a></button>
-				<button class="ml-2 btn btn-warning text-danger font-weight-bold"><a href="/login">Login</a></button>
-				<button class="ml-2 btn btn-warning text-danger font-weight-bold"><a href="/updateinfo">Update my info</a></button>
-				<button class="ml-2 btn btn-warning text-danger font-weight-bold"><a href="/register">Register</a></button>
+				<a href="/logout"><button class="btn btn-warning text-danger font-weight-bold" >Logout</button></a>
+				<a href="/login"><button class="ml-2 btn btn-warning text-danger font-weight-bold">Login</button></a>
+				<a href="/updateinfo"><button class="ml-2 btn btn-warning text-danger font-weight-bold">Update my info</button></a>
+				<a  href="/register"><button class="ml-2 btn btn-warning text-danger font-weight-bold">Register</button></a>
+				<a class="btn btn-warning text-danger font-weight-bold ml-2" href="#" data-toggle="modal" data-target="#aboutUs">About us</a>
 			</div>
 		</nav>
+		<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="modal fade" id="aboutUs">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h1 class="text-danger">About us</h1>
+									</div>
+									<div class="modal-body text-danger">
+											© ayano - rengelbr - gmayou
+									</div>
+									<div class="modal-footer">
+										<input class="btn btn-danger" data-dismiss="modal" value="Close">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 	</footer>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+	<script src="http://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 </body>
