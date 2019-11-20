@@ -16,6 +16,11 @@ const phototable = new Schema({
         type: Schema.Types.ObjectId,
         required: true,
     },
+    isprofile: {
+        type: Boolean,
+        default: 0,
+        required: true,
+    }
 });
 
 module.exports = mongoose.model('Photo', phototable);

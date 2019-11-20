@@ -1,4 +1,5 @@
 const User	= require('../models/umod');
+const Photo	= require('../models/photos');
 const path	= require('path');
 const swig	= require('../app.js');
 const crypto = require('crypto');
@@ -146,7 +147,6 @@ exports.postregister = (req, res, next) => {
 			age: req.body.age,
 			gender: req.body.gender.toLowerCase(),
 			genderpref: req.body.gender_pref.toLowerCase(),
-			profilephoto: req.file.buffer.toString('base64'),
 			agepreflower: req.body.age - 5,
 			ageprefupper: parseInt(req.body.age) + 10,
 			about: req.body.about,
@@ -162,12 +162,32 @@ exports.postregister = (req, res, next) => {
 			} else {
 				user.save().then(item => {
 					console.log("User registration Successful")
-					return (res.redirect('/login'));
 				}).catch(err => {
 					console.log(res.status(400).send(err));
 					return (res.redirect('/'));
 				});
 			}
+		});
+		User.findOne({email: req.body.email}, (err, person) => {
+			if (err || person == null) {
+				console.log("ERROR WHEN TRYING TO FIND THE USER OWNER IN THE REG CONTROLLER");
+			}
+			// Adding profile photo to the photos document instead of the users document
+			date = Date.now();
+			const new_photo = new Photo({
+				photo: req.file.buffer.toString('base64'),
+				photoid: date,
+				user: person._id,
+				isprofile: 1,
+			});
+			new_photo.save().then(item => {
+				// req.session.user.photocount = 1;
+				console.log("Profile Photo Addition Successful")
+				// return (res.redirect('/photos'));
+			}).catch(err => {
+				console.log(res.status(400).send(err));
+				return (res.redirect('/'));
+			});
 		});
 	}
 }
