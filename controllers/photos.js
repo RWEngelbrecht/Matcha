@@ -15,7 +15,11 @@ exports.getphoto = (req, res, next) => {
 		message = null;
     }
     userphotocount = req.session.user.photocount;
-	return (res.render(path.resolve('views/photos'), {photocount: userphotocount}));
+	loggedUser = req.session.user.username 
+	return (res.render(path.resolve('views/photos'), {
+        photocount: userphotocount, 
+        user: loggedUser
+    }));
 
 }
 // POST photo landing page
