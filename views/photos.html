@@ -3,23 +3,27 @@
 {% block title %}Matcha{% endblock %}
 
 {% block body %}
-
-<a href="/editprofilepicture">Update profile picture</a><br >
-
-{% if photocount <= 4 %}
-    <h1>Upload or Take a photo</h1>
-    <form method="POST" action="" enctype="multipart/form-data">
-        <input type="file" name="new_photo" id="new_photo" accept="image/*"><br>
-        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-        <button type="submit">Add new photo</button><br><br><br>
-    </form>
-    <a href="/takephoto">Take a photo</a>
-{% else %}
-    <a href="/deletephoto">Delete a photo</a>
-{% endif %}
-
-
-<div>
-	<li><a href="/">Back to home</a></li>
+<div class = "container mt-4">
+    <div class = "row">
+        <div class = "col-10 mx-auto bg-danger rounded">
+            <br />
+            <h1 class="text-warning display-4">Your photos</h2>
+            <br />
+            <a class="text-decoration-none btn btn-warning text-danger mb-4" href="/editprofilepicture">Update profile picture</a>
+            <br >
+            {% if photocount <= 4 %}
+                <h3 class="text-warning">Upload or Take a photo</h3>
+                <form method="POST" action="" enctype="multipart/form-data">
+                    <input class="btn btn-warning mt-4" type="file" name="new_photo" id="new_photo" accept="image/*"><br>
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <button class="btn btn-warning text-danger mt-4" type="submit">Add new photo</button><br><br><br>
+                </form>
+                <a class="btn btn-warning text-danger mb-4" href="/takephoto">Take a photo</a>
+            {% endif %}
+                <br />
+                <a class="btn btn-warning text-danger mb-4" href="/deletephoto">Delete a photo</a>
+        </div>
+    </div>
 </div>
+
 {% endblock %}
