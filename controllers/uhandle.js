@@ -56,6 +56,11 @@ exports.postlogin = (req, res, next) => {
 		}
 		else if (user && user.verified == true) {
 			console.log('Login Success!');
+			User.findOneAndUpdate({_id: user._id}, {$set: {loggedIn: true}}, err => {
+				if (err){
+					console.log('Something went wrong while updating logged in status!');
+				}
+			});
 			sessionData = req.session;
 			sessionData.user = user;
 			return res.redirect('/');
@@ -184,6 +189,11 @@ exports.getconfirm = (req, res, next) => {
 // Logout
 // GET method. Doesnt really matter get, post, all.
 exports.getlogout = (req, res, next) => {
+	User.findOneAndUpdate({_id: req.session.user._id}, {$set: {lastSeen: Date.now(), loggedIn: false}}, err => {
+		if (err) {
+			console.log("Something went wrong while logging out!");
+		}
+	})
 	req.session.user = 0;
 	return (res.redirect('/'));
 }
