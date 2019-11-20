@@ -21,5 +21,16 @@ router.post('/editprofilepicture', upload.single('new_profile_photo'), [
     body('new_photo'),
 ],
 photo.posteditprofilepicture);
-
+// TAKE PHOTO
+router.get('/takephoto', photo.getakephoto);
+router.post('/takephoto', [
+    body('webcamimage'),
+],
+photo.postakephoto);
+// TAKE PROFILE PHOTO
+router.get('/takeprofilephoto', photo.getakeprofilephoto);
+router.post('/takeprofilephoto', [
+    body('webcamimage'),
+],
+photo.postakeprofilephoto);
 module.exports = router;

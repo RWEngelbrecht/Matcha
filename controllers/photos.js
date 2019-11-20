@@ -20,7 +20,6 @@ exports.getphoto = (req, res, next) => {
         photocount: userphotocount, 
         user: loggedUser
     }));
-
 }
 // POST photo landing page
 exports.postphoto = (req, res, next) => {
@@ -165,6 +164,128 @@ exports.posteditprofilepicture = (req, res, next) => {
             const newimage = new Photo ({
                 isprofile: 1,
                 photo: req.file.buffer.toString('base64'),
+                photoid: date,
+                user: req.session.user._id,
+            });
+            newimage.save().then( item => {
+                console.log("new profile picture added");
+                key = req.session.user.verifkey;
+                pc = req.session.user.photocount + 1;
+                req.session.user.photocount = pc;
+                console.log("Photo Addition Successful")
+                User.findOneAndUpdate({verifkey: key}, {$set:{photocount:pc}},function(err, doc){
+                    if(err){
+                        console.log("Something wrong when updating data!");
+                    }
+                    console.log("photocount updated successfully");
+                });
+                return (res.redirect('/photos'));
+            }).catch(err => {
+                console.log(res.status(400).send(err));
+                return (res.redirect('/'));
+            });
+        })
+    }
+}
+// GET takephoto (BONUS)
+exports.getakephoto = (req, res, next) => {
+	console.log("gettakephoto controller reached reached");
+	let message = req.flash('Something went wrong, please try again later!');
+	if (message.length > 0) {
+		message = message[0];
+	} else {
+		message = null;
+    }
+	return (res.render(path.resolve('views/takephoto')));
+}
+// POST takephoto (BONUS)
+exports.postakephoto = (req, res, next) => {
+    console.log("gettakephoto controller reached reached");
+	let message = req.flash('Something went wrong, please try again later!');
+	if (message.length > 0) {
+		message = message[0];
+	} else {
+		message = null;
+    }
+    date = Date.now();
+    var ret = req.body.webcamimage.replace('data:image/png;base64,','');
+    const image = new Photo({
+        photo: ret,
+        photoid: date,
+        user: req.session.user._id,
+    });
+    image.save().then(item => {
+        key = req.session.user.verifkey;
+        pc = req.session.user.photocount + 1;
+        req.session.user.photocount = pc;
+        console.log("Photo Addition Successful")
+        User.findOneAndUpdate({verifkey: key}, {$set:{photocount:pc}},function(err, doc){
+            if(err){
+                console.log("Something wrong when updating data!");
+            }
+            console.log("photocount updated successfully");
+        });
+        return (res.redirect('/photos'));
+    }).catch(err => {
+        console.log(res.status(400).send(err));
+        return (res.redirect('/'));
+    });
+}
+// takeprofilephoto
+// GET takeprofilephoto (BONUS)
+exports.getakeprofilephoto = (req, res, next) => {
+	console.log("gettakeprofilephoto controller reached reached");
+	let message = req.flash('Something went wrong, please try again later!');
+	if (message.length > 0) {
+		message = message[0];
+	} else {
+		message = null;
+    }
+	return (res.render(path.resolve('views/takeprofilephoto')));
+}
+// POST takeprofilephoto (BONUS)
+exports.postakeprofilephoto = (req, res, next) => {
+    console.log("postakeprofilephoto controller reached reached");
+	let message = req.flash('Something went wrong, please try again later!');
+	if (message.length > 0) {
+		message = message[0];
+	} else {
+		message = null;
+    }
+    userid = req.session.user._id;
+    var ret = req.body.webcamimage.replace('data:image/png;base64,','');
+    if (req.session.user.photocount === 5) {
+        Photo.deleteOne({user: userid, isprofile: 1}, function(err, doc) {
+            if (err) {
+                console.log("failed to delete a photo");
+                return (res.redirect('/editprofilepicture'));
+            };
+        });
+        date = Date.now();
+        const image = new Photo({
+            isprofile: 1,
+            photo: ret,
+            photoid: date,
+            user: req.session.user._id,
+        });
+        image.save().then( item => {
+            console.log("photocount updated successfully");
+            return (res.redirect('/photos'));
+        }).catch(err => {
+            console.log(res.status(400).send(err));
+            return (res.redirect('/'));
+        });
+    }
+    if (req.session.user.photocount <= 4) {
+        Photo.findOneAndUpdate({user: userid, isprofile: 1}, {$set:{isprofile: 0}}, function(err, doc) {
+            if (err) {
+                console.log("failed to update");
+                return (res.redirect('/photos'));
+            }
+            date = Date.now();
+            const newimage = new Photo({
+                isprofile: 1,
+                photo: ret,
                 photoid: date,
                 user: req.session.user._id,
             });
