@@ -14,8 +14,10 @@
                     <input type="{{ type }}" name="{{ name }}" id="{{ id }}" value="{{ value }}">
                 {% endmacro %} 
                 {% for current in photo %}
-                <div class="row ml-4 mb-4">   
-                    <img class="rounded" src="data:image/jpg;base64,{{current.photo}}" width="180" height="180">
+                <div class="row ml-4 mb-4">
+                    <div class="shadow-lg mr-2">   
+                    <img class="rounded border-warning" src="data:image/jpg;base64,{{current.photo}}" width="180" height="180">
+                    </div>
                     {% if current.isprofile == 0%}
 				    <form action="" method="POST">
                         {{ input("hidden", "photo", "photo", current.photoid) }}
@@ -23,14 +25,15 @@
                     </form>
                     <br />
                     {% else %}
-                        <h4 class="text-warning ml-2">This is your profile pic</h3>
-                        <br />
+                        <div class="row">
+                        <h4 class="text-warning ml-4">This is your profile pic</h4>
+                        </div>
                     {% endif %}
                     <br />
                 </div>
                 {% endfor %}
                 {% else %}
-                <h1 class="text-warning display-4">  You don't have any photos to delete</h1>
+                <h1 class="text-warning display-4">You don't have any photos to delete</h1>
 	            {% endif %}
             </div>
         </div>
