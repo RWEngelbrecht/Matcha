@@ -10,10 +10,14 @@
             {% endmacro %}    
             {% for current in photo %}
                 <img src="data:image/jpg;base64,{{current.photo}}" width="180" height="180">
+                {% if current.isprofile == 0%}
 				<form action="" method="POST">
                     {{ input("hidden", "photo", "photo", current.photoid) }}
 					{{ input("submit", "delete", "delete", "delete") }}
-				</form>
+                </form>
+                {% else %}
+                    <h3>This is your profile pic</h3>
+                {% endif %}
 			{% endfor %}
 	{% endif %}
 {% endblock %}
