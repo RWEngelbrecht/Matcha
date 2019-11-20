@@ -1,6 +1,11 @@
 {% extends 'layout.html' %}
 
-{% block title %}Matcha{% endblock %}
+{% block title %}Matcha - Login{% endblock %}
+
+{% block navlist %}
+	<li><a href="/">Home</a></li>
+	<li><a href="/register">Register</a></li>
+{% endblock %}
 
 {% block body %}
 <form action="" method="POST" novalidate>
@@ -15,4 +20,8 @@
 	<input type="hidden" name="_csrf" value="<%= csrfToken %>">
 	<button type="submit">Login</button>
 </form>
+
+<div>
+	<li><a href="/register">I need an account</a></li>
+</div>
 {% endblock %}

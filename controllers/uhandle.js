@@ -5,6 +5,8 @@ const crypto = require('crypto');
 const PasswordValidator = require('password-validator');
 const nodemailer = require('nodemailer');
 const { validationResult } = require("express-validator");
+var sessionData;
+var logged;
 
 // Home
 exports.gethome = (req, res, next) => {
@@ -15,7 +17,16 @@ exports.gethome = (req, res, next) => {
 	} else {
 		message = null;
 	}
-	return (res.render(path.resolve('views/index')));
+	if (!req.session.user) {
+		logged = false;
+		return (res.redirect('/login'));
+	} else {
+		logged = true;
+	}
+	if (req.session.user === 0) {
+		return (res.redirect('/login'));
+	}
+	return (res.render(path.resolve('views/index'), {userLogged: logged}));
 }
 // Login
 // GET method
@@ -32,20 +43,21 @@ exports.getlogin = (req, res, next) => {
 // POST method
 exports.postlogin = (req, res, next) => {
 	console.log("uhandle postlogin reached(Controller)");
-	console.log(req.body.email);
-	console.log(req.body.password);
 	let message = req.flash('Something went wrong, please try again later!');
 	if (message.length > 0) {
 		message = message[0];
 	} else {
 		message = null;
 	}
-	User.findOne({email: req.body.email, password: req.body.password}, (err, user) => {
+	var hashpw = crypto.createHash('whirlpool').update(req.body.password).digest('hex');
+	User.findOne({email: req.body.email, password: hashpw}, (err, user) => {
 		if (err) {
 			console.log(res.status(400).send(err));
 		}
-		else if (user) {
+		else if (user && user.verified == true) {
 			console.log('Login Success!');
+			sessionData = req.session;
+			sessionData.user = user;
 			return res.redirect('/');
 		} else {
 			console.log('Invalid login');
@@ -90,7 +102,7 @@ exports.postregister = (req, res, next) => {
 		.has().uppercase()
 		.has().lowercase()
 		.has().digits()
-		.has().not().spaces()
+		.has().not().spaces()  //lol
 		if (pwcheck.validate(req.body.password) == 0) {
 			console.log("Password must contain upper, lowercase characters and at least one digit");
 			return (res.redirect('/register'));
@@ -102,7 +114,7 @@ exports.postregister = (req, res, next) => {
 			  user: "wethinkcodematcha@gmail.com",
 			  pass: "Matcha1matcha"
 			}
-		});  
+		});
 		var mailOptions = {
 			from: 'wethinkcodematcha@gmail.com',
 			to: req.body.email,
@@ -127,19 +139,18 @@ exports.postregister = (req, res, next) => {
 			firstname: req.body.firstname,
 			surname: req.body.surname,
 			age: req.body.age,
-			gender: req.body.gender,
-			genderpref: req.body.gender_pref,
+			gender: req.body.gender.toLowerCase(),
+			genderpref: req.body.gender_pref.toLowerCase(),
 			profilephoto: req.file.buffer.toString('base64'),
 			agepreflower: req.body.age - 5,
 			ageprefupper: parseInt(req.body.age) + 10,
 			about: req.body.about,
 			verifkey: vkey,
 			maxdist: req.body.dist,
-			// interests: 'test',
+			interests: req.body.interests
 		});
 		// query schema to see if username or email exists
 		User.findOne({$or: [ {username: user.username}, {email: user.email} ]}, (err, docs) => {
-			console.log(docs);
 			if (docs != null) {
 				console.log("Invalid username or password.");
 				return (res.redirect('/register'));
@@ -154,4 +165,33 @@ exports.postregister = (req, res, next) => {
 			}
 		});
 	}
+}
+// Confirm Account.
+// GET method
+exports.getconfirm = (req, res, next) => {
+	var key = req.query.key;
+	User.findOneAndUpdate({verifkey: key}, {$set:{verified:"1"}},function(err, doc){
+		if(err){
+			console.log("Something wrong when updating data!");
+		}
+		console.log(doc);
+	});
+	req.session.user = key;
+	console.log(req.session.user);
+	// Doesnt have to go to home, should probably set user logged in or out and take to login or my account
+	return (res.redirect('/'));
+}
+// Logout
+// GET method. Doesnt really matter get, post, all.
+exports.getlogout = (req, res, next) => {
+	req.session.user = 0;
+	return (res.redirect('/'));
+}
+
+//test to see how session works
+exports.getUserData = (req, res, next) => {
+	console.log('Reached getUserData');
+	sessionData = req.session;
+	console.log(sessionData.user.interests);
+	return (res.render(path.resolve('views/index')));
 }

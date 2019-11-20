@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block title %}Matcha{% endblock %}
+
+{% block body %}
+<form action="" method="POST">
+	<div class="form-control">
+		<label for="new_maxdist">New Maximum Distance</label>
+		<input type="number" name="new_maxdist" id="new_maxdist" required min="5">
+    </div>
+	<input type="hidden" name="_csrf" value="<%= csrfToken %>">
+	<button type="submit">Update Maximum Distance</button>
+</form>
+
+<div>
+	<li><a href="/">Back to home</a></li>
+</div>
+{% endblock %}
