@@ -6,10 +6,13 @@ const multer= require('multer');
 var storage = multer.memoryStorage();
 var upload = multer({ storage: storage });
 
+// ADD photos.
 router.get('/photos', photo.getphoto);
 router.post('/photos', upload.single('new_photo'), [
     body('new_photo'),
 ],
 photo.postphoto);
-
+// DELETE photos
+router.get('/deletephoto', photo.getdeletephoto);
+router.post('/deletephoto', photo.postdeletephoto);
 module.exports = router;
