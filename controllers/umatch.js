@@ -25,7 +25,7 @@ exports.getMatchSuggestions = (req, res, next) => {
 	currUser = req.session.user;
 	if (currUser) {
 		User.find(
-			{gender: currUser.genderpref, genderpref: currUser.gender, age: {$gt: currUser.agepreflower, $lt: currUser.ageprefupper}},
+			{_id: {$ne: currUser._id}, gender: currUser.genderpref, genderpref: currUser.gender, age: {$gt: currUser.agepreflower, $lt: currUser.ageprefupper}},
 			{}, {sort: {fame: -1}},(err, matches) => {
 			if (err) {
 				console.log(res.status(400).send(err));
@@ -38,7 +38,6 @@ exports.getMatchSuggestions = (req, res, next) => {
 				// 	console.log(element.username);
 				// });
 				var interestMatches = getInterestMatches(currUser, matches);
-
 				}
 			return (res.render(path.resolve('views/matches'), {matches: interestMatches}));
 		});
