@@ -4,7 +4,7 @@
 
 {% block body %}
 
-{% if photocount < 4 %}
+{% if photocount <= 4 %}
     <h1>Upload or Take a photo</h1>
     <form method="POST" action="" enctype="multipart/form-data">
         <input type="file" name="new_photo" id="new_photo" accept="image/*"><br>
