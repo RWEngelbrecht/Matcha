@@ -76,6 +76,7 @@ exports.getdeletephoto = (req, res, next) => {
 }
 // POST deletephoto page
 exports.postdeletephoto = (req, res, next) => {
+    userphotocount = req.session.user.photocount;
 	console.log("postdeletephoto controller reached reached");
 	let message = req.flash('Something went wrong, please try again later!');
 	if (message.length > 0) {
@@ -84,14 +85,25 @@ exports.postdeletephoto = (req, res, next) => {
 		message = null;
     }
     curr_user = req.session.user._id;
-    Photo.deleteOne({user: curr_user}, function(err) {
+    to_delete = req.body.photo;
+    console.log(curr_user);
+    console.log(to_delete);
+    Photo.deleteOne({photoid: to_delete}, function(err) {
         if (err) {
-            console.log("Deletion Failed");
+            console.log(err);
             return (res.redirect('/deletephoto'));
+        } else {
+            pc = req.session.user.photocount - 1;
+            req.session.user.photocount = pc;
+            key = req.session.user.verifkey;
+            console.log("Deletion Successful");
+            User.findOneAndUpdate({verifkey: key}, {$set:{photocount:pc}},function(err, doc){
+                if(err){
+                    console.log("Something wrong when updating data!");
+                }
+                console.log("photocount updated successfully");
+            });
+            return (res.redirect('/photos'))
         }
-        req.session.user.photocount--;
-        console.log("Deletion Successful");
-        return (res.redirect('/deletephoto'));
     });
-    return (res.redirect('/photos'));
 }

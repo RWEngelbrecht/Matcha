@@ -14,5 +14,5 @@ router.post('/photos', upload.single('new_photo'), [
 photo.postphoto);
 // DELETE photos
 router.get('/deletephoto', photo.getdeletephoto);
-router.get('/deletephoto', photo.postdeletephoto);
+router.post('/deletephoto', photo.postdeletephoto);
 module.exports = router;

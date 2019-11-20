@@ -3,13 +3,16 @@
 {% block title %}Delete A Photo{% endblock %}
 
 {% block body %}
-	{% if photo %}
+    {% if photo %}
 		<h1>Select a photo to delete</h1>
+            {% macro input(type, name, id, value) %}
+                <input type="{{ type }}" name="{{ name }}" id="{{ id }}" value="{{ value }}">
+            {% endmacro %}    
             {% for current in photo %}
                 <img src="data:image/jpg;base64,{{current.photo}}" width="180" height="180">
-				<form>
-					<input type="hidden" name="photo" value="{{current._id}}">
-					<input type="submit" name="delete" value="delete">
+				<form action="" method="POST">
+                    {{ input("hidden", "photo", "photo", current.photoid) }}
+					{{ input("submit", "delete", "delete", "delete") }}
 				</form>
 			{% endfor %}
 	{% endif %}
