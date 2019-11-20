@@ -8,18 +8,27 @@
 {% endblock %}
 
 {% block body %}
-<form action="" method="POST" novalidate>
-	<div class="form-control">
-		<label for="email">E-Mail</label>
-		<input type="email" name="email" id="email">
+<div class = "container mt-4">
+	<div class = "row">
+		<div class = "col-10 mx-auto bg-danger rounded">
+			<br />
+			<h2 class="text-warning">Welcome back!</h2>
+			<br />
+			<form action="" method="POST" novalidate>
+				<input class="form-control"type="email" name="email" id="email" placeholder="Email">
+				<br />
+				<input class="form-control" type="password" name="password" id="password" placeholder="Password">
+				<br />
+				<input type="hidden" name="_csrf" value="<%= csrfToken %>">
+				<button class="btn btn-warning text-danger font-weight-bold"type="submit">Login</button>
+				<a href="/register" ><small id="emailHelp" class="form-text text-warning">I need an account</small></a>
+				<br />
+			</form>
+		</div>
 	</div>
-	<div class="form-control">
-		<label for="password">Password</label>
-		<input type="password" name="password" id="password" >
-	</div>
-	<input type="hidden" name="_csrf" value="<%= csrfToken %>">
-	<button type="submit">Login</button>
-</form>
+</div>
+
+
 
 <div>
 	<li><a href="/register">I need an account</a></li>
