@@ -11,7 +11,7 @@
                 <h1 class="text-warning display-4"> Choose a photo to delete</h2>
                 <br />
                 {% macro input(type, name, id, value) %}
-                    <input type="{{ type }}" name="{{ name }}" id="{{ id }}" value="{{ value }}">
+                    <input type="{{ type }}" name="{{ name }}" id="{{ id }}"  value="{{ value }}">
                 {% endmacro %} 
                 {% for current in photo %}
                 <div class="row ml-4 mb-4">
@@ -20,8 +20,8 @@
                     </div>
                     {% if current.isprofile == 0%}
 				    <form action="" method="POST">
-                        {{ input("hidden", "photo", "photo", current.photoid) }}
-                        {{ input("submit", "delete", "delete", "delete") }}
+                        {{ input("hidden", "photo", "photo", current.photoid, "") }}
+                        <input type="submit" name="delete" id="delete"  value="x" class="btn-sm btn-warning font-weight-bold text-danger">
                     </form>
                     <br />
                     {% else %}
