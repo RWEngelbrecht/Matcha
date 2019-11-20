@@ -15,55 +15,97 @@
 {% endmacro %}
 
 {% block body %}
-<form action="" method="POST" enctype="multipart/form-data" novalidate>
-	<div class="form-control">
-		<label for="email">E-Mail</label>
-		<input type="email" name="email" id="email">
+
+<div class = "container mt-4">
+	<div class = "row">
+		<div class = "col-10 mx-auto bg-danger rounded">
+			<br />
+			<h2 class="text-warning">Start your fire</h2>
+			<form action="" method="POST" enctype="multipart/form-data" novalidate>
+				<br />
+				<div class="form-row">
+					<div class="col">
+						<input type="text" class="form-control" name="firstname" id="firstname" placeholder="First name">
+					</div>
+					<div class="col">
+						<input type="text" class="form-control" name="surname" id="surname" placeholder="Surname">
+					</div>
+				</div>
+				<br />
+				<div >
+					<input class="form-control" type="email" name="email" id="email" placeholder="Email">
+					<small id="emailHelp" class="form-text text-warning">We'll never share your personal info with anyone else</small>
+				</div>
+				<br />
+				<div class="form-row">
+					<div class="col">
+						<input class="form-control" type="password" name="password" id="password" placeholder="Password">
+					</div>
+					<div class="col">
+						<input class="form-control" type="password" name="confirm_password" id="confirm_password" placeholder="Confirm password">
+					</div>
+				</div>
+				<br />
+				<div >
+					<input class="form-control" type="text" name="username" id="username" placeholder="Username">
+				</div>
+				<br />
+				<div class="form-row">
+					<div class="col">
+						<input class="form-control" type="number" name="age" id="age" placeholder="Age">
+					</div>
+					<div class="col">
+						<input class="form-control" type="number" name="dist" id="dist" placeholder="Max distance (km)">
+					</div>
+				</div>
+				<br />
+				<div class="form-row">
+					<div class="col">
+					<input class="form-control"type="text" name="gender" id="gender" placeholder="Gender">
+					</div>
+					<div class="col">
+					<input class="form-control" type="text" name="gender_pref" id="gender_pref" placeholder="Gender preference">
+					</div>
+				</div>
+				<br />
+				<div >
+					<input class="form-control" type="text" name="about" id="about" placeholder="Share some info about yourself...">
+				</div>
+				<br />
+				<div>
+					<label class="h4 text-warning" for="photo">Profile Picture</label>
+					<br />
+					<input type="file" name="photo" id="photo" accept="image/*">
+				</div>
+				<input type="hidden" name="_csrf" value="<%= csrfToken %>">
+				<br />
+				<button class="btn btn-warning" type="submit">Register Now</button>
+				<br />
+			</form>
+			<br />
+		</div>	
 	</div>
-	<div class="form-control">
-		<label for="password">Password</label>
-		<input type="password" name="password" id="password" >
+	<div class="row">
+		<div class="col">
+			<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#mymodal">Click me</button>
+		</div>
+		<div class="modal fade" id="mymodal">
+			<div class="modal-dialogue">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3>Popup title</h3>
+					</div>
+					<div class="modal-body">
+						<p>yay, tis working!</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-	<div class="form-control">
-		<label for="confirm_password">Confirm Password</label>
-		<input type="password" name="confirm_password" id="confirm_password" >
-	</div>
-	<div class="form-control">
-		<label for="username">Username</label>
-		<input type="text" name="username" id="username" >
-	</div>
-	<div class="form-control">
-		<label for="firstname">Firstname</label>
-		<input type="text" name="firstname" id="firstname" >
-	</div>
-	<div class="form-control">
-		<label for="surname">Surname</label>
-		<input type="text" name="surname" id="surname" >
-	</div>
-	<div class="form-control">
-		<label for="age">Age</label>
-		<input type="number" name="age" id="age" >
-	</div>
-	<div class="form-control">
-		<label for="gender">Gender</label>
-		<input type="text" name="gender" id="gender" >
-	</div>
-	<div class="form-control">
-		<label for="gender_pref">Gender Prefrence</label>
-		<input type="text" name="gender_pref" id="gender_pref" >
-	</div>
-	<div class="form-control">
-		<label for="dist">Max Distance</label>
-		<input type="number" name="dist" id="dist" >
-	</div>
-	<div class="form-control">
-		<label for="about">Bio</label>
-		<input type="text" name="about" id="about" >
-	</div>
-	<div class="form-control">
-		<label for="photo">Profile Picture</label>
-		<input type="file" name="photo" id="photo" accept="image/*">
-	</div>
+</div>
 	<div class="form-control">
 		<label for="interests">Interests</label>
 		<div class="interests">
