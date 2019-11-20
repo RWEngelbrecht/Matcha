@@ -40,10 +40,18 @@ router.get('/confirm', uhandle.getconfirm);
 router.get('/logout', uhandle.getlogout);
 // IDK @ RIGARDT?
 router.get('/userdata', uhandle.getUserData);
-// RESET PASSWORD.
+// SEND RESET PASSWORD.
 router.get('/resetpwd', uhandle.getresetpwd);
 router.post('/resetpwd', [
 	body('resetpwd_email', 'Please enter a valid email address').isEmail().normalizeEmail(),
 ],
 uhandle.postresetpwd);
+// ACTUALLY RESET PASSWORD
+router.get('/resetpassword', uhandle.getresetpassword);
+router.post('/resetpassword', [
+	body('confirm_email', 'Please enter a valid email address').isEmail().normalizeEmail(),
+	body('new_pass_forgot', 'Password must have at least 8 characters alphanumeric').isAlphanumeric().trim().isLength({ min: 8}),
+	body('confirm_new_pass_forgot', 'Password must have at least 8 characters alphanumeric').isAlphanumeric().trim().isLength({ min: 8}),
+],
+uhandle.postresetpassword);
 module.exports = router;
