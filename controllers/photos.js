@@ -21,12 +21,9 @@ exports.getphoto = (req, res, next) => {
 // POST photo landing page
 exports.postphoto = (req, res, next) => {
     date = Date.now();
-    user = req.session.user.username
-    tohash = toString(date) + toString(user);
-    photoid = crypto.createHash('whirlpool').update(tohash).digest('hex');
     const image = new Photo({
         photo: req.file.buffer.toString('base64'),
-        photoid: photoid,
+        photoid: date,
         user: req.session.user._id,
     });
     image.save().then(item => {
