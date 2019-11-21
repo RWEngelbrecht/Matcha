@@ -28,10 +28,10 @@ exports.gethome = (req, res, next) => {
 	if (req.session.user === 0) {
 		return (res.redirect('/login'));
 	}
-	if (req.session.user.interests === null) {
+	if (req.session.user.interests.length === 0) {
 		return (res.redirect('/interests'));
 	}
-	loggedUser = req.session.user.username 
+	loggedUser = req.session.user.username
 	return (res.render(path.resolve('views/index'),{
 		user: loggedUser
 	}));
@@ -96,7 +96,7 @@ exports.getregister = (req, res, next) => {
 	return (res.render(path.resolve('views/register'),{
 		user: loggedUser
 	}));
-	return (res.render(path.resolve('views/register'))); 
+	return (res.render(path.resolve('views/register')));
 }
 // POST method
 exports.postregister = (req, res, next) => {
@@ -243,7 +243,7 @@ exports.postresetpwd = (req, res, next) => {
 		if (err) {
 			console.log(res.status(400).send(err));
 			return res.redirect('/login');
-		} else if (user != null) {		
+		} else if (user != null) {
 			var transporter = nodemailer.createTransport({
 				service: 'gmail',
 				auth: {
@@ -269,7 +269,7 @@ exports.postresetpwd = (req, res, next) => {
 			});
 			// FLASH MESSAGE TO CHECK EMAIL.
 			return res.redirect('/login');
-		} 
+		}
 		else {
 			console.log('Invalid email');
 			return res.redirect('/login');
@@ -328,20 +328,23 @@ exports.postresetpassword = (req, res, next) => {
 }
 // INTERESTS
 // GET method
-// exports.getinterests = (req, res, next) => {
-// 	console.log("uhandle getinterest reached(Controller)");
-// 	return (res.render(path.resolve('views/interests')));
-// }
-// // POST method
-// exports.postinterests = async (req, res, next) => {
-// 	const { interests } = req.body;
-// 	const hobbies = new Interests ({
-		
-// 	})
-// 	console.log(interests);
-// 	// interests.forEach(interests => console.log(interests))
-
-//   }
+exports.getinterests = (req, res, next) => {
+	console.log("uhandle getinterest reached(Controller)");
+	return (res.render(path.resolve('views/interests')));
+}
+// POST method
+exports.postinterests = async (req, res, next) => {
+	const { interests } = req.body;
+	const currUser = req.session.user;
+	currUser.interests = [];
+	User.findOneAndUpdate({_id: currUser._id}, {$set: {interests: interests}}, (err) => {
+		if (err) {
+			console.log("Something went wrong with updating interests.");
+		}
+	});
+	console.log(interests);
+	return (res.redirect('/'));
+  }
 //test to see how session works
 exports.getUserData = (req, res, next) => {
 	console.log('Reached getUserData');
