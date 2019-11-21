@@ -231,7 +231,6 @@ exports.postakephoto = (req, res, next) => {
         return (res.redirect('/'));
     });
 }
-// takeprofilephoto
 // GET takeprofilephoto (BONUS)
 exports.getakeprofilephoto = (req, res, next) => {
 	console.log("gettakeprofilephoto controller reached reached");
