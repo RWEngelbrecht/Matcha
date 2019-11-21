@@ -18,9 +18,20 @@
 
 {% block body %}
 
-<H1>USERNAME</H1><br >
-<H1>PROFILE INFO</H1><br >
-<H1>IMAGES</H1><br >
-<H1>INTERESTS</H1><br >
+	{% if user %}
+		<h1>{{user.username}}</h1><br >
+		<h3>{{user.firstname}} {{user.surname}}</h3>
+		<h2>PROFILE INFO</h2><br >
+			<p>{{user.about}}</p><br >
+		<h1>IMAGES</h1><br >
+		{% if photos %}
+			{% for photo in photos %}
+				<div class="shadow-lg mr-2">
+					<img class="rounded border-warning" src="data:image/jpg;base64,{{photo.photo}}" width="180" height="180">
+				</div>
+			{% endfor %}
+		{% endif %}
+		<h1>INTERESTS</h1><br >
+	{% endif %}
 
 {% endblock %}

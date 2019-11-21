@@ -15,7 +15,7 @@ exports.updateinfo = (req, res, next) => {
 	} else {
 		message = null;
 	}
-	loggedUser = req.session.user.username 
+	loggedUser = req.session.user.username
 	return (res.render(path.resolve('views/update_info'),{
 		user: loggedUser
 	}));
@@ -41,11 +41,13 @@ exports.postusername = (req, res, next) => {
 		message = null;
     }
     key = req.session.user.verifkey;
-    User.findOneAndUpdate({verifkey: key}, {$set:{username:req.body.new_username}},function(err, doc){
+    User.findOneAndUpdate({verifkey: key}, {$set:{username:req.body.new_username}}, {new: true}, function(err, doc){
 		if(err){
 			console.log("Something wrong when updating data!");
 		}
 		console.log("username updated successfully");
+		console.log(doc.username);
+		req.session.user = doc;
 	});
 	return (res.redirect('/updateinfo'));
 }
@@ -70,11 +72,12 @@ exports.postname = (req, res, next) => {
 		message = null;
     }
     key = req.session.user.verifkey;
-    User.findOneAndUpdate({verifkey: key}, {$set:{firstname:req.body.new_firstname, surname:req.body.new_surname}},function(err, doc){
+    User.findOneAndUpdate({verifkey: key}, {$set:{firstname:req.body.new_firstname, surname:req.body.new_surname}}, {new: true},function(err, doc){
 		if(err){
 			console.log("Something wrong when updating data!");
 		}
 		console.log("Name & Surname updated successfully");
+		req.session.user = doc;
 	});
 	return (res.redirect('/updateinfo'));
 }
@@ -99,10 +102,11 @@ exports.postage = (req, res, next) => {
 		message = null;
     }
     key = req.session.user.verifkey;
-    User.findOneAndUpdate({verifkey: key}, {$set:{age:req.body.new_age, agepreflower:req.body.new_agelower, ageprefupper:req.body.new_ageupper}},function(err, doc){
+    User.findOneAndUpdate({verifkey: key}, {$set:{age:req.body.new_age, agepreflower:req.body.new_agelower, ageprefupper:req.body.new_ageupper}}, {new: true},function(err, doc){
 		if(err){
 			console.log("Something wrong when updating data!");
 		}
+		req.session.user = doc;
 		console.log("Age & Preferences updated successfully");
 	});
 	return (res.redirect('/updateinfo'));
@@ -128,10 +132,11 @@ exports.postmaxdist = (req, res, next) => {
 		message = null;
     }
     key = req.session.user.verifkey;
-    User.findOneAndUpdate({verifkey: key}, {$set:{maxdist:req.body.new_maxdist}},function(err, doc){
+    User.findOneAndUpdate({verifkey: key}, {$set:{maxdist:req.body.new_maxdist}}, {new: true},function(err, doc){
 		if(err){
 			console.log("Something wrong when updating data!");
 		}
+		req.session.user = doc;
 		console.log("Maximum Distance updated successfully");
 	});
 	return (res.redirect('/updateinfo'));
@@ -157,16 +162,18 @@ exports.postemail = (req, res, next) => {
 		message = null;
     }
     key = req.session.user.verifkey;
-    User.findOneAndUpdate({verifkey: key}, {$set:{verified:0}},function(err, doc){
+    User.findOneAndUpdate({verifkey: key}, {$set:{verified:0}}, {new: true},function(err, doc){
 		if(err){
 			console.log("Something wrong when updating data!");
 		}
+		req.session.user = doc;
 		console.log("No longer Verified");
 	});
-	User.findOneAndUpdate({verifkey: key}, {$set:{email:req.body.new_email}},function(err, doc){
+	User.findOneAndUpdate({verifkey: key}, {$set:{email:req.body.new_email}}, {new: true},function(err, doc){
 		if(err){
 			console.log("Something wrong when updating data!");
 		}
+		req.session.user = doc;
 		console.log("Email Updated Successfully");
 	});
 	var transporter = nodemailer.createTransport({
@@ -233,7 +240,7 @@ exports.postpassword = (req, res, next) => {
 		hashpw = crypto.createHash('whirlpool').update(req.body.old_password).digest('hex');
 		newhashpw = crypto.createHash('whirlpool').update(req.body.new_password).digest('hex');
 		key = req.session.user.verifkey;
-		User.findOneAndUpdate({verifkey: key, password: hashpw}, {$set:{password: newhashpw}},function(err, doc){
+		User.findOneAndUpdate({verifkey: key, password: hashpw}, {$set:{password: newhashpw}}, {new: true},function(err, doc){
 			if(err){
 				console.log("Something wrong when updating data!");
 			}

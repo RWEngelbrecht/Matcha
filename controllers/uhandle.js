@@ -39,6 +39,7 @@ exports.gethome = (req, res, next) => {
 	if (req.session.user === 0) {
 		return (res.redirect('/login'));
 	}
+<<<<<<< HEAD
 	// if (req.session.user.interests === null) {
 	// 	return (res.redirect('/interests'));
 	// }
@@ -46,6 +47,18 @@ exports.gethome = (req, res, next) => {
 	return (res.render(path.resolve('views/index'),{
 		user: loggedUser
 	}));
+=======
+	if (req.session.user.interests.length === 0) {
+		return (res.redirect('/interests'));
+	}
+	currUser = req.session.user
+	Photo.find({user: currUser._id}, (err, photos) => {
+		if (err) {
+			console.log("Could not find photos.");
+		}
+		return (res.render(path.resolve('views/index'),{user: currUser, photos: photos}));
+	});
+>>>>>>> 2b5811601a73996de83f0b0782dae6dcadec2e0e
 }
 // Login
 // GET method
@@ -351,6 +364,7 @@ exports.postinterests = (req, res, next) => {
 	const { interests } = req.body;
 	const currUser = req.session.user;
 	currUser.interests = [];
+<<<<<<< HEAD
 	User.findOneAndUpdate({_id: currUser._id}, {$set: {interests: interests}}, (err, doc) => {
 		if (err) {
 			console.log("Something went wrong with updating interests.");
@@ -359,6 +373,17 @@ exports.postinterests = (req, res, next) => {
 		// return (res.redirect('/updateinfo'));
 	});
 	return (res.redirect('/updateinfo'));
+=======
+	User.findOneAndUpdate({_id: currUser._id}, {$set: {interests: interests}}, (err, updateduser) => {
+		if (err) {
+			console.log("Something went wrong with updating interests.");
+		}
+		req.session.user = updateduser;
+	});
+
+	console.log(interests);
+	return (res.redirect('/'));
+>>>>>>> 2b5811601a73996de83f0b0782dae6dcadec2e0e
   }
 //test to see how session works
 exports.getUserData = (req, res, next) => {
