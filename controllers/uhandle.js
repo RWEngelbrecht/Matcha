@@ -340,11 +340,13 @@ exports.postinterests = async (req, res, next) => {
 	const { interests } = req.body;
 	const currUser = req.session.user;
 	currUser.interests = [];
-	User.findOneAndUpdate({_id: currUser._id}, {$set: {interests: interests}}, (err) => {
+	User.findOneAndUpdate({_id: currUser._id}, {$set: {interests: interests}}, (err, updateduser) => {
 		if (err) {
 			console.log("Something went wrong with updating interests.");
 		}
+		req.session.user = updateduser;
 	});
+
 	console.log(interests);
 	return (res.redirect('/'));
   }
