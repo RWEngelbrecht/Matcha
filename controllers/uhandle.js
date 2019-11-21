@@ -39,15 +39,6 @@ exports.gethome = (req, res, next) => {
 	if (req.session.user === 0) {
 		return (res.redirect('/login'));
 	}
-<<<<<<< HEAD
-	// if (req.session.user.interests === null) {
-	// 	return (res.redirect('/interests'));
-	// }
-	loggedUser = req.session.user.username
-	return (res.render(path.resolve('views/index'),{
-		user: loggedUser
-	}));
-=======
 	if (req.session.user.interests.length === 0) {
 		return (res.redirect('/interests'));
 	}
@@ -58,7 +49,6 @@ exports.gethome = (req, res, next) => {
 		}
 		return (res.render(path.resolve('views/index'),{user: currUser, photos: photos}));
 	});
->>>>>>> 2b5811601a73996de83f0b0782dae6dcadec2e0e
 }
 // Login
 // GET method
