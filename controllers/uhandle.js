@@ -31,10 +31,13 @@ exports.gethome = (req, res, next) => {
 	if (req.session.user.interests.length === 0) {
 		return (res.redirect('/interests'));
 	}
-	loggedUser = req.session.user.username
-	return (res.render(path.resolve('views/index'),{
-		user: loggedUser
-	}));
+	currUser = req.session.user
+	Photo.find({user: currUser._id}, (err, photos) => {
+		if (err) {
+			console.log("Could not find photos.");
+		}
+		return (res.render(path.resolve('views/index'),{user: currUser, photos: photos}));
+	});
 }
 // Login
 // GET method

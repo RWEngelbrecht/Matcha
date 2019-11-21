@@ -8,8 +8,10 @@ function getInterestMatches(user, matches) {
 	var userInterests = user.interests;
 	var matchInterests = [];
 	for (var i = 0; i < matches.length; i += 1) {
-		if (matches[i].interests.some(e => userInterests.indexOf(e) >= 0)) {
-			matchInterests.push(matches[i]);
+		if (matches[i].interests != null) {
+			if (matches[i].interests.some(e => userInterests.indexOf(e) >= 0)) {
+				matchInterests.push(matches[i]);
+			}
 		}
 	}
 	return (matchInterests);
