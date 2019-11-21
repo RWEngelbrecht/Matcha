@@ -39,6 +39,14 @@ exports.gethome = (req, res, next) => {
 	if (req.session.user === 0) {
 		return (res.redirect('/login'));
 	}
+	key = req.session.user.verifkey;
+	User.findOne({verifkey: key}, (err, doc) => {
+		if (err) {
+			console.log(err);
+			return (res.redirect('/logout'));
+		}
+		req.session.user.interests = doc.interests;
+	});
 	if (req.session.user.interests === null || req.session.user.interests[0] === null) {
 
 		return (res.redirect('/interests'));
