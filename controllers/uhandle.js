@@ -354,16 +354,6 @@ exports.postinterests = (req, res, next) => {
 	const { interests } = req.body;
 	const currUser = req.session.user;
 	currUser.interests = [];
-<<<<<<< HEAD
-	User.findOneAndUpdate({_id: currUser._id}, {$set: {interests: interests}}, (err, doc) => {
-		if (err) {
-			console.log("Something went wrong with updating interests.");
-		}
-		currUser.interests = interests;
-		// return (res.redirect('/updateinfo'));
-	});
-	return (res.redirect('/updateinfo'));
-=======
 	User.findOneAndUpdate({_id: currUser._id}, {$set: {interests: interests}}, (err, updateduser) => {
 		if (err) {
 			console.log("Something went wrong with updating interests.");
@@ -373,7 +363,6 @@ exports.postinterests = (req, res, next) => {
 
 	console.log(interests);
 	return (res.redirect('/'));
->>>>>>> 2b5811601a73996de83f0b0782dae6dcadec2e0e
   }
 //test to see how session works
 exports.getUserData = (req, res, next) => {
