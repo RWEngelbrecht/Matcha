@@ -40,6 +40,7 @@ exports.gethome = (req, res, next) => {
 		return (res.redirect('/login'));
 	}
 	if (req.session.user.interests === null || req.session.user.interests[0] === null) {
+
 		return (res.redirect('/interests'));
 	}
 	currUser = req.session.user
