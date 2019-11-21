@@ -39,9 +39,9 @@ exports.gethome = (req, res, next) => {
 	if (req.session.user === 0) {
 		return (res.redirect('/login'));
 	}
-	if (req.session.user.interests.length === 0) {
-		return (res.redirect('/interests'));
-	}
+	// if (req.session.user.interests === null) {
+	// 	return (res.redirect('/interests'));
+	// }
 	loggedUser = req.session.user.username
 	return (res.render(path.resolve('views/index'),{
 		user: loggedUser
@@ -85,7 +85,7 @@ exports.postlogin = (req, res, next) => {
 			});
 			sessionData = req.session;
 			sessionData.user = user;
-			return res.redirect('/');
+			return (res.redirect('/'));
 		} else {
 			console.log('Invalid login');
 			return res.redirect('/login');
@@ -356,9 +356,9 @@ exports.postinterests = (req, res, next) => {
 			console.log("Something went wrong with updating interests.");
 		}
 		currUser.interests = interests;
-		return (res.redirect('/'));
+		// return (res.redirect('/updateinfo'));
 	});
-	return (res.redirect('/'));
+	return (res.redirect('/updateinfo'));
   }
 //test to see how session works
 exports.getUserData = (req, res, next) => {
