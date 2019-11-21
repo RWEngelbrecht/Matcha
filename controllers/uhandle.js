@@ -8,7 +8,18 @@ const PasswordValidator = require('password-validator');
 const nodemailer = require('nodemailer');
 const { validationResult } = require("express-validator");
 var sessionData;
-var logged;
+var all_pos_interests = [
+	'Octopi/Octopuses/Octopodes',
+	'Alcohol',
+	'Arguing with people online',
+	'Tying knots',
+	'Salami',
+	'Dating Apps',
+	'Kicking puppies',
+	'Counting from 1-10 100 times',
+	'Repetitive Music',
+	'Doing cartwheels',
+];
 
 // Home
 exports.gethome = (req, res, next) => {
@@ -330,19 +341,23 @@ exports.postresetpassword = (req, res, next) => {
 // GET method
 exports.getinterests = (req, res, next) => {
 	console.log("uhandle getinterest reached(Controller)");
-	return (res.render(path.resolve('views/interests')));
+	interests = req.session.user.interests;
+	all_interests = all_pos_interests;
+	return (res.render(path.resolve('views/interests'), {interests, all_interests}));
 }
 // POST method
-exports.postinterests = async (req, res, next) => {
+exports.postinterests = (req, res, next) => {
+	console.log("POES POES PEOS");
 	const { interests } = req.body;
 	const currUser = req.session.user;
 	currUser.interests = [];
-	User.findOneAndUpdate({_id: currUser._id}, {$set: {interests: interests}}, (err) => {
+	User.findOneAndUpdate({_id: currUser._id}, {$set: {interests: interests}}, (err, doc) => {
 		if (err) {
 			console.log("Something went wrong with updating interests.");
 		}
+		currUser.interests = interests;
+		return (res.redirect('/'));
 	});
-	console.log(interests);
 	return (res.redirect('/'));
   }
 //test to see how session works
