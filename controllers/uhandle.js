@@ -8,7 +8,18 @@ const PasswordValidator = require('password-validator');
 const nodemailer = require('nodemailer');
 const { validationResult } = require("express-validator");
 var sessionData;
-var logged;
+var all_pos_interests = [
+	'Octopi/Octopuses/Octopodes',
+	'Alcohol',
+	'Arguing with people online',
+	'Tying knots',
+	'Salami',
+	'Dating Apps',
+	'Kicking puppies',
+	'Counting from 1-10 100 times',
+	'Repetitive Music',
+	'Doing cartwheels',
+];
 
 // Home
 exports.gethome = (req, res, next) => {
@@ -28,6 +39,15 @@ exports.gethome = (req, res, next) => {
 	if (req.session.user === 0) {
 		return (res.redirect('/login'));
 	}
+<<<<<<< HEAD
+	// if (req.session.user.interests === null) {
+	// 	return (res.redirect('/interests'));
+	// }
+	loggedUser = req.session.user.username
+	return (res.render(path.resolve('views/index'),{
+		user: loggedUser
+	}));
+=======
 	if (req.session.user.interests.length === 0) {
 		return (res.redirect('/interests'));
 	}
@@ -38,6 +58,7 @@ exports.gethome = (req, res, next) => {
 		}
 		return (res.render(path.resolve('views/index'),{user: currUser, photos: photos}));
 	});
+>>>>>>> 2b5811601a73996de83f0b0782dae6dcadec2e0e
 }
 // Login
 // GET method
@@ -77,7 +98,7 @@ exports.postlogin = (req, res, next) => {
 			});
 			sessionData = req.session;
 			sessionData.user = user;
-			return res.redirect('/');
+			return (res.redirect('/'));
 		} else {
 			console.log('Invalid login');
 			return res.redirect('/login');
@@ -333,13 +354,26 @@ exports.postresetpassword = (req, res, next) => {
 // GET method
 exports.getinterests = (req, res, next) => {
 	console.log("uhandle getinterest reached(Controller)");
-	return (res.render(path.resolve('views/interests')));
+	interests = req.session.user.interests;
+	all_interests = all_pos_interests;
+	return (res.render(path.resolve('views/interests'), {interests, all_interests}));
 }
 // POST method
-exports.postinterests = async (req, res, next) => {
+exports.postinterests = (req, res, next) => {
+	console.log("POES POES PEOS");
 	const { interests } = req.body;
 	const currUser = req.session.user;
 	currUser.interests = [];
+<<<<<<< HEAD
+	User.findOneAndUpdate({_id: currUser._id}, {$set: {interests: interests}}, (err, doc) => {
+		if (err) {
+			console.log("Something went wrong with updating interests.");
+		}
+		currUser.interests = interests;
+		// return (res.redirect('/updateinfo'));
+	});
+	return (res.redirect('/updateinfo'));
+=======
 	User.findOneAndUpdate({_id: currUser._id}, {$set: {interests: interests}}, (err, updateduser) => {
 		if (err) {
 			console.log("Something went wrong with updating interests.");
@@ -349,6 +383,7 @@ exports.postinterests = async (req, res, next) => {
 
 	console.log(interests);
 	return (res.redirect('/'));
+>>>>>>> 2b5811601a73996de83f0b0782dae6dcadec2e0e
   }
 //test to see how session works
 exports.getUserData = (req, res, next) => {
