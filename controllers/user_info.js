@@ -40,15 +40,14 @@ exports.postusername = (req, res, next) => {
 	} else {
 		message = null;
     }
-    key = req.session.user.verifkey;
+	key = req.session.user.verifkey;
     User.findOneAndUpdate({verifkey: key}, {$set:{username:req.body.new_username}}, {new: true}, function(err, doc){
 		if(err){
 			console.log("Something wrong when updating data!");
 		}
-		console.log("username updated successfully");
-		console.log(doc.username);
 		req.session.user = doc;
 	});
+	req.session.user.username = req.body.new_username;
 	return (res.redirect('/updateinfo'));
 }
 // GET name & surname

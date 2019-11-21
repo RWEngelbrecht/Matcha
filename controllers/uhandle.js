@@ -236,7 +236,7 @@ exports.getlogout = (req, res, next) => {
 			console.log("Something went wrong while logging out!");
 		}
 	})
-	req.session.user = 0;
+	req.session.user = null;
 	return (res.redirect('/'));
 }
 // Send Reset Password Link
@@ -294,6 +294,9 @@ exports.postresetpwd = (req, res, next) => {
 // GET method
 exports.getresetpassword = (req, res, next) => {
 	console.log("uhandle getresetpassword reached(Controller)");
+	if (req.session.user === null || req.session.user === 0) {
+		return(res.redirect('/login'));
+	}
 	return (res.render(path.resolve('views/reset_password')));
 }
 // POST method
@@ -344,10 +347,18 @@ exports.postresetpassword = (req, res, next) => {
 // GET method
 exports.getinterests = (req, res, next) => {
 	console.log("uhandle getinterest reached(Controller)");
-	// EASY WORKAROUND WOULD BE TO RUN A QUERY HERE AND FIX THE SESSION VAR
-	currentuserinterests = req.session.user.interests;
-	all_interests = all_pos_interests;
-	return (res.render(path.resolve('views/interests'), {currentuserinterests, all_interests}));
+	if (req.session.user === null || req.session.user === 0){
+		return (res.redirect('/login'));
+	};
+	User.findOne({_id: req.session.user._id}, (err, user) => {
+		if (err) {
+			return (res.redirect('/logout'));
+		}
+		console.log(user);
+		interests = user.interests;
+		all_interests = all_pos_interests;
+		return (res.render(path.resolve('views/interests'), {interests, all_interests}));
+	});
 }
 // POST method
 exports.postinterests = (req, res, next) => {
