@@ -256,3 +256,34 @@ exports.postpassword = (req, res, next) => {
 	}
 	return (res.redirect('/updateinfo'));
 }
+// GET about
+exports.getabout = (req, res, next) => {
+    console.log("getabout controller reached reached");
+	let message = req.flash('Something went wrong, please try again later!');
+	if (message.length > 0) {
+		message = message[0];
+	} else {
+		message = null;
+	}
+	return (res.render(path.resolve('views/update_about')));
+}
+// POST about
+exports.postabout = (req, res, next) => {
+	console.log("postabout controller reached reached");
+	let message = req.flash('Something went wrong, please try again later!');
+	if (message.length > 0) {
+		message = message[0];
+	} else {
+		message = null;
+	}
+	key = req.session.user.verifkey;
+	User.findOneAndUpdate({verifkey: key}, {$set:{about:req.body.new_about}}, {new: true},function(err, doc){
+		if(err){
+			console.log("Something wrong when updating data!");
+		}
+		console.log("Maximum Distance updated successfully");
+	});
+	req.session.user.about = req.body.new_about;
+	console.log(req.session.user.about);
+	return (res.redirect('/updateinfo'));
+}
