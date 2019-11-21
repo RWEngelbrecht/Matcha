@@ -54,4 +54,7 @@ router.post('/resetpassword', [
 	body('confirm_new_pass_forgot', 'Password must have at least 8 characters alphanumeric').isAlphanumeric().trim().isLength({ min: 8}),
 ],
 uhandle.postresetpassword);
+// // INTERESTS
+// router.get('/interests', uhandle.getinterests);
+// router.post('/interests', uhandle.postinterests);
 module.exports = router;

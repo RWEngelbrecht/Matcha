@@ -1,5 +1,6 @@
 const User	= require('../models/umod');
 const Photo	= require('../models/photos');
+const Interests	= require('../models/interests');
 const path	= require('path');
 const swig	= require('../app.js');
 const crypto = require('crypto');
@@ -26,6 +27,9 @@ exports.gethome = (req, res, next) => {
 	}
 	if (req.session.user === 0) {
 		return (res.redirect('/login'));
+	}
+	if (req.session.user.interests === null) {
+		return (res.redirect('/interests'));
 	}
 	loggedUser = req.session.user.username 
 	return (res.render(path.resolve('views/index'),{
@@ -180,7 +184,8 @@ exports.postregister = (req, res, next) => {
 						isprofile: 1,
 					});
 					new_photo.save().then(item => {
-						console.log("Profile Photo Addition Successful")
+						console.log("Profile Photo Addition Successful");
+						return (res.redirect('/'));
 					}).catch(err => {
 						console.log(res.status(400).send(err));
 						return (res.redirect('/'));
@@ -321,6 +326,22 @@ exports.postresetpassword = (req, res, next) => {
 		}
 	});
 }
+// INTERESTS
+// GET method
+// exports.getinterests = (req, res, next) => {
+// 	console.log("uhandle getinterest reached(Controller)");
+// 	return (res.render(path.resolve('views/interests')));
+// }
+// // POST method
+// exports.postinterests = async (req, res, next) => {
+// 	const { interests } = req.body;
+// 	const hobbies = new Interests ({
+		
+// 	})
+// 	console.log(interests);
+// 	// interests.forEach(interests => console.log(interests))
+
+//   }
 //test to see how session works
 exports.getUserData = (req, res, next) => {
 	console.log('Reached getUserData');
@@ -328,4 +349,3 @@ exports.getUserData = (req, res, next) => {
 	console.log(sessionData.user.interests);
 	return (res.render(path.resolve('views/index')));
 }
-

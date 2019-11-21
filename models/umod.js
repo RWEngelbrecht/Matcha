@@ -71,7 +71,7 @@ const usertable = new Schema({
 	},
 	interests: [{
 		type: String,
-		default: "Not interesting"
+		default: null,
 	}],
 	lastSeen: {
 		type: Date,
