@@ -49,4 +49,10 @@ router.post('/password', [
     body('confirm_new_password').isAlphanumeric().trim().isLength({ min: 8}),
 ]
 ,update.postpassword);
+// About me updating page.
+router.get('/about', update.getabout);
+router.post('/about', [
+    body('new_about').isAlphanumeric(),
+],
+update.postabout)
 module.exports = router;
