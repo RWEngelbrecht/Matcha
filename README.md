@@ -6,3 +6,5 @@ The aim of this project is to create a dating Website much like tinder. A user c
 The only limitation with this project is that we are only allowed to user micro-frameworks.
 
 Email used for nodemailer = wethinkcodematcha -> Matcha1matcha
+
+VI -> AIzaSyAxdwnqjWNL8FzlEYk7RAXGaaDW52vO2V4 <---- API KEY FOR PROJECT
