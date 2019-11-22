@@ -8,28 +8,30 @@
             <div class = "col-10 mx-auto bg-danger rounded">
                 <br />
                 {% if photo %}
-                <h1 class="text-warning display-4"> Choose a photo to delete</h2>
+                <h2 class="text-warning display-4"> Choose a photo to delete</h2>
                 <br />
                 {% macro input(type, name, id, value) %}
                     <input type="{{ type }}" name="{{ name }}" id="{{ id }}"  value="{{ value }}">
                 {% endmacro %} 
                 {% for current in photo %}
                 <div class="row ml-4 mb-4">
-                    <div class="shadow-lg mr-2">   
-                    <img class="rounded border-warning" src="data:image/jpg;base64,{{current.photo}}" width="180" height="180">
-                    </div>
-                    {% if current.isprofile == 0%}
-				    <form action="" method="POST">
-                        {{ input("hidden", "photo", "photo", current.photoid, "") }}
-                        <input type="submit" name="delete" id="delete"  value="x" class="btn-sm btn-warning font-weight-bold text-danger">
-                    </form>
-                    <br />
-                    {% else %}
-                        <div class="row">
-                        <h4 class="text-warning ml-4">This is your profile pic</h4>
+                    <div class="col">
+                        <div class="shadow-lg mr-2">   
+                            <img class="rounded border-warning" src="data:image/jpg;base64,{{current.photo}}" width="180" height="180">
                         </div>
-                    {% endif %}
-                    <br />
+                        {% if current.isprofile == 0%}
+				        <form action="" method="POST">
+                            {{ input("hidden", "photo", "photo", current.photoid, "") }}
+                            <input type="submit" name="delete" id="delete"  value="x" class="btn-sm btn-warning font-weight-bold text-danger">
+                        </form>
+                        <br />
+                        {% else %}
+                            <div class="row">
+                            <h4 class="text-warning d-flex ml-4">This is your profile pic</h4>
+                            </div>
+                        {% endif %}
+                        <br />
+                    </div>
                 </div>
                 {% endfor %}
                 {% else %}

@@ -7,21 +7,29 @@
     <div class = "row">
         <div class = "col-10 mx-auto bg-danger rounded">
             <br />
-            <h1 class="text-warning display-4">Your photos</h2>
+            <h1 class="text-warning display-4">Edit your photos</h2>
             <br />
-            <a class="text-decoration-none btn btn-warning text-danger mb-4" href="/editprofilepicture">Update profile picture</a>
+            <a class="text-decoration-none btn font-weight-bold btn-warning text-danger mb-4" href="/editprofilepicture">Update profile picture</a>
             <br >
             {% if photocount <= 4 %}
                 <h3 class="text-warning">Upload or Take a photo</h3>
                 <form method="POST" action="" enctype="multipart/form-data">
-                    <input class="btn btn-warning mt-4" type="file" name="new_photo" id="new_photo" accept="image/*"><br>
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                    <button class="btn btn-warning text-danger mt-4" type="submit">Add new photo</button><br><br><br>
+                    <div class="row justify">
+                        <div class="col-1">
+                                <label class="btn btn-danger border-warning font-weight-bold text-warning btn-file mt-4">
+                                Browse <input style="display: none;" class="text-warning" type="file" name="new_photo" id="new_photo" accept="image/*"><br>
+                                </label>
+                        </div>
+                        <div class="col">
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <button class="btn btn-warning font-weight-bold text-danger mt-4" type="submit">Add new photo</button>                    
+                        </div>
+                    </div>
                 </form>
-                <a class="btn btn-warning text-danger mb-4" href="/takephoto">Take a photo</a>
+                <a class="btn btn-warning text-danger font-weight-bold mb-4 mt-4" href="/takephoto">Take a photo</a>
             {% endif %}
                 <br />
-                <a class="btn btn-warning text-danger mb-4" href="/deletephoto">Delete a photo</a>
+                <a class="btn btn-warning text-danger font-weight-bold mb-4" href="/deletephoto">Delete a photo</a>
         </div>
     </div>
 </div>
