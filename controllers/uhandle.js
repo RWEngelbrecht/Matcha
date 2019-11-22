@@ -8,7 +8,18 @@ const PasswordValidator = require('password-validator');
 const nodemailer = require('nodemailer');
 const { validationResult } = require("express-validator");
 var sessionData;
-var logged;
+var all_pos_interests = [
+	'Octopi/Octopuses/Octopodes',
+	'Alcohol',
+	'Arguing with people online',
+	'Tying knots',
+	'Salami',
+	'Dating Apps',
+	'Kicking puppies',
+	'Counting from 1-10 100 times',
+	'Repetitive Music',
+	'Doing cartwheels',
+];
 
 // Home
 exports.gethome = (req, res, next) => {
@@ -28,13 +39,25 @@ exports.gethome = (req, res, next) => {
 	if (req.session.user === 0) {
 		return (res.redirect('/login'));
 	}
-	if (req.session.user.interests === null) {
+
+	key = req.session.user.verifkey;
+	User.findOne({verifkey: key}, (err, doc) => {
+		if (err) {
+			console.log(err);
+			return (res.redirect('/logout'));
+		}
+		req.session.user.interests = doc.interests;
+	});
+	if (req.session.user.interests === null || req.session.user.interests[0] === null) {
 		return (res.redirect('/interests'));
 	}
-	loggedUser = req.session.user.username
-	return (res.render(path.resolve('views/index'),{
-		user: loggedUser
-	}));
+	currUser = req.session.user
+	Photo.find({user: currUser._id}, (err, photos) => {
+		if (err) {
+			console.log("Could not find photos.");
+		}
+		return (res.render(path.resolve('views/index'),{user: currUser, photos: photos}));
+	});
 }
 // Login
 // GET method
@@ -74,7 +97,7 @@ exports.postlogin = (req, res, next) => {
 			});
 			sessionData = req.session;
 			sessionData.user = user;
-			return res.redirect('/');
+			return (res.redirect('/'));
 		} else {
 			console.log('Invalid login');
 			return res.redirect('/login');
@@ -221,7 +244,7 @@ exports.getlogout = (req, res, next) => {
 			console.log("Something went wrong while logging out!");
 		}
 	})
-	req.session.user = 0;
+	req.session.user = null;
 	return (res.redirect('/'));
 }
 // Send Reset Password Link
@@ -279,6 +302,9 @@ exports.postresetpwd = (req, res, next) => {
 // GET method
 exports.getresetpassword = (req, res, next) => {
 	console.log("uhandle getresetpassword reached(Controller)");
+	if (req.session.user === null || req.session.user === 0) {
+		return(res.redirect('/login'));
+	}
 	return (res.render(path.resolve('views/reset_password')));
 }
 // POST method
@@ -329,18 +355,32 @@ exports.postresetpassword = (req, res, next) => {
 // GET method
 exports.getinterests = (req, res, next) => {
 	console.log("uhandle getinterest reached(Controller)");
-	return (res.render(path.resolve('views/interests')));
+	if (req.session.user === null || req.session.user === 0){
+		return (res.redirect('/login'));
+	};
+	User.findOne({_id: req.session.user._id}, (err, user) => {
+		if (err) {
+			return (res.redirect('/logout'));
+		}
+		console.log(user);
+		interests = user.interests;
+		all_interests = all_pos_interests;
+		return (res.render(path.resolve('views/interests'), {interests, all_interests}));
+	});
 }
 // POST method
-exports.postinterests = async (req, res, next) => {
+exports.postinterests = (req, res, next) => {
+	console.log("POES POES PEOS");
 	const { interests } = req.body;
-	const currUser = req.session.user;
+	var currUser = req.session.user;
 	currUser.interests = [];
-	User.findOneAndUpdate({_id: currUser._id}, {$set: {interests: interests}}, (err) => {
+	User.findOneAndUpdate({_id: currUser._id}, {$set: {interests: interests}}, (err, updateduser) => {
 		if (err) {
 			console.log("Something went wrong with updating interests.");
 		}
+		currUser = updateduser;
 	});
+	// NEED TO FIX CURRENT USER NOT UPDATING SESSION VAR OR SOMETHING
 	console.log(interests);
 	return (res.redirect('/'));
   }

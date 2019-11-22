@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block title %}Matcha{% endblock %}
+
+{% block body %}
+<form action="" method="POST">
+	<div class="form-control">
+		<label for="new_about">New About</label>
+		<input type="text" name="new_about" id="new_about" required min="18">
+    </div>
+	<input type="hidden" name="_csrf" value="<%= csrfToken %>">
+	<button type="submit">Update About me</button>
+</form>
+
+<div>
+	<li><a href="/">Back to home</a></li>
+</div>
+{% endblock %}

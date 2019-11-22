@@ -3,18 +3,22 @@
 {% block title %}Matcha - Login{% endblock %}
 
 {% block body %}
+    {% macro interest(value) %}
+    	<td>
+    		<label for="interests">{{value}}</label>
+    		<input type="checkbox" name="interests" id="{{value}}" value="{{value}}">
+    	</td>
+    {% endmacro %}
 	<h1 class="text-warning display-4">Select Your Interests!</h2>
 	<form action="" method="POST" novalidate>
-        hiking<input type="checkbox" id="hiking" name="interests" value="hiking"><br >
-        cooking<input type="checkbox" id="cooking" name="interests" value="cooking"><br >
-        reading<input type="checkbox" id="reading" name="interests" value="reading"><br >
-        travelling<input type="checkbox" id="travelling" name="interests" value="travelling"><br >
-        film<input type="checkbox" id="film" name="interests" value="film"><br >
-        photography<input type="checkbox" id="photography" name="interests" value="photography"><br >
-        technology<input type="checkbox" id="technology" name="interests" value="technology"><br >
-        dancing<input type="checkbox" id="dancing" name="interests" value="dancing"><br >
-        sport<input type="checkbox" id="sport" name="interests" value="sport"><br >
-        politics<input type="checkbox" id="politics" name="interests" value="politics"><br >
+
+        {% for hobby in all_interests %}
+            {% if interests.includes(hobby) %}
+                {{hobby}}<input type="checkbox" name="interests" id={{hobby}} value="{{hobby}}" checked><br>
+            {% else %}
+                {{hobby}}<input type="checkbox" name="interests" id={{hobby}} value="{{hobby}}"><br>
+            {% endif %}
+        {% endfor %}
 		<input type="hidden" name="_csrf" value="<%= csrfToken %>">
 		<button class="mb-2 btn btn-warning text-danger font-weight-bold"type="submit">Send it!</button>
 	</form>
