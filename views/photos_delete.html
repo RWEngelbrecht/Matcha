@@ -15,22 +15,20 @@
                 {% endmacro %} 
                 <div class="row justify-content-center mb-4">
                 {% for current in photo %}
-                    <div class="card m-2 bg-warning" style="width: 16rem;">   
-                        <img class="card-img-top" src="data:image/jpg;base64,{{current.photo}}" >                       
+                    <div class="card m-2 bg-warning" style="width: 16rem; ">   
+                        <img class="card-img-top" src="data:image/jpg;base64,{{current.photo}}" height="220">                       
                     {% if current.isprofile == 0%}
                         <div class="card-body">
 				        <form class="ml-2" action="" method="POST">
                             {{ input("hidden", "photo", "photo", current.photoid, "") }}
-                            <input type="submit" name="delete" id="delete"  value="x" class="mx-auto btn-sm btn-warning font-weight-bold text-danger">
+                            <input type="submit" name="delete" id="delete"  value="X" class="mx-auto btn-sm float-right btn-danger font-weight-bold text-warning">
                         </form>
                         </div>
-                        <br />
                     </div>
                     {% else %}
-                        <h6 class="mt-2 ml-2 text-danger">This is your profile pic</h4>
+                        <h6 class="mt-4 ml-2 text-danger">This is your profile pic</h4>
                     </div>
                     {% endif %}
-                    <br />
                 {% endfor %}
                 </div>
                 {% else %}
