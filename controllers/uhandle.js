@@ -28,7 +28,7 @@ exports.gethome = (req, res, next) => {
 	if (req.session.user === 0) {
 		return (res.redirect('/login'));
 	}
-	if (req.session.user.interests.length === 0) {
+	if (req.session.user.interests === null) {
 		return (res.redirect('/interests'));
 	}
 	loggedUser = req.session.user.username
@@ -96,7 +96,6 @@ exports.getregister = (req, res, next) => {
 	return (res.render(path.resolve('views/register'),{
 		user: loggedUser
 	}));
-	return (res.render(path.resolve('views/register')));
 }
 // POST method
 exports.postregister = (req, res, next) => {
