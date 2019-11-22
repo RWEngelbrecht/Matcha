@@ -117,7 +117,6 @@ exports.getregister = (req, res, next) => {
 	return (res.render(path.resolve('views/register'),{
 		user: loggedUser
 	}));
-	return (res.render(path.resolve('views/register')));
 }
 // POST method
 exports.postregister = (req, res, next) => {

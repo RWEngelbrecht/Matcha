@@ -120,7 +120,10 @@ exports.geteditprofilepicture = (req, res, next) => {
 	} else {
 		message = null;
     }
-	return (res.render(path.resolve('views/photo_profile_edit'))); 
+    loggedUser = req.session.user.username 
+    return (res.render(path.resolve('views/photo_profile_edit'), {
+        user: loggedUser
+    }));
 }
 // POST editprofilepicture
 exports.posteditprofilepicture = (req, res, next) => {
