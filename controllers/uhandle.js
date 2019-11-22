@@ -83,10 +83,11 @@ exports.postlogin = (req, res, next) => {
 		else if (user && user.verified == true) {
 			console.log('Login Success!');
 			// pull ip from IPAddresses.txt and add the location data to location var in db and session.
-			iplocation('155.93.207.245', [], (error, res) => {
-				location = res;
-				console.log(location);
-			});
+			// iplocation below needs to pull a random ip from the file i guess.
+			// iplocation('155.93.207.245', [], (error, res) => {
+			// 	location = res;
+			// 	console.log(location);
+			// });
 			User.findOneAndUpdate({_id: user._id}, {$set: {loggedIn: true}}, err => {
 				if (err){
 					console.log('Something went wrong while updating logged in status!');
