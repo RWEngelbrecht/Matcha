@@ -59,22 +59,22 @@
 		<nav class="navbar fixed-bottom bg-light">
 			<div class="row mx-auto float-right">
 				{% if user !== 0 %}
-				<a href="/logout"><button class="btn btn-warning text-danger font-weight-bold" >Logout {{ user }} </button></a>
+				<a href="/logout"><button class="btn btn-outline-danger font-weight-bold" >Logout {{ user }} </button></a>
 				{% endif %}
 
 				{% if user == 0 %}
-				<a href="/login"><button class="ml-2 btn btn-warning text-danger font-weight-bold">Login</button></a>
+				<a href="/login"><button class="ml-2 btn btn-outline-danger font-weight-bold">Login</button></a>
 				{% endif %}
 
 				{% if user !== 0 %}
-				<a href="/updateinfo"><button class="ml-2 btn btn-warning text-danger font-weight-bold">Update my info</button></a>
+				<a href="/updateinfo"><button class="ml-2 btn btn-outline-danger font-weight-bold">Update my info</button></a>
 				{% endif %}
 
 				{% if user == 0 %}
-				<a  href="/register"><button class="ml-2 btn btn-warning text-danger font-weight-bold">Register</button></a>
+				<a  href="/register"><button class="ml-2 btn btn-outline-danger font-weight-bold">Register</button></a>
 				{% endif %}
 
-				<a class="btn btn-warning text-danger font-weight-bold ml-2" href="#" data-toggle="modal" data-target="#aboutUs">About us</a>
+				<a class="btn btn-outline-danger font-weight-bold ml-2" href="#" data-toggle="modal" data-target="#aboutUs">About us</a>
 			</div>
 		</nav>
 		<div class="container">
