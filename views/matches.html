@@ -9,22 +9,8 @@
 {% block body %}
 	{% if matches %}
 		<h1>Potential matches based on arbitrary stuff: </h1>
-		<h2>Filter by:</h2>
+		<a href="/filter"><button>Filter</button></a>
 		<!-- Click on one of these, popup with corresponding form -->
-		<form method="POST">
-			<h3>Age</h3>
-			<input type="text" name="filterAge" id="filterAge">
-			<h3>Fame</h3>
-			<input type="text" name="filterFame" id="filterAge">
-			<h3>Gender</h3>
-			<input type="text" name="filterGender" id="filterAge">
-			<h3>Location</h3>
-			<input type="text" name="filterLocation" id="filterAge">
-			<h3>Interests</h3>
-			<input type="text" name="filterInterests" id="filterAge">
-			<input type="submit" name="filter" id="filter" value="Filter">
-		</form>
-
 		<table>
 			{% for match in matches %}
 				<tr>

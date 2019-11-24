@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block title %}Here be the criteria ye filter by{% endblock %}
+
+{% macro input(title, type, name) %}
+	<!-- <form method="POST"> -->
+		<h3>{{title}}</h3>
+		<input type="{{type}}" name="filterCrit" id="{{name}}">
+		<!-- <input type="submit" name="filter" id="filter" value="Filter"> -->
+	<!-- </form> -->
+{% endmacro %}
+
+{% block body %}
+	<form method="POST">
+		{{input("Age", "text", "filterAge")}}  <!-- can already set age upper + lower, here filter by specific age -->
+		{{input("Fame", "text", "filterFame")}}
+		{{input("Gender", "text", "filterGender")}}
+		{{input("Location", "text", "filterLocation")}}
+		{{input("Interests", "text", "filterInterests")}}
+		<input type="submit" name="filter" id="filter" value="Filter">
+	</form>
+{% endblock %}

@@ -6,4 +6,9 @@ const path	= require('path');
 mrouter.get('/matches', umatch.getMatchSuggestions);
 mrouter.post('/matches', umatch.like);
 
+
+//filtering
+mrouter.get('/filter', umatch.getFilter);
+mrouter.post('/filter', umatch.postFilter);
+
 module.exports = mrouter;
