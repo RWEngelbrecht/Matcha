@@ -38,9 +38,6 @@ exports.getMatchSuggestions = (req, res, next) => {
 				console.log('No matches for you!');
 			}
 			else {
-				// matches.forEach(element => {
-				// 	console.log(element.username);
-				// });
 				var interestMatches = getInterestMatches(currUser, matches);
 				var filteredMatches = filters.FilterFrom(interestMatches);
 				}
@@ -102,6 +99,5 @@ exports.getFilter = (req, res, next) => {
 exports.postFilter = (req, res, next) => {
 	//give filter class all filters
 	filters.SetFilters(req.body.filterCrit);
-	console.log(filters);
 	return (res.redirect('/matches'));
 }
