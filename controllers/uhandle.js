@@ -7,6 +7,7 @@ const crypto = require('crypto');
 const PasswordValidator = require('password-validator');
 const nodemailer = require('nodemailer');
 const { validationResult } = require("express-validator");
+const iplocation = require("iplocation").default;
 var sessionData;
 var all_pos_interests = [
 	'Octopi/Octopuses/Octopodes',
@@ -39,16 +40,7 @@ exports.gethome = (req, res, next) => {
 	if (req.session.user === 0) {
 		return (res.redirect('/login'));
 	}
-
-	key = req.session.user.verifkey;
-	User.findOne({verifkey: key}, (err, doc) => {
-		if (err) {
-			console.log(err);
-			return (res.redirect('/logout'));
-		}
-		req.session.user.interests = doc.interests;
-	});
-	if (req.session.user.interests === null || req.session.user.interests[0] === null) {
+	if (req.session.user.interests === null) {
 		return (res.redirect('/interests'));
 	}
 	currUser = req.session.user
@@ -56,7 +48,7 @@ exports.gethome = (req, res, next) => {
 		if (err) {
 			console.log("Could not find photos.");
 		}
-		return (res.render(path.resolve('views/index'),{user: currUser, photos: photos}));
+		return (res.render(path.resolve('views/index'),{user: currUser.username, photos: photos}));
 	});
 }
 // Login
@@ -90,6 +82,12 @@ exports.postlogin = (req, res, next) => {
 		}
 		else if (user && user.verified == true) {
 			console.log('Login Success!');
+			// pull ip from IPAddresses.txt and add the location data to location var in db and session.
+			// iplocation below needs to pull a random ip from the file i guess.
+			// iplocation('155.93.207.245', [], (error, res) => {
+			// 	location = res;
+			// 	console.log(location);
+			// });
 			User.findOneAndUpdate({_id: user._id}, {$set: {loggedIn: true}}, err => {
 				if (err){
 					console.log('Something went wrong while updating logged in status!');
