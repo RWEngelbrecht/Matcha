@@ -14,22 +14,26 @@ class Filter {
 	FilterFrom = (matches) => {
 		var filter = 0;
 		var filteredMatches = [];
-		this.filterBy.forEach(el => {
-			if (el != '')
+		// if filters empty, don't filter
+		for (var el in this.filterBy) {
+			if (this.filterBy[el] != '') {
 				filter = 1;
-		})
-		if (filter == 0)
+			}
+		}
+		if (filter == 0) {
 			return matches;
+		}
+		//currently filters inclusively
 		matches.forEach(element => {
-			if (element.age == this.filterBy['ageFilters'])
+			if (element.age == this.filterBy['ageFilter'] && this.filterBy['ageFilter'] != '')
 				filteredMatches.push(element);
-			else if (element.fame >= this.filterBy['fameFilter'])
+			else if (element.fame >= this.filterBy['fameFilter'] && this.filterBy['fameFilter'] != '')
 				filteredMatches.push(element);
-			else if (element.gender == this.filterBy['genderFilter'])
+			else if (element.gender == this.filterBy['genderFilter'] && this.filterBy['genderFilter'] != '')
 				filteredMatches.push(element);
-			else if (element.location == this.filterBy['locationFilter'])
+			else if (element.location == this.filterBy['locationFilter'] && this.filterBy['locationFilter'] != '')
 				filteredMatches.push(element);
-			else if (element.interests == this.filterBy['interestsFilter'])
+			else if (element.interests == this.filterBy['interestsFilter'] && this.filterBy['interestsFilter'] != '')
 				filteredMatches.push(element);
 		});
 		return (filteredMatches);
