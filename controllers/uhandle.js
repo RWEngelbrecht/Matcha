@@ -82,32 +82,28 @@ exports.postlogin = (req, res, next) => {
 			console.log(res.status(400).send(err));
 		}
 		else if (user && user.verified == true) {
-			req.session.user = user;
 			console.log('Login Success!');
-			// pull ip from IPAddresses.txt and add the location data to location var in db and session.
-			fs.readFile("IPAddresses.txt", 'utf8', function(err, data){
+			// updating your location
+			fs.readFile("IPAddresses.txt", 'utf8',function(err, data){
 				if(err) throw err;
 				var lines = data.split('\n');
-				ip = lines[Math.floor(Math.random()*lines.length)];
+				var ip = lines[Math.floor(Math.random()*lines.length)];
 				iplocation(ip, [], (error, res) => {
-					postal = res.postal;
-					city = res.city;
-					province = res.region;
-					var location = [
-						postal,
-						city,
-						province,
+					location = [
+						res.postal,
+						res.city,
+						res.region,
 					];
-					console.log(req.session.user);
-					User.findOneAndUpdate({_id: user._id}, {$set: {loggedIn: true, location: location}}, err => {
-						if (err){
-							console.log('Something went wrong while updating logged in status!');
+				});
+				console.log(location);
+				User.findOneAndUpdate({_id: user._id}, {$set: {loggedIn: true/*, location: location*/}}, err => {
+					if (err){
+						console.log('Something went wrong while updating logged in status!');
 						}
 					});
-				});
-			})
-			// sessionData = req.session;
-			// sessionData.user = user;
+			});
+			sessionData = req.session;
+			sessionData.user = user;
 			return (res.redirect('/'));
 		} else {
 			console.log('Invalid login');
