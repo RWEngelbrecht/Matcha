@@ -6,18 +6,18 @@ var currUser;
 var filters = new Filter();
 
 
-function getInterestMatches(user, matches) {
-	var userInterests = user.interests;
-	var matchInterests = [];
-	for (var i = 0; i < matches.length; i += 1) {
-		if (matches[i].interests != null) {
-			if (matches[i].interests.some(e => userInterests.indexOf(e) >= 0)) {
-				matchInterests.push(matches[i]);
-			}
-		}
-	}
-	return (matchInterests);
-}
+// function getInterestMatches(user, matches) {
+// 	var userInterests = user.interests;
+// 	var matchInterests = [];
+// 	for (var i = 0; i < matches.length; i += 1) {
+// 		if (matches[i].interests != null) {
+// 			if (matches[i].interests.some(e => userInterests.indexOf(e) >= 0)) {
+// 				matchInterests.push(matches[i]);
+// 			}
+// 		}
+// 	}
+// 	return (matchInterests);
+// }
 
 exports.getMatchSuggestions = (req, res, next) => {
 	let message = req.flash('Something went wrong, please try again later!');
@@ -27,43 +27,68 @@ exports.getMatchSuggestions = (req, res, next) => {
 		message = null;
 	}
 	currUser = req.session.user;
-	// console.log(currUser);
-	// console.log("BELOW");
-	console.log(req.session.user.interests);
-	if (currUser) {
-		User.find(
-			{_id: {$ne: currUser._id}, gender: currUser.genderpref, genderpref: currUser.gender, age: {$gt: currUser.agepreflower, $lt: currUser.ageprefupper}},
-			{}, {sort: {fame: -1}},(err, matches) => {
-			if (err) {
-				console.log(res.status(400).send(err));
-			}
-			else if (!matches) {
-				console.log('No matches for you!');
-			}
-			else {
-				var interestMatches = getInterestMatches(currUser, matches);
-				var filteredMatches = filters.FilterFrom(interestMatches);
+	var likedUsers;
+	Likes.find({likeBy: currUser._id}, (err, liked) => {
+		if (err) {
+			console.log(res.status(400).send(err));
+		}
+		likedUsers = liked;
+	}).then(() => {
+		if (currUser) {
+			User.find(
+				{_id: {$ne: currUser._id}, gender: currUser.genderpref,
+				genderpref: currUser.gender, age: {$gt: currUser.agepreflower,
+					$lt: currUser.ageprefupper}}, {}, {sort: {fame: -1}},(err, matches) => {
+				if (err) {
+					console.log(res.status(400).send(err));
 				}
-			return (res.render(path.resolve('views/matches'), {matches: filteredMatches}));
-		});
-	}
-	else {
-		return (res.redirect('/'));
-	}
+				else if (!matches) {
+					console.log('No matches for you!');
+				}
+				else {
+					var interestMatches = filters.getInterestMatches(currUser, matches);
+					var filteredMatches = filters.FilterFrom(interestMatches);
+					}
+				return (res.render(path.resolve('views/matches'), {matches: filteredMatches}));
+			});
+		}
+		else {
+			return (res.redirect('/'));
+		}
+	});
+	// if (currUser) {
+	// 	User.find(
+	// 		{_id: {$ne: currUser._id}, gender: currUser.genderpref,
+	// 		genderpref: currUser.gender, age: {$gt: currUser.agepreflower,
+	// 			$lt: currUser.ageprefupper}}, {}, {sort: {fame: -1}},(err, matches) => {
+	// 		if (err) {
+	// 			console.log(res.status(400).send(err));
+	// 		}
+	// 		else if (!matches) {
+	// 			console.log('No matches for you!');
+	// 		}
+	// 		else {
+	// 			var interestMatches = filters.getInterestMatches(currUser, matches);
+	// 			var filteredMatches = filters.FilterFrom(interestMatches);
+	// 			}
+	// 		return (res.render(path.resolve('views/matches'), {matches: filteredMatches}));
+	// 	});
+	// }
+	// else {
+	// 	return (res.redirect('/'));
+	// }
 }
 
 exports.like = (req, res, next) => {
 	var likedkey = req.body.potmatch;
 	currUser = req.session.user;
-	console.log('currUser is %s', currUser.username);
-
 	User.findOneAndUpdate({verifkey: likedkey}, {$inc:{fame:1}}, {new: true}, (err, doc) => {
 		if(err){
 			console.log("Something went wrong when updating match data!");
 		}
 	}).then((doc) => {
 		if (doc) {
-			Likes.findOne({likedUser: doc._id}, (err, haveLiked) => {
+			Likes.findOne({likedUser: doc._id, likeBy: currUser._id}, (err, haveLiked) => {
 				if (haveLiked != null) {
 					console.log('Already liked this person!');
 					return (res.redirect('/matches'));
@@ -77,7 +102,6 @@ exports.like = (req, res, next) => {
 							console.log(res.status(400).send(err));
 						}
 					});
-					console.log(like.likedUser);
 					return (res.redirect('/matches'));
 				}
 			});
