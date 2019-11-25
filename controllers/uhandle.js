@@ -2,6 +2,7 @@ const User	= require('../models/umod');
 const Photo	= require('../models/photos');
 const Interests	= require('../models/interests');
 const path	= require('path');
+const fs	= require('fs');
 const swig	= require('../app.js');
 const crypto = require('crypto');
 const PasswordValidator = require('password-validator');
@@ -81,22 +82,32 @@ exports.postlogin = (req, res, next) => {
 			console.log(res.status(400).send(err));
 		}
 		else if (user && user.verified == true) {
+			req.session.user = user;
 			console.log('Login Success!');
 			// pull ip from IPAddresses.txt and add the location data to location var in db and session.
-			// iplocation below needs to pull a random ip from the file i guess.
-			// iplocation('155.93.207.245', [], (error, res) => {
-			// 	location = res;
-			// 	console.log(location.postal);
-			// 	console.log(location.city);
-			// 	console.log(location.region);
-			// });
-			User.findOneAndUpdate({_id: user._id}, {$set: {loggedIn: true}}, err => {
-				if (err){
-					console.log('Something went wrong while updating logged in status!');
-				}
-			});
-			sessionData = req.session;
-			sessionData.user = user;
+			fs.readFile("IPAddresses.txt", 'utf8', function(err, data){
+				if(err) throw err;
+				var lines = data.split('\n');
+				ip = lines[Math.floor(Math.random()*lines.length)];
+				iplocation(ip, [], (error, res) => {
+					postal = res.postal;
+					city = res.city;
+					province = res.region;
+					var location = [
+						postal,
+						city,
+						province,
+					];
+					console.log(req.session.user);
+					User.findOneAndUpdate({_id: user._id}, {$set: {loggedIn: true, location: location}}, err => {
+						if (err){
+							console.log('Something went wrong while updating logged in status!');
+						}
+					});
+				});
+			})
+			// sessionData = req.session;
+			// sessionData.user = user;
 			return (res.redirect('/'));
 		} else {
 			console.log('Invalid login');
@@ -378,9 +389,7 @@ exports.postinterests = (req, res, next) => {
 			console.log("Something went wrong with updating interests.");
 		}
 		currUser = updateduser;
-		console.log(req.session.user.interests);
 	});
-	req.session.user.interests = interests;
 	console.log(req.session.user.interests);
 	// NEED TO FIX CURRENT USER NOT UPDATING SESSION VAR OR SOMETHING
 	return (res.redirect('/'));

@@ -29,7 +29,7 @@ exports.getMatchSuggestions = (req, res, next) => {
 	currUser = req.session.user;
 	// console.log(currUser);
 	// console.log("BELOW");
-	console.log(req.session.user.interests);
+	console.log(req.session.user);
 	if (currUser) {
 		User.find(
 			{_id: {$ne: currUser._id}, gender: currUser.genderpref, genderpref: currUser.gender, age: {$gt: currUser.agepreflower, $lt: currUser.ageprefupper}},
