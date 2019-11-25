@@ -11,6 +11,19 @@ class Filter {
 		this.filterBy['interestsFilter'] = filters[4];
 	}
 
+	getInterestMatches(user, matches) {
+		var userInterests = user.interests;
+		var matchInterests = [];
+		for (var i = 0; i < matches.length; i += 1) {
+			if (matches[i].interests != null) {
+				if (matches[i].interests.some(e => userInterests.indexOf(e) >= 0)) {
+					matchInterests.push(matches[i]);
+				}
+			}
+		}
+		return (matchInterests);
+	}
+
 	FilterFrom = (matches) => {
 		var filter = 0;
 		var filteredMatches = [];
@@ -33,7 +46,7 @@ class Filter {
 				filteredMatches.push(element);
 			else if (element.location == this.filterBy['locationFilter'] && this.filterBy['locationFilter'] != '')
 				filteredMatches.push(element);
-			else if (element.interests == this.filterBy['interestsFilter'] && this.filterBy['interestsFilter'] != '')
+			else if (element.interests.indexOf(this.filterBy['interestsFilter'])  > -1 && this.filterBy['interestsFilter'] != '')
 				filteredMatches.push(element);
 		});
 		return (filteredMatches);
