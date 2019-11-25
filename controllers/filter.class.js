@@ -24,6 +24,32 @@ class Filter {
 		return (matchInterests);
 	}
 
+	getLikeableMatches(likedMatches, matches) {
+		var _ = require('underscore');
+		if (!likedMatches.length)
+			return (matches);
+
+		var likedIds = [];
+		likedMatches.forEach(likd => {
+			likedIds.push(likd.likedUser.toString());
+		});
+
+		var matchIds = [];
+		matches.forEach(match => {
+			matchIds.push(match._id.toString());
+		});
+
+		var likeable = _.difference(matchIds, likedIds);
+		var matchLikeable = [];
+
+		matches.forEach(match => {
+			if (likeable.includes(match._id.toString())) {
+				matchLikeable.push(match);
+			}
+		});
+		return (matchLikeable);
+	}
+
 	FilterFrom = (matches) => {
 		var filter = 0;
 		var filteredMatches = [];
@@ -51,6 +77,8 @@ class Filter {
 		});
 		return (filteredMatches);
 	}
+
+
 }
 
 module.exports = Filter;
