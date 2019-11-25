@@ -33,7 +33,7 @@ class Filter {
 				filteredMatches.push(element);
 			else if (element.location == this.filterBy['locationFilter'] && this.filterBy['locationFilter'] != '')
 				filteredMatches.push(element);
-			else if (element.interests == this.filterBy['interestsFilter'] && this.filterBy['interestsFilter'] != '')
+			else if (element.interests.indexOf(this.filterBy['interestsFilter'])  > -1 && this.filterBy['interestsFilter'] != '')
 				filteredMatches.push(element);
 		});
 		return (filteredMatches);
