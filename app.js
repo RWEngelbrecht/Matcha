@@ -7,6 +7,7 @@ const Mongodb	= require('connect-mongodb-session')(session);
 const mongoose	= require('mongoose');
 const swig		= require('swig');
 const bodyParser= require('body-parser');
+// const fs		= require('fs');
 // MONGODB_URI		= "mongodb+srv://Yano:80058024@cluster0-jszpy.mongodb.net/matcha";
 MONGODB_URI		= "mongodb+srv://Rigardt:80058024@cluster0-e6mik.mongodb.net/matcha";
 const PasswordValidator = require('password-validator');
@@ -15,8 +16,9 @@ const app = express();
 // APP SETUP.
 app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
-app.use(session({ secret: 'matcha', resave: false, saveUninitialized: false}));
+app.use(session({ secret: 'matcha', resave: true, saveUninitialized: false}));
 app.use(flash());
+// app.use(fs());
 app.use(express.static('static'));
 app.use(bodyParser.urlencoded({extended: false, limit: '5mb'}));
 session.user = 0;
