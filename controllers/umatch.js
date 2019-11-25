@@ -1,7 +1,9 @@
 const User = require('../models/umod');
 const Likes = require('../models/likemod');
+const Filter = require('./filter.class')
 const path	= require('path');
 var currUser;
+var filters = new Filter();
 
 
 function getInterestMatches(user, matches) {
@@ -36,12 +38,10 @@ exports.getMatchSuggestions = (req, res, next) => {
 				console.log('No matches for you!');
 			}
 			else {
-				// matches.forEach(element => {
-				// 	console.log(element.username);
-				// });
 				var interestMatches = getInterestMatches(currUser, matches);
+				var filteredMatches = filters.FilterFrom(interestMatches);
 				}
-			return (res.render(path.resolve('views/matches'), {matches: interestMatches}));
+			return (res.render(path.resolve('views/matches'), {matches: filteredMatches}));
 		});
 	}
 	else {
@@ -92,3 +92,12 @@ exports.like = (req, res, next) => {
 	// });
 }
 
+exports.getFilter = (req, res, next) => {
+	return (res.render(path.resolve('views/filter')));
+}
+
+exports.postFilter = (req, res, next) => {
+	//give filter class all filters
+	filters.SetFilters(req.body.filterCrit);
+	return (res.redirect('/matches'));
+}
