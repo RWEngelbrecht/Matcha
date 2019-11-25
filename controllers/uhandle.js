@@ -86,7 +86,9 @@ exports.postlogin = (req, res, next) => {
 			// iplocation below needs to pull a random ip from the file i guess.
 			// iplocation('155.93.207.245', [], (error, res) => {
 			// 	location = res;
-			// 	console.log(location);
+			// 	console.log(location.postal);
+			// 	console.log(location.city);
+			// 	console.log(location.region);
 			// });
 			User.findOneAndUpdate({_id: user._id}, {$set: {loggedIn: true}}, err => {
 				if (err){
@@ -360,7 +362,7 @@ exports.getinterests = (req, res, next) => {
 		if (err) {
 			return (res.redirect('/logout'));
 		}
-		console.log(user);
+		// console.log(user);
 		interests = user.interests;
 		all_interests = all_pos_interests;
 		return (res.render(path.resolve('views/interests'), {interests, all_interests}));
@@ -368,7 +370,6 @@ exports.getinterests = (req, res, next) => {
 }
 // POST method
 exports.postinterests = (req, res, next) => {
-	console.log("POES POES PEOS");
 	const { interests } = req.body;
 	var currUser = req.session.user;
 	currUser.interests = [];
@@ -377,9 +378,11 @@ exports.postinterests = (req, res, next) => {
 			console.log("Something went wrong with updating interests.");
 		}
 		currUser = updateduser;
+		console.log(req.session.user.interests);
 	});
+	req.session.user.interests = interests;
+	console.log(req.session.user.interests);
 	// NEED TO FIX CURRENT USER NOT UPDATING SESSION VAR OR SOMETHING
-	console.log(interests);
 	return (res.redirect('/'));
   }
 //test to see how session works
