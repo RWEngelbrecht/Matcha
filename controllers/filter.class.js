@@ -11,6 +11,19 @@ class Filter {
 		this.filterBy['interestsFilter'] = filters[4];
 	}
 
+	getInterestMatches(user, matches) {
+		var userInterests = user.interests;
+		var matchInterests = [];
+		for (var i = 0; i < matches.length; i += 1) {
+			if (matches[i].interests != null) {
+				if (matches[i].interests.some(e => userInterests.indexOf(e) >= 0)) {
+					matchInterests.push(matches[i]);
+				}
+			}
+		}
+		return (matchInterests);
+	}
+
 	FilterFrom = (matches) => {
 		var filter = 0;
 		var filteredMatches = [];
