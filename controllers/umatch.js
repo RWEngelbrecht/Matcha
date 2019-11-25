@@ -47,8 +47,9 @@ exports.getMatchSuggestions = (req, res, next) => {
 				}
 				else {
 					var interestMatches = filters.getInterestMatches(currUser, matches);
-					var filteredMatches = filters.FilterFrom(interestMatches);
-					}
+					var likeableMatches = filters.getLikeableMatches(likedUsers, interestMatches);
+					var filteredMatches = filters.FilterFrom(likeableMatches);
+				}
 				return (res.render(path.resolve('views/matches'), {matches: filteredMatches}));
 			});
 		}
