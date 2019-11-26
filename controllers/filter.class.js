@@ -23,7 +23,9 @@ class Filter {
 		}
 		return (matchInterests);
 	}
-
+	//removes user profiles that appear in likedMatches from matches
+		//likedMatches should be array of Likes documents (see likemod.js)
+		//matches should be array of User docs
 	getLikeableMatches(likedMatches, matches) {
 		var _ = require('underscore');
 		if (!likedMatches.length)
@@ -48,6 +50,32 @@ class Filter {
 			}
 		});
 		return (matchLikeable);
+	}
+	// returns user profiles that 
+	getMatched(likedBy, likedMatches) {
+		var _ = require('underscore');
+		if (!likedBy.length)
+			return (liked);
+
+		var likers = [];
+		likedBy.forEach(likd => {
+			likers.push(likd.likeBy.toString());
+		});
+
+		var likedMatchIds = [];
+		likedMatches.forEach(match => {
+			likedMatchIds.push(match._id.toString());
+		});
+
+		var matched = _.intersection(likedMatchIds, likers);
+		var matchedUsers = [];
+
+		likedMatches.forEach(match => {
+			if (matched.includes(match._id.toString())) {
+				matchedUsers.push(match);
+			}
+		});
+		return (matchedUsers);
 	}
 
 	FilterFrom = (matches) => {

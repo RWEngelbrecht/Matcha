@@ -2,27 +2,22 @@
 
 {% block title %}Matches{% endblock %}
 
-{% macro input(type, name, id, value) %}
-	<input type="{{ type }}" name="{{ name }}" id="{{ id }}" value="{{ value }}">
-{% endmacro %}
-
 {% block body %}
-	{% if matches %}
-		<h1>Potential matches based on arbitrary stuff: </h1>
-		<a href="/filter"><button>Filter</button></a>
-		<!-- Click on one of these, popup with corresponding form -->
-		<table>
-			{% for match in matches %}
-				<tr>
-					<form action="" method="POST">
-						<td style="color: white">{{match.username}}</td>
-						<td>{{ input("hidden", "potmatch", "potmatch", match.verifkey) }}</td>
-						<td>{{ input("submit", "like", "like", "Like") }}</td>
-					</form>
-				</tr>
-			{% endfor %}
-		</table>
-	{% else %}
-		<h2>look at all these matches i dont have yet</h2>
-	{% endif %}
+	<table>
+		<h2>Matched users (both liked each other)</h2>
+		{% for match in matched %}
+			<tr>
+				<td style="color: white">{{match.username}}</td>
+			</tr>
+		{% endfor %}
+	</table>
+	<br >
+	<table>
+			<h2>liked users (other users liked by current user)</h2>
+		{% for liked in likedMatches %}
+			<tr>
+				<td style="color: white">{{liked.username}}</td>
+			</tr>
+		{% endfor %}
+	</table>
 {% endblock %}
