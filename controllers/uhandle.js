@@ -1,5 +1,6 @@
 const User	= require('../models/umod');
 const Photo	= require('../models/photos');
+const Order	= require('./order.class');
 const Interests	= require('../models/interests');
 const path	= require('path');
 const fs	= require('fs');
@@ -84,24 +85,24 @@ exports.postlogin = (req, res, next) => {
 		else if (user && user.verified == true) {
 			console.log('Login Success!');
 			// updating your location
-			fs.readFile("IPAddresses.txt", 'utf8',function(err, data){
-				if(err) throw err;
-				var lines = data.split('\n');
-				var ip = lines[Math.floor(Math.random()*lines.length)];
-				iplocation(ip, [], (error, res) => {
-					location = [
-						res.postal,
-						res.city,
-						res.region,
-					];
-				});
-				console.log(location);
-				User.findOneAndUpdate({_id: user._id}, {$set: {loggedIn: true/*, location: location*/}}, err => {
-					if (err){
-						console.log('Something went wrong while updating logged in status!');
-						}
-					});
-			});
+			// fs.readFile("IPAddresses.txt", 'utf8',function(err, data){
+			// 	if(err) throw err;
+			// 	var lines = data.split('\n');
+			// 	var ip = lines[Math.floor(Math.random()*lines.length)];
+			// 	iplocation(ip, [], (error, res) => {
+			// 		location = [
+			// 			res.postal,
+			// 			res.city,
+			// 			res.region,
+			// 		];
+			// 	});
+			// 	console.log(location);
+			// 	User.findOneAndUpdate({_id: user._id}, {$set: {loggedIn: true/*, location: location*/}}, err => {
+			// 		if (err){
+			// 			console.log('Something went wrong while updating logged in status!');
+			// 			}
+			// 		});
+			// });
 			sessionData = req.session;
 			sessionData.user = user;
 			return (res.redirect('/'));
