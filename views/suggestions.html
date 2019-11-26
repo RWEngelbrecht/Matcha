@@ -1,0 +1,31 @@
+{% extends 'layout.html' %}
+
+{% block title %}Suggested Matches{% endblock %}
+
+{% macro input(type, name, id, value) %}
+	<input type="{{ type }}" name="{{ name }}" id="{{ id }}" value="{{ value }}">
+{% endmacro %}
+
+{% block body %}
+	{% if matches %}
+		<h1>Potential matches based on arbitrary stuff: </h1>
+		<span>
+			<a href="/filter"><button>Filter</button></a>
+			<a href="/matches"><button>Liked</button></a>
+		</span>
+		<!-- Click on one of these, popup with corresponding form -->
+		<table>
+			{% for match in matches %}
+				<tr>
+					<form action="" method="POST">
+						<td style="color: white">{{match.username}}</td>
+						<td>{{ input("hidden", "potmatch", "potmatch", match.verifkey) }}</td>
+						<td>{{ input("submit", "like", "like", "Like") }}</td>
+					</form>
+				</tr>
+			{% endfor %}
+		</table>
+	{% else %}
+		<h2>look at all these matches i dont have yet</h2>
+	{% endif %}
+{% endblock %}
