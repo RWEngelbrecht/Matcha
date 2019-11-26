@@ -23,9 +23,10 @@ class Filter {
 		}
 		return (matchInterests);
 	}
-	//removes user profiles that appear in likedMatches from matches
-		//likedMatches should be array of Likes documents (see likemod.js)
-		//matches should be array of User docs
+
+// removes user profiles that appear in likedMatches from matches
+//	likedMatches should be array of Likes documents (see likemod.js)
+//	matches should be array of User docs
 	getLikeableMatches(likedMatches, matches) {
 		var _ = require('underscore');
 		if (!likedMatches.length)
@@ -51,11 +52,14 @@ class Filter {
 		});
 		return (matchLikeable);
 	}
-	// returns user profiles that 
+
+// returns users liked by currently logged-in user that have liked the current user.
+//	likedBy holds users that liked current user (array of docs from Likes)
+//	likedMatches holds users liked by current user (arr of docs from User)
 	getMatched(likedBy, likedMatches) {
 		var _ = require('underscore');
 		if (!likedBy.length)
-			return (liked);
+			return (likedBy);
 
 		var likers = [];
 		likedBy.forEach(likd => {
@@ -76,6 +80,31 @@ class Filter {
 			}
 		});
 		return (matchedUsers);
+	}
+
+	filterMatches = (likedUsers, matched) => {
+
+		var _ = require('underscore');
+
+		if (!matched)
+			return (likedUsers);
+
+		var likedUsersNames = [];
+		likedUsers.forEach(notMatch => {
+			likedUsersNames.push(notMatch.username);
+		});
+		var matchedNames = [];
+		matched.forEach(match => {
+			matchedNames.push(match.username);
+		});
+		var notMatches = _.difference(likedUsersNames, matchedNames);
+		var notMatchUsers = [];
+		likedUsers.forEach(liked => {
+			if (notMatches.includes(liked.username)) {
+				notMatchUsers.push(liked);
+			}
+		});
+		return (notMatchUsers);
 	}
 
 	FilterFrom = (matches) => {
@@ -105,8 +134,6 @@ class Filter {
 		});
 		return (filteredMatches);
 	}
-
-
 }
 
 module.exports = Filter;
