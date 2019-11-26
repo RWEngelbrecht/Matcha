@@ -49,13 +49,18 @@ exports.getMatchSuggestions = (req, res, next) => {
 }
 
 exports.getMatches = (req, res, next) => {
+
 	let message = req.flash('Something went wrong, please try again later!');
 	if (message.length > 0) {
 		message = message[0];
 	} else {
 		message = null;
 	}
+
 	currUser = req.session.user;
+	if (!currUser)
+		res.redirect('/');
+
 	var likedUsers = [];
 	Likes.find({likeBy: currUser._id})
 		.populate('likedUser')
@@ -69,21 +74,11 @@ exports.getMatches = (req, res, next) => {
 			Likes.find({likedUser: currUser._id}, (err, currLiked) => { // people that have liked the current user
 				var matched = filters.getMatched(currLiked, likedUsers); // filtered out people who user hasn't liked
 				//filter matched users that also liked current user from likedUsers
-				
-				console.log(likedUsers);
-				console.log(currLiked);
-				console.log(matched);
-				return (res.render(path.resolve('views/matches'), {likedMatches: likedUsers, matched: matched}));
+				var notMatched = filters.filterMatches(likedUsers, matched);
+
+				return (res.render(path.resolve('views/matches'), {likedMatches: notMatched, matched: matched}));
 			});
 		});
-		// .then(() => {
-		// 	// send mutual likes and one-sided likes through as seperate arrays
-		// 	Likes.find({likedUser: currUser._id}, (err, currLiked) => {
-		// 		console.log(liked);
-		// 		console.log(currLiked);
-		//		filter.getLikeableMatches(currLiked, liked)
-		// 	});
-		// })
 }
 
 exports.like = (req, res, next) => {
@@ -114,16 +109,6 @@ exports.like = (req, res, next) => {
 			});
 		}
 	});
-
-	// Likes.findOne({likeBy: currUser._id}).
-	// populate('likeBy').
-	// populate('likedUser').
-	// exec((err, like) => {
-	// 	if (err) {
-	// 		console.log(res.status(400).send(err));
-	// 	}
-	// 	console.log('%s likes %s', like.likeBy.username, like.likedUser.username);
-	// });
 }
 
 exports.getFilter = (req, res, next) => {

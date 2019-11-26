@@ -3,21 +3,27 @@
 {% block title %}Matches{% endblock %}
 
 {% block body %}
-	<table>
-		<h2>Matched users (both liked each other)</h2>
-		{% for match in matched %}
-			<tr>
-				<td style="color: white">{{match.username}}</td>
-			</tr>
-		{% endfor %}
-	</table>
+	{% if matched.length > 0 or likedMatches.length > 0 %}
+		<table>
+			<h2 style="color: white">Matched users (both liked each other)</h2>
+			{% for match in matched %}
+				<tr>
+					<td style="color: white">{{match.username}}</td>
+				</tr>
+			{% endfor %}
+		</table>
+		<br >
+		<table>
+			<h2 style="color: white">liked users (other users liked by current user)</h2>
+			{% for liked in likedMatches %}
+				<tr>
+					<td style="color: white">{{liked.username}}</td>
+				</tr>
+			{% endfor %}
+		</table>
+	{% else %}
+		<h2 style="color:white">What are you even using this app for?</h2>
+	{% endif %}
 	<br >
-	<table>
-			<h2>liked users (other users liked by current user)</h2>
-		{% for liked in likedMatches %}
-			<tr>
-				<td style="color: white">{{liked.username}}</td>
-			</tr>
-		{% endfor %}
-	</table>
+	<a href="/suggestions"><button>potential matches</button></a>
 {% endblock %}
