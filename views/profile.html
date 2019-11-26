@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+
+{% block title %}Matcha - Profile{% endblock %}
+
+{% block body %}
+	{% if user %}
+		<h1 style="color: white">{{user.username}}</h1><br >
+		<h3 style="color: white">{{user.firstname}} {{user.surname}}</h3>
+		<h2 style="color: white">PROFILE INFO</h2><br >
+			<p style="color: white">{{user.about}}</p><br >
+		<h1 style="color: white">IMAGES</h1><br >
+		{% if photos %}
+			{% for photo in photos %}
+				<div class="shadow-lg mr-2">
+					<img class="rounded border-warning" src="data:image/jpg;base64,{{photo.photo}}" width="180" height="180">
+				</div>
+			{% endfor %}
+		{% endif %}
+		<h1 style="color: white">INTERESTS</h1><br >
+	{% endif %}
+{% endblock %}
