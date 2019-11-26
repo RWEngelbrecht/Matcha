@@ -1,29 +1,14 @@
 {% extends 'layout.html' %}
 
-{% block title %}Matcha - Home{% endblock %}
-
-{% block navlist %}
-	<li><a href="/">Home</a></li>
-
-
-
-	{% if userLogged == false %}
-		<li><a href="/login">Login</a></li>
-		<li><a href="/register">Register</a></li>
-	{% else %}
-		<li><a href="/suggestions">Matcha Me, Mario</a></li>
-	{% endif %}
-
-{% endblock %}
+{% block title %}Matcha - Profile{% endblock %}
 
 {% block body %}
-
 	{% if user %}
 		<h1 style="color: white">{{user.username}}</h1><br >
 		<h3 style="color: white">{{user.firstname}} {{user.surname}}</h3>
 		<h2 style="color: white">PROFILE INFO</h2><br >
 			<p style="color: white">{{user.about}}</p><br >
-		<h style="color: white"1>IMAGES</h1><br >
+		<h1 style="color: white">IMAGES</h1><br >
 		{% if photos %}
 			{% for photo in photos %}
 				<div class="shadow-lg mr-2">
@@ -32,15 +17,5 @@
 			{% endfor %}
 		{% endif %}
 		<h1 style="color: white">INTERESTS</h1><br >
-		{% if user.interests %}
-			<table>
-				{% for interest in user.interests %}
-					<tr>
-						<td>{{interest}}</td>
-					</tr>
-				{% endfor %}
-			</table>
-		{% endif %}
 	{% endif %}
-
 {% endblock %}

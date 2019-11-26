@@ -50,7 +50,7 @@ exports.gethome = (req, res, next) => {
 		if (err) {
 			console.log("Could not find photos.");
 		}
-		return (res.render(path.resolve('views/index'),{user: currUser.username, photos: photos}));
+		return (res.render(path.resolve('views/index'),{user: currUser, photos: photos}));
 	});
 }
 // Login
@@ -64,9 +64,7 @@ exports.getlogin = (req, res, next) => {
 		message = null;
 	}
 	loggedUser = 0;
-	return (res.render(path.resolve('views/login'),{
-		user: loggedUser
-	}));
+	return (res.render(path.resolve('views/login'),{user: loggedUser}));
 }
 // POST method
 exports.postlogin = (req, res, next) => {
@@ -390,7 +388,22 @@ exports.postinterests = (req, res, next) => {
 	console.log(req.session.user.interests);
 	// NEED TO FIX CURRENT USER NOT UPDATING SESSION VAR OR SOMETHING
 	return (res.redirect('/'));
-  }
+}
+
+exports.getProfile = (req, res, next) => {
+
+	currUser = req.session.user
+	if (!currUser) {
+		return (res.status(400).send(err));
+	}
+	Photo.find({user: currUser._id}, (err, photos) => {
+		if (err) {
+			console.log("Could not find photos.");
+		}
+		return (res.render(path.resolve('views/index'),{user: currUser, photos: photos}));
+	});
+}
+
 //test to see how session works
 exports.getUserData = (req, res, next) => {
 	console.log('Reached getUserData');
