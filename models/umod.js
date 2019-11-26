@@ -80,8 +80,11 @@ const usertable = new Schema({
 	loggedIn: {
 		type: Boolean,
 		default: false
-	}
-	// TODO LOCATION.
+	},
+	location: [{
+		type: String,
+		default: null,
+	}],
 });
 
 module.exports = mongoose.model('User', usertable);
