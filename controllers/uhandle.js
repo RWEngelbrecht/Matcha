@@ -3,8 +3,6 @@ const Photo	= require('../models/photos');
 const Order	= require('./order.class');
 const Interests	= require('../models/interests');
 const path	= require('path');
-const fs	= require('fs');
-const swig	= require('../app.js');
 const crypto = require('crypto');
 const PasswordValidator = require('password-validator');
 const nodemailer = require('nodemailer');
@@ -392,16 +390,22 @@ exports.postinterests = (req, res, next) => {
 }
 
 exports.getProfile = (req, res, next) => {
-
 	currUser = req.session.user
 	if (!currUser) {
 		return (res.status(400).send(err));
 	}
-	Photo.find({user: currUser._id}, (err, photos) => {
+	var profileUsrId = req.params.id;
+	User.findOne({_id: profileUsrId}, (err, user) => {
+
 		if (err) {
-			console.log("Could not find photos.");
+			return (res.status(400).send(err));
 		}
-		return (res.render(path.resolve('views/index'),{user: currUser, photos: photos}));
+		Photo.find({user: profileUsrId}, (err, photos) => {
+			if (err) {
+				console.log("Could not find photos.");
+			}
+			return (res.render(path.resolve('views/index'),{user: user, photos: photos}));
+		});
 	});
 }
 
