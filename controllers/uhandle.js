@@ -95,11 +95,11 @@ exports.postlogin = (req, res, next) => {
 			// 		];
 			// 	});
 			// 	console.log(location);
-			// 	User.findOneAndUpdate({_id: user._id}, {$set: {loggedIn: true/*, location: location*/}}, err => {
-			// 		if (err){
-			// 			console.log('Something went wrong while updating logged in status!');
-			// 			}
-			// 		});
+			User.findOneAndUpdate({_id: user._id}, {$set: {loggedIn: true/*, location: location*/}}, err => {
+				if (err){
+					console.log('Something went wrong while updating logged in status!');
+					}
+				});
 			// });
 			sessionData = req.session;
 			sessionData.user = user;
@@ -249,7 +249,8 @@ exports.getlogout = (req, res, next) => {
 		if (err) {
 			console.log("Something went wrong while logging out!");
 		}
-	})
+
+	});
 	req.session.user = null;
 	return (res.redirect('/'));
 }
@@ -404,10 +405,3 @@ exports.getProfile = (req, res, next) => {
 	});
 }
 
-//test to see how session works
-exports.getUserData = (req, res, next) => {
-	console.log('Reached getUserData');
-	sessionData = req.session;
-	console.log(sessionData.user.interests);
-	return (res.render(path.resolve('views/index')));
-}
