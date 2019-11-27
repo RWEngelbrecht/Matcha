@@ -2,13 +2,24 @@
 
 {% block title %}Matches{% endblock %}
 
+{% macro  %}
+{% endmacro  %}
+
 {% block body %}
+<!-- Need to add unmatch/unlike buttons respectively, linked to unlike route i.e. /matches/unlike -->
 	{% if matched.length > 0 or likedMatches.length > 0 %}
 		<table>
 			<h2 style="color: white">Matched users (both liked each other)</h2>
 			{% for match in matched %}
 				<tr>
-					<td style="color: white">{{match.username}}</td>
+					<td style="color: white">
+						{{match.username}}
+						{% if match.loggedIn == true %}
+							{{"Online"}}
+						{% else %}
+							{{"Last seen: "+Math.ceil(Date.now() - match.lastSeen.getTime()) / 1000 / 60 / 60) }}
+						{% endif %}
+					</td>
 				</tr>
 			{% endfor %}
 		</table>
