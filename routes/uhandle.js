@@ -38,8 +38,6 @@ uhandle.postregister);
 router.get('/confirm', uhandle.getconfirm);
 // LOGOUT
 router.get('/logout', uhandle.getlogout);
-// IDK @ RIGARDT?
-router.get('/userdata', uhandle.getUserData);
 // SEND RESET PASSWORD.
 router.get('/resetpwd', uhandle.getresetpwd);
 router.post('/resetpwd', [
