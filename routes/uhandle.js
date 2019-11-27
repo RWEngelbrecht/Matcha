@@ -56,5 +56,6 @@ uhandle.postresetpassword);
 router.get('/interests', uhandle.getinterests);
 router.post('/interests', uhandle.postinterests);
 
-router.get('/profile', uhandle.getProfile);
+router.get('/profile/:id',uhandle.getProfile);
+
 module.exports = router;
