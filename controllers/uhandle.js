@@ -3,8 +3,6 @@ const Photo	= require('../models/photos');
 const Order	= require('./order.class');
 const Interests	= require('../models/interests');
 const path	= require('path');
-const fs	= require('fs');
-const swig	= require('../app.js');
 const crypto = require('crypto');
 const PasswordValidator = require('password-validator');
 const nodemailer = require('nodemailer');
@@ -95,11 +93,11 @@ exports.postlogin = (req, res, next) => {
 			// 		];
 			// 	});
 			// 	console.log(location);
-			// 	User.findOneAndUpdate({_id: user._id}, {$set: {loggedIn: true/*, location: location*/}}, err => {
-			// 		if (err){
-			// 			console.log('Something went wrong while updating logged in status!');
-			// 			}
-			// 		});
+			User.findOneAndUpdate({_id: user._id}, {$set: {loggedIn: true/*, location: location*/}}, err => {
+				if (err){
+					console.log('Something went wrong while updating logged in status!');
+					}
+				});
 			// });
 			sessionData = req.session;
 			sessionData.user = user;
@@ -249,7 +247,8 @@ exports.getlogout = (req, res, next) => {
 		if (err) {
 			console.log("Something went wrong while logging out!");
 		}
-	})
+
+	});
 	req.session.user = null;
 	return (res.redirect('/'));
 }
@@ -391,23 +390,22 @@ exports.postinterests = (req, res, next) => {
 }
 
 exports.getProfile = (req, res, next) => {
-
 	currUser = req.session.user
 	if (!currUser) {
 		return (res.status(400).send(err));
 	}
-	Photo.find({user: currUser._id}, (err, photos) => {
+	var profileUsrId = req.params.id;
+	User.findOne({_id: profileUsrId}, (err, user) => {
+
 		if (err) {
-			console.log("Could not find photos.");
+			return (res.status(400).send(err));
 		}
-		return (res.render(path.resolve('views/index'),{user: currUser, photos: photos}));
+		Photo.find({user: profileUsrId}, (err, photos) => {
+			if (err) {
+				console.log("Could not find photos.");
+			}
+			return (res.render(path.resolve('views/index'),{user: user, photos: photos}));
+		});
 	});
 }
 
-//test to see how session works
-exports.getUserData = (req, res, next) => {
-	console.log('Reached getUserData');
-	sessionData = req.session;
-	console.log(sessionData.user.interests);
-	return (res.render(path.resolve('views/index')));
-}

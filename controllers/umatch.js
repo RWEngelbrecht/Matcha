@@ -76,7 +76,7 @@ exports.getMatches = (req, res, next) => {
 				//filter matched users that also liked current user from likedUsers
 				var notMatched = filters.filterMatches(likedUsers, matched);
 
-				return (res.render(path.resolve('views/matches'), {likedMatches: notMatched, matched: matched}));
+				return (res.render(path.resolve('views/matches'), {likedMatches: notMatched, matched: matched, user: currUser}));
 			});
 		});
 }
