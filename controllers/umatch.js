@@ -2,6 +2,7 @@ const User = require('../models/umod');
 const Likes = require('../models/likemod');
 const Filter = require('./filter.class')
 const path	= require('path');
+const mongoose	= require('mongoose');
 var currUser;
 var filters = new Filter();
 
@@ -61,23 +62,41 @@ exports.getMatches = (req, res, next) => {
 	if (!currUser)
 		res.redirect('/');
 
+	var likedUserIDs = [];
 	var likedUsers = [];
-	Likes.find({likeBy: currUser._id})
-		.populate('likedUser')
-		.exec((err, liked) => {
-			if (err) {
-				return (res.status(400).send(err));
-			}
-			liked.forEach(user => {
-				likedUsers.push(user.likedUser); // profiles that current user has liked
-			});
-			Likes.find({likedUser: currUser._id}, (err, currLiked) => { // people that have liked the current user
-				var matched = filters.getMatched(currLiked, likedUsers); // filtered out people who user hasn't liked
-				//filter matched users that also liked current user from likedUsers
-				var notMatched = filters.filterMatches(likedUsers, matched);
+	// Likes.find({likeBy: currUser._id})
+	// 	.populate('likedUser')
+	// 	.exec((err, liked) => {
+	// 		if (err) {
+	// 			return (res.status(400).send(err));
+	// 		}
+	// 		liked.forEach(user => {
+	// 			likedUsers.push(user.likedUser); // profiles that current user has liked
+	// 		});
+	// 		Likes.find({likedUser: currUser._id}, (err, currLiked) => { // people that have liked the current user
+	// 			var matched = filters.getMatched(currLiked, likedUsers); // filtered out people who user hasn't liked
+	// 			//filter matched users that also liked current user from likedUsers
+	// 			var notMatched = filters.filterMatches(likedUsers, matched);
 
-				return (res.render(path.resolve('views/matches'), {likedMatches: notMatched, matched: matched, user: currUser}));
+	// 			return (res.render(path.resolve('views/matches'), {likedMatches: notMatched, matched: matched, user: currUser}));
+	// 		});
+	// 	});
+	Likes.find({likeBy: currUser._id}).then((liked) => {
+			liked.forEach(user => {
+				likedUserIDs.push(user.likedUser); // profiles that current user has liked
 			});
+			User.find({_id: {$in: likedUserIDs}},(err, likedUsrs) => {
+				Likes.find({likedUser: currUser._id}, (err, currLiked) => { // people that have liked the current user
+					var matched = filters.getMatched(currLiked, likedUsrs); // filtered out people who user hasn't liked
+													//filter matched users that also liked current user from likedUsers
+					var notMatched = filters.filterMatches(likedUsrs, matched);
+
+					res.render(path.resolve('views/matches'), {likedMatches: notMatched, matched: matched, user: currUser});
+				});
+			})
+		})
+		.catch((error) => {
+			console.log(error);
 		});
 }
 
