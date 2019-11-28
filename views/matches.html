@@ -7,34 +7,35 @@
 
 {% block body %}
 <!-- Need to add unmatch/unlike buttons respectively, linked to unlike route i.e. /matches/unlike -->
-	{% if matched.length > 0 or likedMatches.length > 0 %}
-		<table>
-			<h2 style="color: white">Matched users (both liked each other)</h2>
+<div class = "row" style="min-height: 82vh; height:82vh">
+	<div class = "col-10 align-self-center mx-auto rounded" style="background-color: rgb(40,40,40,0.5)">
+		<h1 class="mt-4 text-warning display-4">Matches & Likes</h1>
+		{% if matched.length > 0%}
+		<h2 class="mt-4 text-warning">Start talking to...</h2>	
 			{% for match in matched %}
-				<tr>
-					<td style="color: white">
-						<a href="/profile/{{match._id.toString()}}">{{match.username}}</a>
+				<div>
+					<a class="text-decoration-none h6 text-warning" href="/profile/{{match._id.toString()}}">{{match.username}}</a>
 						{% if match.loggedIn == true %}
 							{{"Online"}}
 						{% else %}
 							{{"Last seen: "+ match.lastSeen.toString().substring(3, 25)}}
 						{% endif %}
-					</td>
-				</tr>
+				</div>
 			{% endfor %}
-		</table>
-		<br >
-		<table>
-			<h2 style="color: white">liked users (other users liked by current user)</h2>
-			{% for liked in likedMatches %}
-				<tr>
-					<td style="color: white">{{liked.username}}</td>
-				</tr>
-			{% endfor %}
-		</table>
-	{% else %}
-		<h2 style="color:white">What are you even using this app for?</h2>
-	{% endif %}
-	<br >
-	<a href="/suggestions"><button>potential matches</button></a>
+		{% endif %}
+		{% if likedMatches.length > 0 %}
+		<h2 class="mt-4 mb-4 text-warning">People you've got an eye on</h2>
+		{% for liked in likedMatches %}
+			<div class="row">
+				<div class="col">
+					<h4 class="h6 text-warning">{{liked.username}}</h4>
+				</div>
+			</div>
+		{% endfor %}
+		{% endif %}
+		<div class="mt-4 mb-4">
+			<a href="/suggestions"><button class="btn btn-outline-warning">Find someone new</button></a>
+		</div>
+	</div>	
+</div>	
 {% endblock %}
