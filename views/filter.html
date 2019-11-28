@@ -3,17 +3,29 @@
 {% block title %}Here be the criteria ye filter by{% endblock %}
 
 {% macro input(title, type, name) %}
-		<h3>{{title}}</h3>
-		<input type="{{type}}" name="filterCrit" id="{{name}}">
+	<!-- <form method="POST"> -->
+		<div class="mt-2 form-row">
+			<h4 class="col-2 text-warning">{{title}}</h3>
+			<div class="col-4">
+				<input class="form-control" type="{{type}}" name="filterCrit" id="{{name}}">
+			</div>
+		</div>
+		<!-- <input type="submit" name="filter" id="filter" value="Filter"> -->
+	<!-- </form> -->
 {% endmacro %}
 
 {% block body %}
-	<form method="POST">
-		{{input("Age", "text", "filterAge")}}  <!-- can already set age upper + lower, here filter by specific age -->
-		{{input("Fame", "text", "filterFame")}}
-		{{input("Gender", "text", "filterGender")}}
-		{{input("Location", "text", "filterLocation")}}
-		{{input("Interests", "text", "filterInterests")}}
-		<input type="submit" name="filter" id="filter" value="Filter">
-	</form>
+<div class = "container mt-4 fluid" style="min-height: 82vh; height:82vh">
+	<div class="col-10 mx-auto rounded" style="background-color: rgb(40,40,40,0.5)">
+		<h1 class="mt-4 text-warning display-4">How high are your standards?</h1>
+		<form class="mt-4 mb-4" method="POST">
+			{{input("Age", "text", "filterAge")}}  <!-- can already set age upper + lower, here filter by specific age -->
+			{{input("Fame", "text", "filterFame")}}
+			{{input("Gender", "text", "filterGender")}}
+			{{input("Location", "text", "filterLocation")}}
+			{{input("Interests", "text", "filterInterests")}}
+			<input class="btn btn-outline-warning mt-4 mb-4" type="submit" name="filter" id="filter" value="Apply">
+		</form>
+	</div>
+</div>
 {% endblock %}
