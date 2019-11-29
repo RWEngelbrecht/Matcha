@@ -35,6 +35,7 @@ app.use(user_info);
 app.use(umatch);
 app.use(photo);
 
+mongoose.set('useFindAndModify', false);
 mongoose
 	.connect(MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true})
 	.then(result => {
