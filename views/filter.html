@@ -5,7 +5,7 @@
 {% macro input(title, type, name) %}
 	<!-- <form method="POST"> -->
 		<div class="mt-2 form-row">
-			<h4 class="col-2 text-warning">{{title}}</h3>
+			<h4 class="col-2 text-warning">{{title}}</h4>
 			<div class="col-4">
 				<input class="form-control" type="{{type}}" name="filterCrit" id="{{name}}">
 			</div>
@@ -22,8 +22,34 @@
 			{{input("Age", "text", "filterAge")}}  <!-- can already set age upper + lower, here filter by specific age -->
 			{{input("Fame", "text", "filterFame")}}
 			{{input("Gender", "text", "filterGender")}}
-			{{input("Location", "text", "filterLocation")}}
-			{{input("Interests", "text", "filterInterests")}}
+			<div class="mt-2 form-row">
+				<h4 class="col-2 text-warning">Location</h4>
+				<div class="col-4">
+					<select name="filterCrit">
+						<option value="">None</option>
+						<option value="suburb">My Suburb</option>
+						<option value="city">My City</option>
+					</select>
+				</div>
+			</div>
+			<div class="mt-2 form-row">
+					<h4 class="col-2 text-warning">Interest</h4>
+					<div class="col-4">
+						<select name="filterCrit">
+							<option value="">None</option>
+							<option value="Octopi/Octopuses/Octopodes">Octopi/Octopuses/Octopodes</option>
+							<option value="Alcohol">Alcohol</option>
+							<option value="Arguing with people online">Arguing with people online</option>
+							<option value="Tying knots">Tying knots</option>
+							<option value="Salami">Salami</option>
+							<option value="Dating Apps">Dating Apps</option>
+							<option value="Kicking puppies">Kicking puppies</option>
+							<option value="Counting from 1-10 100 times">Counting from 1-10 100 times</option>
+							<option value="Repetitive Music">Repetitive Music</option>
+							<option value="Doing cartwheels">Doing cartwheels</option>
+						</select>
+					</div>
+				</div>
 			<input class="btn btn-outline-warning mt-4 mb-4" type="submit" name="filter" id="filter" value="Apply">
 		</form>
 	</div>
