@@ -27,8 +27,8 @@ exports.getMatchSuggestions = (req, res, next) => {
 		if (currUser) {
 			User.find(
 				{_id: {$ne: currUser._id}, gender: currUser.genderpref,
-				genderpref: currUser.gender, age: {$gt: currUser.agepreflower,
-					$lt: currUser.ageprefupper}}, {}, {sort: {fame: -1}},(err, matches) => {
+				genderpref: currUser.gender, age: {$gte: currUser.agepreflower,
+					$lte: currUser.ageprefupper}}, {}, {sort: {fame: -1}},(err, matches) => {
 				if (err) {
 					console.log(res.status(400).send(err));
 				}
@@ -38,9 +38,10 @@ exports.getMatchSuggestions = (req, res, next) => {
 				else {
 					var interestMatches = filters.getInterestMatches(currUser, matches);
 					var likeableMatches = filters.getLikeableMatches(likedUsers, interestMatches);
-					var filteredMatches = filters.FilterFrom(likeableMatches);
+					var filteredMatches = filters.FilterFrom(currUser, likeableMatches);
+
 				}
-				res.render(path.resolve('views/suggestions'), {matches: filteredMatches});
+				res.render(path.resolve('views/suggestions'), {matches: filteredMatches, filters: filters.filterBy});
 			});
 		}
 		else {
@@ -137,5 +138,10 @@ exports.getFilter = (req, res, next) => {
 exports.postFilter = (req, res, next) => {
 	//give filter class all filters
 	filters.SetFilters(req.body.filterCrit);
+	return (res.redirect('/suggestions'));
+}
+
+exports.clearFilter = (req, res, next) => {
+	filters.ClearFilters();
 	return (res.redirect('/suggestions'));
 }
