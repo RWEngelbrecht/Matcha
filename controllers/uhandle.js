@@ -76,7 +76,7 @@ exports.getlogin = (req, res, next) => {
 	return (res.render(path.resolve('views/login'),{user: loggedUser}));
 }
 // POST method
-exports.postlogin = (req, res, next) => {
+exports.postlogin = (req, res) => {
 	console.log("uhandle postlogin reached(Controller)");
 	let message = req.flash('Something went wrong, please try again later!');
 	if (message.length > 0) {
@@ -91,36 +91,18 @@ exports.postlogin = (req, res, next) => {
 		}
 		else if (user && user.verified == true) {
 			console.log('Login Success!');
-			// updating your location
-			fs.readFile("IPAddresses.txt", 'utf8',function(err, data){
-				if(err) throw err;
-				var lines = data.split('\n');
-				var ip = lines[Math.floor(Math.random()*lines.length)];
-				iplocation(ip, [], (error, res) => {
-					location = [
-						res.postal,
-						res.city,
-						res.region,
-					];
-					User.findOneAndUpdate({_id: user._id}, {$set: {location: location}}, err => {
-						if (err){
-							console.log('failed to set location');
-							}
-							console.log("THE DB LOCATION IS");
-							console.log(location);		
-						});
-				});
-			});
-			User.findOneAndUpdate({_id: user._id}, {$set: {loggedIn: true/*, location: location*/}}, err => {
+			User.findOneAndUpdate({_id: user._id}, {$set: {loggedIn: true}}, err => {
 				if (err){
 					console.log('Something went wrong while updating logged in status!');
-					}
-				});
-			// });
-			sessionData = req.session;
-			sessionData.user = user;
-			console.log("SESSION LOCATION IS")
-			console.log(req.session.user.location);
+				}
+			});
+			req.session.user = user;
+			// TODO
+			/*
+			req.session.user.location = getLocation(user._id);
+			console.log("SESSION USER");
+			console.log(req.session.user);
+			*/
 			return (res.redirect('/'));
 		} else {
 			console.log('Invalid login');
@@ -128,6 +110,31 @@ exports.postlogin = (req, res, next) => {
 		}
 	});
 	// NEED TO ADD DB QUERY AND SESSION SET HERE.
+}
+function getLocation(id) {
+	return new Promise(function(resolve, reject){
+		fs.readFile("IPAddresses.txt", 'utf8',function(err, data){
+			if(err) throw err;
+			var lines = data.split('\n');
+			var ip = lines[Math.floor(Math.random()*lines.length)];
+			iplocation(ip, [], (error, res) => {
+				location = [
+					res.postal,
+					res.city,
+					res.region,
+				];
+				User.findOneAndUpdate({_id: id}, {$set: {location: location}}, (err, user) => {
+					if (err){
+						console.log('failed to set location');
+						reject(user);
+					}
+				});
+				console.log("AJGHFAJSGL");
+				console.log(location);
+				resolve(location);
+			});
+		});
+	})
 }
 // Register
 // GET method
