@@ -40,7 +40,7 @@ exports.getMatchSuggestions = (req, res, next) => {
 					var likeableMatches = filters.getLikeableMatches(likedUsers, interestMatches);
 					var filteredMatches = filters.FilterFrom(likeableMatches);
 				}
-				return (res.render(path.resolve('views/suggestions'), {matches: filteredMatches}));
+				res.render(path.resolve('views/suggestions'), {matches: filteredMatches});
 			});
 		}
 		else {
