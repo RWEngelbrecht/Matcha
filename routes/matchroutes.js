@@ -11,5 +11,6 @@ mrouter.get('/matches', umatch.getMatches);
 //filtering
 mrouter.get('/filter', umatch.getFilter);
 mrouter.post('/filter', umatch.postFilter);
+mrouter.post('/filterclear', umatch.clearFilter);
 
 module.exports = mrouter;
