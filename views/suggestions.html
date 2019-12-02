@@ -12,6 +12,9 @@
 		<span>
 			<a href="/filter"><button>Filter</button></a>
 			<a href="/matches"><button>Liked</button></a>
+			{% if filters %}
+				<button onclick="clearFilters()">Clear Filters</button>
+			{% endif %}
 		</span>
 		<!-- Click on one of these, popup with corresponding form -->
 		<table>
@@ -28,4 +31,16 @@
 	{% else %}
 		<h2>look at all these matches i dont have yet</h2>
 	{% endif %}
+<script type="text/javascript">
+	function clearFilters() {
+		const xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = () => {
+			if (xhttp.status == 200 && xhttp.readyState == 4) {
+				console.log('filters cleared');
+			}
+		}
+		xhttp.open("POST", 'filterclear', true);
+		xhttp.send();
+	}
+</script>
 {% endblock %}
