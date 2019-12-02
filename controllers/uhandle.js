@@ -43,14 +43,14 @@ exports.gethome = (req, res, next) => {
 	}
 	test = new Order(req.session.user._id, req.session.user.interests);
 	me = test.OderByLocation(req.session.user.location);
-	me.then(function(result) {
-        userDetails = result;
-        console.log("Initialized user details");
-        // Use user details from here
-        console.log(userDetails)
-    }, function(err) {
-        console.log(err);
-	});
+	// me.then(function(result) {
+    //     userDetails = result;
+    //     // console.log("THE DB LOCATION IS");
+    //     // Use user details from here
+    //     // console.log(userDetails)
+    // }, function(err) {
+    //     console.log(err);
+	// });
 	if (req.session.user.interests === null) {
 		return (res.redirect('/interests'));
 	}
@@ -106,8 +106,9 @@ exports.postlogin = (req, res, next) => {
 						if (err){
 							console.log('failed to set location');
 							}
+							console.log("THE DB LOCATION IS");
+							console.log(location);		
 						});
-						console.log(location);		
 				});
 			});
 			User.findOneAndUpdate({_id: user._id}, {$set: {loggedIn: true/*, location: location*/}}, err => {
@@ -118,7 +119,7 @@ exports.postlogin = (req, res, next) => {
 			// });
 			sessionData = req.session;
 			sessionData.user = user;
-			console.log("MEMEMEM")
+			console.log("SESSION LOCATION IS")
 			console.log(req.session.user.location);
 			return (res.redirect('/'));
 		} else {
@@ -403,6 +404,7 @@ exports.postinterests = (req, res, next) => {
 		}
 		currUser = updateduser;
 	});
+	req.session.user.interests = interests;
 	console.log(req.session.user.interests);
 	// NEED TO FIX CURRENT USER NOT UPDATING SESSION VAR OR SOMETHING
 	return (res.redirect('/'));
