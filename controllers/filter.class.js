@@ -11,6 +11,14 @@ class Filter {
 		this.filterBy['interestsFilter'] = filters[4];
 	}
 
+	ClearFilters = () => {
+		this.filterBy['ageFilter'] = '';
+		this.filterBy['fameFilter'] = '';
+		this.filterBy['genderFilter'] = '';
+		this.filterBy['locationFilter'] = '';
+		this.filterBy['interestsFilter'] = '';
+	}
+
 	getInterestMatches(user, matches) {
 		var userInterests = user.interests;
 		var matchInterests = [];
@@ -107,12 +115,12 @@ class Filter {
 		return (notMatchUsers);
 	}
 
-	FilterFrom = (matches) => {
+	FilterFrom = (user, matches) => {
 		var filter = 0;
 		var filteredMatches = [];
 		// if filters empty, don't filter
 		for (var el in this.filterBy) {
-			if (this.filterBy[el] != '') {
+			if (this.filterBy[el] != '' && typeof this.filterBy[el] !== 'undefined') {
 				filter = 1;
 			}
 		}
@@ -127,8 +135,12 @@ class Filter {
 				filteredMatches.push(element);
 			else if (element.gender == this.filterBy['genderFilter'] && this.filterBy['genderFilter'] != '')
 				filteredMatches.push(element);
-			else if (element.location == this.filterBy['locationFilter'] && this.filterBy['locationFilter'] != '')
-				filteredMatches.push(element);
+			else if (this.filterBy['locationFilter'] != '') {
+				if (this.filterBy['locationFilter'] === 'suburb' && element.location[0] === user.location[0])
+					filteredMatches.push(element);
+				else if (this.filterBy['locationFilter'] === 'city' && element.location[1] === user.location[1])
+					filteredMatches.push(element);
+			}
 			else if (element.interests.indexOf(this.filterBy['interestsFilter'])  > -1 && this.filterBy['interestsFilter'] != '')
 				filteredMatches.push(element);
 		});
