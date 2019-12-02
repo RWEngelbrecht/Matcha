@@ -8,6 +8,7 @@ const PasswordValidator = require('password-validator');
 const nodemailer = require('nodemailer');
 const { validationResult } = require("express-validator");
 const iplocation = require("iplocation").default;
+const fs = require('fs');
 var sessionData;
 var all_pos_interests = [
 	'Octopi/Octopuses/Octopodes',
@@ -91,18 +92,24 @@ exports.postlogin = (req, res, next) => {
 		else if (user && user.verified == true) {
 			console.log('Login Success!');
 			// updating your location
-			// fs.readFile("IPAddresses.txt", 'utf8',function(err, data){
-			// 	if(err) throw err;
-			// 	var lines = data.split('\n');
-			// 	var ip = lines[Math.floor(Math.random()*lines.length)];
-			// 	iplocation(ip, [], (error, res) => {
-			// 		location = [
-			// 			res.postal,
-			// 			res.city,
-			// 			res.region,
-			// 		];
-			// 	});
-			// 	console.log(location);
+			fs.readFile("IPAddresses.txt", 'utf8',function(err, data){
+				if(err) throw err;
+				var lines = data.split('\n');
+				var ip = lines[Math.floor(Math.random()*lines.length)];
+				iplocation(ip, [], (error, res) => {
+					location = [
+						res.postal,
+						res.city,
+						res.region,
+					];
+					User.findOneAndUpdate({_id: user._id}, {$set: {location: location}}, err => {
+						if (err){
+							console.log('failed to set location');
+							}
+						});
+						console.log(location);		
+				});
+			});
 			User.findOneAndUpdate({_id: user._id}, {$set: {loggedIn: true/*, location: location*/}}, err => {
 				if (err){
 					console.log('Something went wrong while updating logged in status!');
@@ -111,6 +118,8 @@ exports.postlogin = (req, res, next) => {
 			// });
 			sessionData = req.session;
 			sessionData.user = user;
+			console.log("MEMEMEM")
+			console.log(req.session.user.location);
 			return (res.redirect('/'));
 		} else {
 			console.log('Invalid login');
