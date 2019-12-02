@@ -40,6 +40,16 @@ exports.gethome = (req, res, next) => {
 	if (req.session.user === 0) {
 		return (res.redirect('/login'));
 	}
+	// test = new Order(req.session.user._id, req.session.user.interests);
+	// me = test.OrderByNBInterests();
+	// me.then(function(result) {
+    //     userDetails = result;
+    //     console.log("Initialized user details");
+    //     // Use user details from here
+    //     console.log(userDetails)
+    // }, function(err) {
+    //     console.log(err);
+	// });
 	if (req.session.user.interests === null) {
 		return (res.redirect('/interests'));
 	}
