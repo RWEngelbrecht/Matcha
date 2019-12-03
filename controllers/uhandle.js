@@ -12,7 +12,7 @@ const iplocation = require("iplocation").default;
 const fs = require('fs');
 global.loc = [];
 var all_pos_interests = [
-	'Octopi/Octopuses/Octopodes',
+	'Octopi / Octopuses / Octopodes',
 	'Alcohol',
 	'Arguing with people online',
 	'Tying knots',

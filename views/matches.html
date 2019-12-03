@@ -13,18 +13,26 @@
 		{% if matched.length > 0%}
 		<h2 class="mt-4 text-warning">Start talking to...</h2>
 			{% for match in matched %}
-				<div>
-					<a class="text-decoration-none h6 text-warning" href="/profile/{{match._id.toString()}}">{{match.username}}</a>
-						<form action="" method="POST">
-							<input type="hidden" name="liked" id="liked" value="{{match._id}}">
-							<input type="submit" name="unlike" id="unlike" value="Unlike">
-						</form>
-						{% if match.loggedIn == true %}
+				<div class="row">
+					<!-- Want to put profile picture here -->
+					<div class="col">
+					<a class="text-decoration-none h4 align-self-bottom text-warning" href="/profile/{{match._id.toString()}}">{{match.username}}</a>
+					<small class="form-text text-warning">
+							{% if match.loggedIn == true %}
 							{{"Online"}}
-						{% else %}
-							{{"Last seen: "+ match.lastSeen.toString().substring(3, 25)}}
-						{% endif %}
+							{% else %}
+							{{ " Last seen: " + match.lastSeen.toString().substring(3, 25)}}</p>
+							{% endif %}
+					</small>
+					</div>
+					<form class="col" action="" method="POST">
+							<div class="form-row">
+								<input type="hidden" name="liked" id="liked" value="{{match._id}}">
+								<input class="btn btn-sm btn-warning text-dark" type="submit" name="unlike" id="unlike" value="Unlike">
+							</div>
+					</form><br />
 				</div>
+				
 			{% endfor %}
 		{% endif %}
 		{% if likedMatches.length > 0 %}
@@ -32,13 +40,14 @@
 		{% for liked in likedMatches %}
 
 			<div class="row">
+				<!-- Want to put profile picture here -->
 				<div class="col">
-					<h4 class="h6 text-warning">{{liked.username}}</h4>
+					<h4 class="h4 text-warning">{{liked.username}}</h4>
 				</div>
 				<div class="col">
 					<form action="" method="POST">
 						<input type="hidden" name="liked" id="liked" value="{{liked._id.toString()}}">
-						<input type="submit" name="unlike" id="unlike" value="Unlike">
+						<input class="btn btn-sm btn-warning text-dark" type="submit" name="unlike" id="unlike" value="Unlike">
 					</form>
 				</div>
 			</div>
