@@ -1,6 +1,7 @@
 const User	= require('../models/umod');
 const path	= require('path');
 const swig	= require('../app.js');
+const Validate	= require('./validate.class');
 const crypto = require('crypto');
 const PasswordValidator = require('password-validator');
 const nodemailer = require('nodemailer');
@@ -39,7 +40,13 @@ exports.postusername = (req, res, next) => {
 		message = message[0];
 	} else {
 		message = null;
-    }
+	}
+	var validate = new Validate();
+	var check = validate.ValidateUsername(req.body.new_username);
+	if (check == 0) {
+		console.log("USERNAME CHECK WORKING HERE(UPDATE USERNAME)")
+		return(res.redirect('/updateinfo'));
+	}
 	key = req.session.user.verifkey;
     User.findOneAndUpdate({verifkey: key}, {$set:{username:req.body.new_username}}, {new: true}, function(err, doc){
 		if(err){
@@ -69,7 +76,14 @@ exports.postname = (req, res, next) => {
 		message = message[0];
 	} else {
 		message = null;
-    }
+	}
+	var validate = new Validate();
+	var checkfname = validate.isAlpha(req.body.new_firstname);
+	var checksurname = validate.isAlpha(req.body.new_surname);
+	if (checkfname == 0 || checksurname == 0) {
+		console.log("NAME & SURNAME CHECK WORKING HERE(UPDATE NAME)")
+		return(res.redirect('/updateinfo'));
+	}
     key = req.session.user.verifkey;
     User.findOneAndUpdate({verifkey: key}, {$set:{firstname:req.body.new_firstname, surname:req.body.new_surname}}, {new: true},function(err, doc){
 		if(err){
@@ -100,7 +114,15 @@ exports.postage = (req, res, next) => {
 		message = message[0];
 	} else {
 		message = null;
-    }
+	}
+	var validate = new Validate();
+	var checkage = validate.isNumeric(req.body.new_age);
+	var checkageprefupper = validate.isNumeric(req.body.new_ageupper);
+	var checkagepreflower = validate.isNumeric(req.body.new_agelower);
+	if (checkage == 0 || checkagepreflower == 0 || checkageprefupper == 0) {
+		console.log("AGE CHECK WORKING HERE(UPDATE AGE)")
+		return(res.redirect('/updateinfo'));
+	}
     key = req.session.user.verifkey;
     User.findOneAndUpdate({verifkey: key}, {$set:{age:req.body.new_age, agepreflower:req.body.new_agelower, ageprefupper:req.body.new_ageupper}}, {new: true},function(err, doc){
 		if(err){
@@ -166,7 +188,13 @@ exports.postemail = (req, res, next) => {
 		message = message[0];
 	} else {
 		message = null;
-    }
+	}
+	var validate = new Validate();
+	var check = validate.isEmail(req.body.new_email);
+	if (check == 0) {
+		console.log("EMAIL CHECK WORKING HERE(UPDATE EMAIL)")
+		return(res.redirect('/updateinfo'));
+	}
     key = req.session.user.verifkey;
     User.findOneAndUpdate({verifkey: key}, {$set:{verified:0}}, {new: true},function(err, doc){
 		if(err){
@@ -227,18 +255,11 @@ exports.postpassword = (req, res, next) => {
 		message = null;
 	}
 	// checks for password strength.
-	var pwcheck = new PasswordValidator();
-	pwcheck
-	.is().min(8)
-	.is().max(20)
-	.has().uppercase()
-	.has().lowercase()
-	.has().digits()
-	.has().not().spaces()  //lol
-	if (pwcheck.validate(req.body.new_password) == 0) {
-		console.log("Password must contain upper, lowercase characters and at least one digit");
-		// tell them why theyre getting redirected.
-		return (res.redirect('/updateinfo'));
+	var validate = new Validate();
+	var check = validate.ValidatePassword(req.body.new_password);
+	if (check == 0) {
+		console.log("PASSWORD CHECK WORKING HERE(UPDATE PASSWORD)")
+		return(res.redirect('/updateinfo'));
 	}
 	if (req.body.new_password === req.body.confirm_new_password) {
 		console.log("Passwords Match");
@@ -275,6 +296,12 @@ exports.postabout = (req, res, next) => {
 		message = message[0];
 	} else {
 		message = null;
+	}
+	var validate = new Validate();
+	var check = validate.isAlphanumeric(req.body.new_about);
+	if (check == 0) {
+		console.log("ABOUT CHECK WORKING HERE(UPDATE ABOUT)")
+		return(res.redirect('/updateinfo'));
 	}
 	key = req.session.user.verifkey;
 	User.findOneAndUpdate({verifkey: key}, {$set:{about:req.body.new_about}}, {new: true},function(err, doc){
