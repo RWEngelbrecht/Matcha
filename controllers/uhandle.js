@@ -1,6 +1,7 @@
 const User	= require('../models/umod');
 const Photo	= require('../models/photos');
 const Order	= require('./order.class');
+const Validate	= require('./validate.class');
 const Interests	= require('../models/interests');
 const path	= require('path');
 const crypto = require('crypto');
@@ -156,19 +157,15 @@ exports.postregister = (req, res, next) => {
 		// TODO send email.
 	} else {
 		// checks for password strength.
-		var pwcheck = new PasswordValidator();
-		pwcheck
-		.is().min(8)
-		.is().max(20)
-		.has().uppercase()
-		.has().lowercase()
-		.has().digits()
-		.has().not().spaces()  //lol
-		if (pwcheck.validate(req.body.password) == 0) {
-			console.log("Password must contain upper, lowercase characters and at least one digit");
+		var check = new Validate();
+		var pwcheck = check.ValidatePassword(req.body.password);
+		var unamecheck = check.ValidateUsername(req.body.username)
+		if (pwcheck == 0) {
 			return (res.redirect('/register'));
 		}
-		// MAYBE DO SOME CHECKS BECUASE THIS ONLY WORKS WITH GMAIL ACCOUNTS
+		if (unamecheck == 0) {
+			return (res.redirect('/register'));
+		}
 		var transporter = nodemailer.createTransport({
 			service: 'gmail',
 			auth: {

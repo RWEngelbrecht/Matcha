@@ -54,5 +54,13 @@ router.get('/about', update.getabout);
 router.post('/about', [
     body('new_about').isAlphanumeric(),
 ],
-update.postabout)
+update.postabout);
+// Update Location page
+router.get('/location', update.getlocation);
+router.post('/location', [
+    body('new_postal').isAlpha(),
+    body('new_city'),
+    body('new_province'),
+],
+update.postlocation);
 module.exports = router;

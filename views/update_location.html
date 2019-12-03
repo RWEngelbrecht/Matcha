@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+
+{% block title %}Matcha{% endblock %}
+
+{% block body %}
+<form action="" method="POST">
+	<div class="form-control">
+		<label for="new_postal">New Postal Code</label>
+		<input type="text" name="new_postal" id="new_postal" required>
+    </div>
+    <div class="form-control">
+		<label for="new_city">New City</label>
+		<select name="new_city" id="new_city">
+            <option value="New City">New City</option>
+            <option value="Durban">Durban</option>
+            <option value="Cape Town">Cape Town</option>
+            <option value="Johannesburg">Johannesburg</option>
+            <option value="Bloemfontein">Bloemfontein</option>
+            <option value="Port Elizabeth">Port Elizabeth</option>
+            <option value="Bisho">Bisho</option>
+            <option value="Saldanha">Saldanha</option>
+            <option value="Port Alfred">Port Alfred</option>
+            <option value="Sommerset West">Sommerset West</option>
+        </select>
+    </div>
+    <div class="form-control">
+        <label for="new_province">New Province</label>
+        <select name="new_province" id="new_province">
+            <option value="New Province">New Province</option>
+            <option value="Eastern Cape">Eastern Cape</option>
+            <option value="Free State">Free State</option>
+            <option value="Gauteng">Gauteng</option>
+            <option value="KwaZulu-Natal">KwaZulu-Natal</option>
+            <option value="Limpopo">Limpopo</option>
+            <option value="Mpumalanga">Mpumalanga</option>
+            <option value="North West">North West</option>
+            <option value="Northen Cape">Northen Cape</option>
+            <option value="Western Cape">Western Cape</option>
+        </select>
+    </div>
+	<input type="hidden" name="_csrf" value="<%= csrfToken %>">
+	<button type="submit">Update Location</button>
+</form>
+
+<div>
+	<li><a href="/">Back to home</a></li>
+</div>
+{% endblock %}
