@@ -16,7 +16,8 @@ exports.updateinfo = (req, res, next) => {
 		message = null;
 	}
 	loggedUser = req.session.user.username
-	// console.log(req.session.user);
+	console.log("USER ON DIFFERENT PAGE");
+	console.log(req.session.user);
 	return (res.render(path.resolve('views/update_info'),{
 		user: loggedUser
 	}));
