@@ -30,7 +30,7 @@ exports.getMatchSuggestions = (req, res, next) => {
 				genderpref: currUser.gender, age: {$gte: currUser.agepreflower,
 					$lte: currUser.ageprefupper}}, {}, {sort: {fame: -1}},(err, matches) => {
 				if (err) {
-					console.log(res.status(400).send(err));
+					res.status(400).send(err);
 				}
 				else if (!matches) {
 					console.log('No matches for you!');

@@ -36,7 +36,7 @@
 		const xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = () => {
 			if (xhttp.status == 200 && xhttp.readyState == 4) {
-				console.log('filters cleared');
+				location.reload();
 			}
 		}
 		xhttp.open("POST", 'filterclear', true);
