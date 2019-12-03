@@ -7,7 +7,7 @@ mrouter.get('/suggestions', umatch.getMatchSuggestions);
 mrouter.post('/suggestions', umatch.like);
 
 mrouter.get('/matches', umatch.getMatches);
-
+mrouter.post('/matches', umatch.unlike);
 //filtering
 mrouter.get('/filter', umatch.getFilter);
 mrouter.post('/filter', umatch.postFilter);
