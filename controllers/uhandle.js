@@ -5,9 +5,7 @@ const Validate	= require('./validate.class');
 const Interests	= require('../models/interests');
 const path	= require('path');
 const crypto = require('crypto');
-const PasswordValidator = require('password-validator');
 const nodemailer = require('nodemailer');
-const { validationResult } = require("express-validator");
 const iplocation = require("iplocation").default;
 const fs = require('fs');
 global.loc = [];
@@ -341,17 +339,10 @@ exports.postresetpassword = (req, res, next) => {
 				console.log("Passwords do not match");
 				return res.redirect('/login');
 			} else {
-				var pwcheck = new PasswordValidator();
-				pwcheck
-				.is().min(8)
-				.is().max(20)
-				.has().uppercase()
-				.has().lowercase()
-				.has().digits()
-				.has().not().spaces()  //lol
-				if (pwcheck.validate(req.body.new_pass_forgot) == 0) {
-					console.log("Password must contain upper, lowercase characters and at least one digit");
-					return (res.redirect('/register'));
+				var check = new Validate();
+				var pwcheck = check.ValidatePassword(req.body.new_pass_forgot);
+				if (pwcheck == 0) {
+					return(res.redirect('/update_info'));
 				}
 				var forgothashedpw = crypto.createHash('whirlpool').update(req.body.new_pass_forgot).digest('hex');
 				User.findOneAndUpdate({email: req.body.confirm_email}, {$set:{password: forgothashedpw}},function(err, doc){

@@ -1,9 +1,6 @@
 const User	= require('../models/umod');
 const Photo	= require('../models/photos');
 const path	= require('path');
-const swig	= require('../app.js');
-const crypto = require('crypto');
-const { validationResult } = require("express-validator");
 
 // GET photo landing page
 exports.getphoto = (req, res, next) => {
