@@ -15,12 +15,12 @@ exports.getMatchSuggestions = (req, res, next) => {
 	}
 	currUser = req.session.user;
 	if (!currUser) {
-		return (res.redirect('/'));
+		res.redirect('/');
 	}
 	var likedUsers;
 	Likes.find({likeBy: currUser._id}, (err, liked) => {
 		if (err) {
-			return (res.status(400).send(err));
+			res.status(400).send(err);
 		}
 		likedUsers = liked;
 	}).then(() => {
@@ -45,7 +45,7 @@ exports.getMatchSuggestions = (req, res, next) => {
 			});
 		}
 		else {
-			return (res.redirect('/'));
+			res.redirect('/');
 		}
 	});
 }
@@ -96,7 +96,7 @@ exports.like = (req, res, next) => {
 			Likes.findOne({likedUser: doc._id, likeBy: currUser._id}, (err, haveLiked) => {
 				if (haveLiked != null) {
 					console.log('Already liked this person!');
-					return (res.redirect('/suggestions'));
+					res.redirect('/suggestions');
 				} else {
 					const like = new Likes({
 						likeBy: currUser._id,
@@ -107,7 +107,7 @@ exports.like = (req, res, next) => {
 							console.log(res.status(400).send(err));
 						}
 					});
-					return (res.redirect('/suggestions'));
+					res.redirect('/suggestions');
 				}
 			});
 		}
@@ -131,16 +131,16 @@ exports.unlike = (req, res) => {
 }
 
 exports.getFilter = (req, res, next) => {
-	return (res.render(path.resolve('views/filter')));
+	res.render(path.resolve('views/filter'));
 }
 
 exports.postFilter = (req, res, next) => {
 	//give filter class all filters
 	filters.SetFilters(req.body.filterCrit);
-	return (res.redirect('/suggestions'));
+	res.redirect('/suggestions');
 }
 
 exports.clearFilter = (req, res, next) => {
 	filters.ClearFilters();
-	return (res.redirect('/suggestions'));
+	res.redirect('/suggestions');
 }
