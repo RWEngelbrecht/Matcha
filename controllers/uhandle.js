@@ -149,6 +149,11 @@ exports.postregister = (req, res, next) => {
 	} else {
 		message = null;
 	}
+	var validate = new Validate();
+	check_reg = validate.validateregister(req.body);
+	if (check_reg == 0) {
+		return (res.redirect('/register'));
+	}
 	var vkey = crypto.createHash('whirlpool').update(req.body.username).digest('hex');
 	if (req.body.password != req.body.confirm_password) {
 		// DISPLAY ERROR MESSAGE.
@@ -160,12 +165,6 @@ exports.postregister = (req, res, next) => {
 		var check = new Validate();
 		var pwcheck = check.ValidatePassword(req.body.password);
 		var unamecheck = check.ValidateUsername(req.body.username)
-		if (pwcheck == 0) {
-			return (res.redirect('/register'));
-		}
-		if (unamecheck == 0) {
-			return (res.redirect('/register'));
-		}
 		var transporter = nodemailer.createTransport({
 			service: 'gmail',
 			auth: {
