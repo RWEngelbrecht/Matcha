@@ -16,8 +16,6 @@ exports.updateinfo = (req, res, next) => {
 		message = null;
 	}
 	loggedUser = req.session.user.username
-	console.log("USER ON DIFFERENT PAGE");
-	console.log(req.session.user);
 	return (res.render(path.resolve('views/update_info'),{
 		user: loggedUser
 	}));
@@ -287,5 +285,36 @@ exports.postabout = (req, res, next) => {
 	});
 	req.session.user.about = req.body.new_about;
 	console.log(req.session.user.about);
+	return (res.redirect('/updateinfo'));
+}
+// GET location
+exports.getlocation = (req, res, next) => {
+    console.log("getlocation controller reached reached");
+	let message = req.flash('Something went wrong, please try again later!');
+	if (message.length > 0) {
+		message = message[0];
+	} else {
+		message = null;
+	}
+	return (res.render(path.resolve('views/update_location')));
+}
+// POST location
+exports.postlocation = (req, res, next) => {
+	console.log("postabout controller reached reached");
+	let message = req.flash('Something went wrong, please try again later!');
+	if (message.length > 0) {
+		message = message[0];
+	} else {
+		message = null;
+	}
+	key = req.session.user.verifkey;
+	var new_loc = [req.body.new_postal, req.body.new_city, req.body.new_province];
+	User.findOneAndUpdate({verifkey: key}, {$set:{location:new_loc}}, {new: true},function(err, doc){
+		if(err){
+			console.log("Something wrong when updating data!");
+		}
+		console.log("Location updated successfully");
+	});
+	req.session.user.location = new_loc;
 	return (res.redirect('/updateinfo'));
 }
