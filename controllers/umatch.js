@@ -65,23 +65,6 @@ exports.getMatches = (req, res, next) => {
 
 	var likedUserIDs = [];
 	var likedUsers = [];
-	// Likes.find({likeBy: currUser._id})
-	// 	.populate('likedUser')
-	// 	.exec((err, liked) => {
-	// 		if (err) {
-	// 			return (res.status(400).send(err));
-	// 		}
-	// 		liked.forEach(user => {
-	// 			likedUsers.push(user.likedUser); // profiles that current user has liked
-	// 		});
-	// 		Likes.find({likedUser: currUser._id}, (err, currLiked) => { // people that have liked the current user
-	// 			var matched = filters.getMatched(currLiked, likedUsers); // filtered out people who user hasn't liked
-	// 			//filter matched users that also liked current user from likedUsers
-	// 			var notMatched = filters.filterMatches(likedUsers, matched);
-
-	// 			return (res.render(path.resolve('views/matches'), {likedMatches: notMatched, matched: matched, user: currUser}));
-	// 		});
-	// 	});
 	Likes.find({likeBy: currUser._id}).then((liked) => {
 			liked.forEach(user => {
 				likedUserIDs.push(user.likedUser); // profiles that current user has liked
@@ -128,6 +111,22 @@ exports.like = (req, res, next) => {
 				}
 			});
 		}
+	});
+}
+
+exports.unlike = (req, res) => {
+	var likedID = req.body.liked;
+	currUser = req.session.user;
+	User.findOneAndUpdate({_id: likedID}, {$inc:{fame:-1}}, {new: true}, (err, doc) => {
+		if(err){
+			res.status(400);
+		}
+	});
+	Likes.findOneAndDelete({likeBy: currUser._id, likedUser: likedID}, (err, doc) => {
+		if (err) {
+			res.status(400);
+		}
+		res.redirect('/matches');
 	});
 }
 
