@@ -26,7 +26,6 @@ class Validate {
     };
 
     ValidateUsername(username) {
-        // SPECIAL CHARS?
         var checkspecial = new RegExp("\\W");
         if (username.length < 5) {
             console.log("Username must be at least 5 characters long");
@@ -34,6 +33,45 @@ class Validate {
         }
         if (checkspecial.test(username) == true) {
             console.log("Username cannot contain special characters");
+            return (0);
+        }
+        return (1);
+    }
+
+    isAlpha(string) {
+        var checkspecial = new RegExp("\\W");
+        var checknum = new RegExp("[0-9]");
+        if (checknum.test(string) == true || checkspecial.test(string) == true){
+            console.log("Contains either a special character or a letter");
+            return (0);
+        }
+        return (1);
+    };
+
+    isAlphanumeric(string) {
+        var checkspecial = new RegExp("\\W");
+        if (checkspecial.test(string) == true){
+            console.log("Contains a special character, BAD!");
+            return (0);
+        }
+        return (1);
+    };
+
+    isNumeric(string) {
+        var checkspecial = new RegExp("\\W");
+        var checknum = new RegExp("[A-Za-z]");
+        if (checknum.test(string) == true || checkspecial.test(string) == true){
+            console.log("Contains either a special character or a letter");
+            return (0);
+        }
+        return (1);
+    };
+
+    isEmail(string) {
+        var checkspecial = new RegExp("\\W");
+        var checkemail = new RegExp("\\S+@\\S+\\.\\S+");
+        if (checkemail.test(string) == false) {
+            console.log("Please format your email properly");
             return (0);
         }
         return (1);
