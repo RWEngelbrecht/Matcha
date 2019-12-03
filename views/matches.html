@@ -11,10 +11,14 @@
 	<div class = "col-10 align-self-center mx-auto rounded" style="background-color: rgb(40,40,40,0.5)">
 		<h1 class="mt-4 text-warning display-4">Matches & Likes</h1>
 		{% if matched.length > 0%}
-		<h2 class="mt-4 text-warning">Start talking to...</h2>	
+		<h2 class="mt-4 text-warning">Start talking to...</h2>
 			{% for match in matched %}
 				<div>
 					<a class="text-decoration-none h6 text-warning" href="/profile/{{match._id.toString()}}">{{match.username}}</a>
+						<form action="" method="POST">
+							<input type="hidden" name="liked" id="liked" value="{{match._id}}">
+							<input type="submit" name="unlike" id="unlike" value="Unlike">
+						</form>
 						{% if match.loggedIn == true %}
 							{{"Online"}}
 						{% else %}
@@ -26,9 +30,16 @@
 		{% if likedMatches.length > 0 %}
 		<h2 class="mt-4 mb-4 text-warning">People you've got an eye on</h2>
 		{% for liked in likedMatches %}
+
 			<div class="row">
 				<div class="col">
 					<h4 class="h6 text-warning">{{liked.username}}</h4>
+				</div>
+				<div class="col">
+					<form action="" method="POST">
+						<input type="hidden" name="liked" id="liked" value="{{liked._id.toString()}}">
+						<input type="submit" name="unlike" id="unlike" value="Unlike">
+					</form>
 				</div>
 			</div>
 		{% endfor %}
@@ -36,6 +47,6 @@
 		<div class="mt-4 mb-4">
 			<a href="/suggestions"><button class="btn btn-outline-warning">Find someone new</button></a>
 		</div>
-	</div>	
-</div>	
+	</div>
+</div>
 {% endblock %}
