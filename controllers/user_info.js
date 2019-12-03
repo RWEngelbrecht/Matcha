@@ -3,9 +3,7 @@ const path	= require('path');
 const swig	= require('../app.js');
 const Validate	= require('./validate.class');
 const crypto = require('crypto');
-const PasswordValidator = require('password-validator');
 const nodemailer = require('nodemailer');
-const { validationResult } = require("express-validator");
 
 // Landing page for updating user information.
 exports.updateinfo = (req, res, next) => {
