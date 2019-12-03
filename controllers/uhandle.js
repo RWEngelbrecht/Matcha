@@ -9,7 +9,7 @@ const nodemailer = require('nodemailer');
 const { validationResult } = require("express-validator");
 const iplocation = require("iplocation").default;
 const fs = require('fs');
-var sessionData;
+global.loc = [];
 var all_pos_interests = [
 	'Octopi/Octopuses/Octopodes',
 	'Alcohol',
@@ -41,16 +41,6 @@ exports.gethome = (req, res, next) => {
 	if (req.session.user === 0) {
 		return (res.redirect('/login'));
 	}
-	test = new Order(req.session.user._id, req.session.user.interests);
-	me = test.OderByLocation(req.session.user.location);
-	// me.then(function(result) {
-    //     userDetails = result;
-    //     // console.log("THE DB LOCATION IS");
-    //     // Use user details from here
-    //     // console.log(userDetails)
-    // }, function(err) {
-    //     console.log(err);
-	// });
 	if (req.session.user.interests === null) {
 		return (res.redirect('/interests'));
 	}
@@ -97,13 +87,13 @@ exports.postlogin = (req, res) => {
 				}
 			});
 			req.session.user = user;
-			// TODO
-			/*
-			req.session.user.location = getLocation(user._id);
-			console.log("SESSION USER");
-			console.log(req.session.user);
-			*/
-			return (res.redirect('/'));
+			me = getLocation(user._id);
+			me.then(function(result) {
+				global.loc = result;
+			}).then (function (result){
+				req.session.user.location = global.loc;
+				return (res.redirect('/'));
+			});
 		} else {
 			console.log('Invalid login');
 			return res.redirect('/login');
@@ -129,8 +119,6 @@ function getLocation(id) {
 						reject(user);
 					}
 				});
-				console.log("AJGHFAJSGL");
-				console.log(location);
 				resolve(location);
 			});
 		});
