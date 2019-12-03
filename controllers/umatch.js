@@ -15,12 +15,12 @@ exports.getMatchSuggestions = (req, res, next) => {
 	}
 	currUser = req.session.user;
 	if (!currUser) {
-		return (res.redirect('/'));
+		res.redirect('/');
 	}
 	var likedUsers;
 	Likes.find({likeBy: currUser._id}, (err, liked) => {
 		if (err) {
-			return (res.status(400).send(err));
+			res.status(400).send(err);
 		}
 		likedUsers = liked;
 	}).then(() => {
@@ -45,7 +45,7 @@ exports.getMatchSuggestions = (req, res, next) => {
 			});
 		}
 		else {
-			return (res.redirect('/'));
+			res.redirect('/');
 		}
 	});
 }
@@ -65,23 +65,6 @@ exports.getMatches = (req, res, next) => {
 
 	var likedUserIDs = [];
 	var likedUsers = [];
-	// Likes.find({likeBy: currUser._id})
-	// 	.populate('likedUser')
-	// 	.exec((err, liked) => {
-	// 		if (err) {
-	// 			return (res.status(400).send(err));
-	// 		}
-	// 		liked.forEach(user => {
-	// 			likedUsers.push(user.likedUser); // profiles that current user has liked
-	// 		});
-	// 		Likes.find({likedUser: currUser._id}, (err, currLiked) => { // people that have liked the current user
-	// 			var matched = filters.getMatched(currLiked, likedUsers); // filtered out people who user hasn't liked
-	// 			//filter matched users that also liked current user from likedUsers
-	// 			var notMatched = filters.filterMatches(likedUsers, matched);
-
-	// 			return (res.render(path.resolve('views/matches'), {likedMatches: notMatched, matched: matched, user: currUser}));
-	// 		});
-	// 	});
 	Likes.find({likeBy: currUser._id}).then((liked) => {
 			liked.forEach(user => {
 				likedUserIDs.push(user.likedUser); // profiles that current user has liked
@@ -113,7 +96,7 @@ exports.like = (req, res, next) => {
 			Likes.findOne({likedUser: doc._id, likeBy: currUser._id}, (err, haveLiked) => {
 				if (haveLiked != null) {
 					console.log('Already liked this person!');
-					return (res.redirect('/suggestions'));
+					res.redirect('/suggestions');
 				} else {
 					const like = new Likes({
 						likeBy: currUser._id,
@@ -124,24 +107,40 @@ exports.like = (req, res, next) => {
 							console.log(res.status(400).send(err));
 						}
 					});
-					return (res.redirect('/suggestions'));
+					res.redirect('/suggestions');
 				}
 			});
 		}
 	});
 }
 
+exports.unlike = (req, res) => {
+	var likedID = req.body.liked;
+	currUser = req.session.user;
+	User.findOneAndUpdate({_id: likedID}, {$inc:{fame:-1}}, {new: true}, (err, doc) => {
+		if(err){
+			res.status(400);
+		}
+	});
+	Likes.findOneAndDelete({likeBy: currUser._id, likedUser: likedID}, (err, doc) => {
+		if (err) {
+			res.status(400);
+		}
+		res.redirect('/matches');
+	});
+}
+
 exports.getFilter = (req, res, next) => {
-	return (res.render(path.resolve('views/filter')));
+	res.render(path.resolve('views/filter'));
 }
 
 exports.postFilter = (req, res, next) => {
 	//give filter class all filters
 	filters.SetFilters(req.body.filterCrit);
-	return (res.redirect('/suggestions'));
+	res.redirect('/suggestions');
 }
 
 exports.clearFilter = (req, res, next) => {
 	filters.ClearFilters();
-	return (res.redirect('/suggestions'));
+	res.redirect('/suggestions');
 }
