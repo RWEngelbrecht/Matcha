@@ -7,20 +7,22 @@
 	<!-- Following meta tag probably not needed as IE has been updated -->
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>Matcha</title>
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-	<link rel="stylesheet" href="/css/mystyles.css">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+	<!-- Bootstrap core CSS -->
+	<link rel="stylesheet" href="/css/bootstrap.min.css">
+	<!-- Material Design Bootstrap -->
+	<link rel="stylesheet" href="/css/mdb.min.css">
+	<!-- Custom styles -->
+	<link rel="stylesheet" href="/css/style.css">
+	<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" href="/css/mystyles.css"> -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 
-<body background="/images/fire_bg.png" style="background-position: center; background-repeat: no-repeat;  min-height: 80vh; background-size: cover;"class="bg-light mt-4">
+<body background="/images/fire_bg.png" style="background-position: center; background-repeat: no-repeat;  min-height: 80vh; background-size: cover; background-attachment: fixed;"class="bg-light mt-4">
 	<header>
-		<!-- Not working for mobile yet-->
-		<nav class="navbar navbar-light bg-light">
-			<a class="navbar-brand" href="/">
-
-			</a>
-		</nav>
-		<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
+		<nav class="navbar fixed-top navbar-expand-lg navbar-light white">
 			<a class="navbar-brand" href="/">
 				<img width="240" height="60" src="/images/matcha_logo.png"/>
 			</a>
@@ -57,7 +59,7 @@
 	</section>
 	<footer>
 		<br />
-		<nav class="navbar fixed-bottom bg-light">
+		<nav class="navbar fixed-bottom white">
 			<div class="row mx-auto float-right">
 				{% if user !== 0 %}
 				<a href="/logout"><button class="btn btn-outline-danger font-weight-bold" >Logout {{ user.username }} </button></a>
@@ -100,9 +102,19 @@
 				</div>
 			</div>
 	</footer>
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<!-- jQuery -->
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="/js/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="/js/mdb.min.js"></script>
+<!-- Your custom scripts (optional) -->
+<script type="text/javascript"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script> -->
 <script>$(function () { $('[data-toggle="popover"]').popover()})</script>
 <!-- <script src="/js/jquery.min.js"></script>
 <script src="/js/jquery.scrolly.min.js"></script>

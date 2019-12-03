@@ -8,10 +8,8 @@
 {% endblock %}
 
 {% macro interest(value) %}
-	<td>
-		<label for="interests">{{value}}</label>
-		<input type="checkbox" name="interests" id="interests" value="{{value}}">
-	</td>
+	<input type="checkbox" class="form-check-input filled-in" name="interests" id="interests" value="{{value}}"/>
+	<label class="form-check-label" for="interests">{{value}}</label>
 {% endmacro %}
 
 {% block body %}
@@ -81,18 +79,26 @@
 				</div>
 				<br />
 				<h4 class="text-warning mt-4" for="photo">Interests</h4>
-				<div class="interests text-danger mt-4">
-					<div class="row mt-1 d-flex justify-content-center">
-						<div class="btn btn-warning font-weight-bold text-danger mt-1 ml-1">{{ interest("Octopi/Octopuses/Octopodes") }}</div>
-						<div class="btn btn-warning font-weight-bold text-danger mt-1 ml-1">{{ interest("Alcohol") }}</div>
-						<div class="btn btn-warning font-weight-bold text-danger mt-1 ml-1">{{ interest("Arguing with people online") }}</div>
-						<div class="btn btn-warning font-weight-bold text-danger mt-1 ml-1">{{ interest("Tying knots") }}</div>
-						<div class="btn btn-warning font-weight-bold text-danger mt-1 ml-1">{{ interest("Salami") }}</div>
-						<div class="btn btn-warning font-weight-bold text-danger mt-1 ml-1">{{ interest("Dating Apps") }}</div>
-						<div class="btn btn-warning font-weight-bold text-danger mt-1 ml-1">{{ interest("Kicking puppies") }}</div>
-						<div class="btn btn-warning font-weight-bold text-danger mt-1 ml-1">{{ interest("Counting from 1-10 100 times") }}</div>
-						<div class="btn btn-warning font-weight-bold text-danger mt-1 ml-1">{{ interest("Repetitive Music") }}</div>
-						<div class="btn btn-warning font-weight-bold text-danger mt-1 ml-1">{{ interest("Doing cartwheels") }}</div>
+				<div class="interests text-warning font-weight-bold mt-4">
+					<div class="row mt-1 d-flex justify-content-left">
+						<div class="col mt-1 ml-1">{{ interest("Octopi / Octopuses / Octopodes") }}</div>
+						<div class="col mt-1 ml-1">{{ interest("Alcohol") }}</div>
+					</div>
+					<div class="row mt-1 d-flex justify-content-left">
+						<div class="col mt-1 ml-1">{{ interest("Arguing with people online") }}</div>
+						<div class="col mt-1 ml-1">{{ interest("Tying knots") }}</div>
+					</div>
+					<div class="row mt-1 d-flex justify-content-left">
+						<div class="col mt-1 ml-1">{{ interest("Salami") }}</div>
+						<div class="col mt-1 ml-1">{{ interest("Dating Apps") }}</div>
+					</div>
+					<div class="row mt-1 d-flex justify-content-left">
+						<div class="col mt-1 ml-1">{{ interest("Kicking puppies") }}</div>
+						<div class="col mt-1 ml-1">{{ interest("Counting from 1-10 100 times") }}</div>
+					</div>
+					<div class="row mt-1 d-flex justify-content-left">
+						<div class="col mt-1 ml-1">{{ interest("Repetitive Music") }}</div>
+						<div class="col mt-1 ml-1">{{ interest("Doing cartwheels") }}</div>
 					</div>
 				</div>
 				<input type="hidden" name="_csrf" value="<%= csrfToken %>">
