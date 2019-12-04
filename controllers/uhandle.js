@@ -1,8 +1,6 @@
 const User	= require('../models/umod');
 const Photo	= require('../models/photos');
-const Order	= require('./order.class');
 const Validate	= require('./validate.class');
-const Interests	= require('../models/interests');
 const path	= require('path');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
@@ -307,7 +305,7 @@ exports.postresetpwd = (req, res, next) => {
 			return res.redirect('/login');
 		}
 		else {
-			console.log('Invalid email');
+			console.log('Email does not exist, piss off');
 			return res.redirect('/login');
 		}
 	});
