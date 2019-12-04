@@ -4,13 +4,11 @@ const Schema = mongoose.Schema;
 
 const messagetable = new Schema({
 	sentBy: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'User',
+		type: String,
 		required: true
 	},
 	sentTo: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'User',
+		type: String,
 		required: true
 	},
 	time: {

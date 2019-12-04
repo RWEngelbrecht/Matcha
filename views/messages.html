@@ -23,7 +23,7 @@
     </div>
     <div id="messages">
         {% for obj in messages %}
-            <h5>{{ obj.time }}</h5>
+            <h5>{{ obj.sentBy }}</h5>
             <h4>{{ obj.message }}</h4>
         {% endfor %}
 

@@ -20,7 +20,6 @@ var dbUrl = "mongodb+srv://Yano:80058024@cluster0-jszpy.mongodb.net/matcha";
 // GETS METHOD
 exports.getmessages = (req, res) => {
 Message.find({chatID: "ArataGeorgia"},(err, messages)=> {
-    console.log(messages);
         res.render(path.resolve('views/messages'), {messages: messages})
     });
 };
