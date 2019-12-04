@@ -393,11 +393,17 @@ exports.postinterests = (req, res, next) => {
 exports.getProfile = (req, res, next) => {
 	currUser = req.session.user
 	if (!currUser) {
-		return (res.status(400).send(err));
+		res.status(400).send(err);
 	}
 	var profileUsrId = req.params.id;
+	if (profileUsrId != currUser._id) {
+		User.findOneAndUpdate({_id: profileUsrId}, {$push: {viewedBy: currUser.username}}, (err, usr) => {
+			if (err) {
+				res.status(400).send(err);
+			}
+		});
+	}
 	User.findOne({_id: profileUsrId}, (err, user) => {
-
 		if (err) {
 			res.status(400).send(err);
 		}
