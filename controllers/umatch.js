@@ -26,7 +26,6 @@ exports.getMatchSuggestions = (req, res, next) => {
 		likedUsers = liked;
 	}).then(() => {
 		if (currUser) {
-			console.log("currUser's blocked peeps: ", currUser.blocked);
 			User.find(
 				{_id: {$ne: currUser._id}, username: {$nin: currUser.blocked}, gender: currUser.genderpref,
 				genderpref: currUser.gender, age: {$gte: currUser.agepreflower,
@@ -42,7 +41,7 @@ exports.getMatchSuggestions = (req, res, next) => {
 					var likeableMatches = filters.getLikeableMatches(likedUsers, interestMatches);
 					var filteredMatches = filters.FilterFrom(currUser, likeableMatches);
 				}
-				res.render(path.resolve('views/suggestions'), {matches: filteredMatches, filters: filters.filterBy});
+				res.render(path.resolve('views/suggestions'), {matches: filteredMatches, filters: filters.filterBy, loggedUser: currUser});
 			});
 		}
 		else {
@@ -88,7 +87,8 @@ exports.getMatches = (req, res, next) => {
 exports.like = (req, res, next) => {
 	var likedkey = req.body.potmatch;
 	currUser = req.session.user;
-	User.findOneAndUpdate({verifkey: likedkey}, {$inc:{fame:1}}, {new: true}, (err, doc) => {
+	console.log('liking......');
+	User.findOneAndUpdate({verifkey: likedkey}, {$inc:{fame:1}, $push:{likedBy: currUser.username}}, {new: true}, (err, doc) => {
 		if(err){
 			console.log("Something went wrong when updating match data!");
 		}
@@ -139,22 +139,25 @@ exports.like = (req, res, next) => {
 
 exports.block = (req, res) => {
 		var likedUsername = req.body.liked;
-		console.log(likedUsername);
 		currUser = req.session.user;
-		User.findOneAndUpdate({username: likedUsername}, {$inc:{fame:-1}}, {new: true}, (err, doc) => {
-			if(err){
-				res.status(400).send(err);
-			}
+		User.findOneAndUpdate(
+			{username: likedUsername},
+			{$inc:{fame:-1},
+			$push: {blocked: currUser.username},
+			$pull: {likedBy: currUser.username}},
+			{new: true, multi: true},
+			(err, doc) => {
+				if(err){
+					res.status(400).send(err);
+				}
 		});
-		User.findOneAndUpdate({_id: currUser._id}, {$push: {blocked: likedUsername}}, (err, usr) => {
-			if (err) {
-				res.status(400).send(err);
-			}
-		});
-		User.findOneAndUpdate({username: likedUsername}, {$push: {blocked: currUser.username}}, (err, usr) => {
-			if (err) {
-				res.status(400);
-			}
+		User.findOneAndUpdate(
+			{_id: currUser._id},
+			{$push: {blocked: likedUsername}},
+			(err, usr) => {
+				if (err) {
+					res.status(400).send(err);
+				}
 		});
 		Likes.findOneAndDelete({likeBy: currUser._id, likedUser: likedUsername}, (err, doc) => {
 			if (err) {
