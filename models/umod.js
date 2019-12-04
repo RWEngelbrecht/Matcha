@@ -88,6 +88,10 @@ const usertable = new Schema({
 	blocked: [{
 		type: String,
 		default: null
+	}],
+	likedBy: [{
+		type: String,
+		default: null
 	}]
 });
 
