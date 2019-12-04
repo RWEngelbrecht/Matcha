@@ -88,11 +88,12 @@ exports.like = (req, res, next) => {
 	var likedkey = req.body.potmatch;
 	currUser = req.session.user;
 	console.log('liking......');
-	User.findOneAndUpdate({verifkey: likedkey}, {$inc:{fame:1}, $push:{likedBy: currUser.username}}, {new: true}, (err, doc) => {
-		if(err){
-			console.log("Something went wrong when updating match data!");
-		}
-	}).then((doc) => {
+	User.findOneAndUpdate(
+		{verifkey: likedkey},
+		{$inc:{fame:1},
+		$push:{likedBy: currUser.username}},
+		{new: true})
+		.then((doc) => {
 		if (doc) {
 			Likes.findOne({likedUser: doc._id, likeBy: currUser._id}, (err, haveLiked) => {
 				if (haveLiked != null) {
@@ -105,7 +106,7 @@ exports.like = (req, res, next) => {
 					});
 					like.save((err) => {
 						if (err){
-							console.log(res.status(400).send(err));
+							res.status(400).send(err);
 						}
 					});
 					var transporter = nodemailer.createTransport({
