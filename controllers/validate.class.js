@@ -6,7 +6,7 @@ class Validate {
 
     ValidatePassword(passwd) {
         // BOOL -> PROMISES? DOESNT SEEM NECESSARY.
-        
+
         if (passwd.length < 8) {
             console.log("Password must be at least 8 characters long");
             return(0);
@@ -84,15 +84,15 @@ class Validate {
         var email = this.isEmail(body.email);
         var password = this.ValidatePassword(body.password);
         var age = this.isNumeric(body.age);
-        var about = this.isAlphanumeric(body.about);
+        // var about = this.isAlphanumeric(body.about);
         if (
             firstname == 0 ||
             surname == 0 ||
             username == 0 ||
             email == 0 ||
             password == 0 ||
-            age == 0 ||
-            about == 0    
+            age == 0
+            // about == 0
         ) {
             return (0);
         }
