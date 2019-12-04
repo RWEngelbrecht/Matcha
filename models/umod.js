@@ -92,6 +92,10 @@ const usertable = new Schema({
 	likedBy: [{
 		type: String,
 		default: null
+	}],
+	viewedBy: [{
+		type:String,
+		default: null
 	}]
 });
 
