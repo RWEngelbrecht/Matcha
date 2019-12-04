@@ -70,6 +70,7 @@ class Validate {
     isEmail(string) {
         // BASIC CHECK BECAUSE WE CANT REALLY CHECK IF ITS VALID WITH JUSTY REGEX
         var checkemail = new RegExp("\\S+@\\S+\\.\\S+");
+        console.log(checkemail);
         if (checkemail.test(string) == false) {
             console.log("Please format your email properly");
             return (0);
