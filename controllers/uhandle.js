@@ -401,13 +401,13 @@ exports.getProfile = (req, res, next) => {
 	User.findOne({_id: profileUsrId}, (err, user) => {
 
 		if (err) {
-			return (res.status(400).send(err));
+			res.status(400).send(err);
 		}
 		Photo.find({user: profileUsrId}, (err, photos) => {
 			if (err) {
 				console.log("Could not find photos.");
 			}
-			return (res.render(path.resolve('views/index'),{user: user, photos: photos}));
+			res.render(path.resolve('views/index'),{user: user, photos: photos});
 		});
 	});
 }

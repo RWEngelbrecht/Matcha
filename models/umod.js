@@ -85,6 +85,10 @@ const usertable = new Schema({
 		type: String,
 		default: null,
 	}],
+	blocked: [{
+		type: String,
+		default: null
+	}]
 });
 
 module.exports = mongoose.model('User', usertable);
