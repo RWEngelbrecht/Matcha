@@ -13,25 +13,25 @@ router.get('/', uhandle.gethome);
 // LOGIN
 router.get('/login', uhandle.getlogin);
 router.post('/login', [
-	body('email', 'Please enter a valid email address').isEmail().normalizeEmail(),
-	body('password', 'Password must have at least 8 characters alphanumeric').isAlphanumeric().trim().isLength({ min: 8})
+	body('email', 'Please enter a valid email address').normalizeEmail(),
+	body('password', 'Password must have at least 8 characters alphanumeric').trim()
 ],
 uhandle.postlogin);
 // REGISTER
 router.get('/register', uhandle.getregister);
 router.post('/register', upload.single('photo'), [
-	body('email', 'Please enter a valid email address').isEmail().normalizeEmail(),
-	body('password', 'Password must have at least 8 characters alphanumeric').isAlphanumeric().trim().isLength({ min: 8}),
-	body('confirm_password', 'Password must have at least 8 characters alphanumeric').isAlphanumeric().trim().isLength({ min: 8}),
-	body('username').isAlphanumeric().trim(),
+	body('email', 'Please enter a valid email address').normalizeEmail(),
+	body('password', 'Password must have at least 8 characters alphanumeric').trim(),
+	body('confirm_password', 'Password must have at least 8 characters alphanumeric').trim(),
+	body('username').trim(),
 	body('firstname').trim(),
 	body('surname').trim(),
-	body('age').isNumeric(),
-	body('gender').trim().isAlpha(),
-	body('gender_pref').trim().isAlpha(),
+	body('age'),
+	body('gender').trim(),
+	body('gender_pref').trim(),
 	body('photo'),
-	body('dist').isNumeric(),
-	body('about').isAlphanumeric().trim(),
+	body('dist'),
+	body('about').trim(),
 ],
 uhandle.postregister);
 // CONFIRM EMAIL
@@ -41,15 +41,15 @@ router.get('/logout', uhandle.getlogout);
 // SEND RESET PASSWORD.
 router.get('/resetpwd', uhandle.getresetpwd);
 router.post('/resetpwd', [
-	body('resetpwd_email', 'Please enter a valid email address').isEmail().normalizeEmail(),
+	body('resetpwd_email', 'Please enter a valid email address').normalizeEmail(),
 ],
 uhandle.postresetpwd);
 // ACTUALLY RESET PASSWORD
 router.get('/resetpassword', uhandle.getresetpassword);
 router.post('/resetpassword', [
-	body('confirm_email', 'Please enter a valid email address').isEmail().normalizeEmail(),
-	body('new_pass_forgot', 'Password must have at least 8 characters alphanumeric').isAlphanumeric().trim().isLength({ min: 8}),
-	body('confirm_new_pass_forgot', 'Password must have at least 8 characters alphanumeric').isAlphanumeric().trim().isLength({ min: 8}),
+	body('confirm_email', 'Please enter a valid email address').normalizeEmail(),
+	body('new_pass_forgot', 'Password must have at least 8 characters alphanumeric').trim(),
+	body('confirm_new_pass_forgot', 'Password must have at least 8 characters alphanumeric').trim(),
 ],
 uhandle.postresetpassword);
 // // INTERESTS
