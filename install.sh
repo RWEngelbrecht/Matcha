@@ -13,3 +13,5 @@ npm install iplocation
 npm install fs
 npm install express-validator
 npm install multer
+npm install socket.io
+npm isntall http
