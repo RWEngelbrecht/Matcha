@@ -43,7 +43,7 @@
 					<li class="nav-item">
 					  <a class="nav-link text-danger" href="/messages">Messages</a>
 					</li>
-					<li class="nav-item active">
+					<li class="nav-item">
 						<a class="nav-link text-danger" href="/matches">Matches</a>
 					</li>
 			  	</ul>
@@ -51,8 +51,8 @@
 			<!-- Navbar links end -->
 			<!-- Search bar -->
 			<form class="form-inline">
-				<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-				<button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Search</button>
+				<input class="col-7 form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+				<button class="btn btn-sm btn-outline-danger my-2 my-sm-0" type="submit">Search</button>
 			</form>
 			<!-- Search bar ends -->
 		</nav>
@@ -67,22 +67,22 @@
 		<nav class="navbar fixed-bottom white">
 			<div class="row mx-auto float-right">
 				{% if user !== 0 %}
-				<a href="/logout"><button class="btn btn-outline-danger font-weight-bold" >Logout {{ user.username }} </button></a>
+				<a href="/logout"><button class="btn btn-sm btn-outline-danger font-weight-bold" >Logout {{ user.username }} </button></a>
 				{% endif %}
 
 				{% if user == 0 %}
-				<a href="/login"><button class="ml-2 btn btn-outline-danger font-weight-bold">Login</button></a>
+				<a href="/login"><button class="ml-2 btn btn-sm btn-outline-danger font-weight-bold">Login</button></a>
 				{% endif %}
 
 				{% if user !== 0 %}
-				<a href="/updateinfo"><button class="ml-2 btn btn-outline-danger font-weight-bold">Update my info</button></a>
+				<a href="/updateinfo"><button class="ml-2 btn btn-sm btn-outline-danger font-weight-bold">Update my info</button></a>
 				{% endif %}
 
 				{% if user == 0 %}
-				<a  href="/register"><button class="ml-2 btn btn-outline-danger font-weight-bold">Register</button></a>
+				<a  href="/register"><button class="ml-2 btn btn-sm btn-outline-danger font-weight-bold">Register</button></a>
 				{% endif %}
-
-				<a class="btn btn-outline-danger font-weight-bold ml-2" href="#" data-toggle="modal" data-target="#aboutUs">About us</a>
+				<!-- Remove so that phone view is better -->
+				<a class="btn btn-sm btn-outline-danger font-weight-bold ml-2" href="#" data-toggle="modal" data-target="#aboutUs">About us</a>
 			</div>
 		</nav>
 		<div class="container">
