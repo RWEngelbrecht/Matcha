@@ -2,6 +2,7 @@ const User = require('../models/umod');
 const Likes = require('../models/likemod');
 const Filter = require('./filter.class')
 const path	= require('path');
+const nodemailer = require('nodemailer');
 const mongoose	= require('mongoose');
 var currUser;
 var filters = new Filter();
@@ -25,8 +26,9 @@ exports.getMatchSuggestions = (req, res, next) => {
 		likedUsers = liked;
 	}).then(() => {
 		if (currUser) {
+			console.log("currUser's blocked peeps: ", currUser.blocked);
 			User.find(
-				{_id: {$ne: currUser._id}, gender: currUser.genderpref,
+				{_id: {$ne: currUser._id}, username: {$nin: currUser.blocked}, gender: currUser.genderpref,
 				genderpref: currUser.gender, age: {$gte: currUser.agepreflower,
 					$lte: currUser.ageprefupper}}, {}, {sort: {fame: -1}},(err, matches) => {
 				if (err) {
@@ -39,7 +41,6 @@ exports.getMatchSuggestions = (req, res, next) => {
 					var interestMatches = filters.getInterestMatches(currUser, matches);
 					var likeableMatches = filters.getLikeableMatches(likedUsers, interestMatches);
 					var filteredMatches = filters.FilterFrom(currUser, likeableMatches);
-
 				}
 				res.render(path.resolve('views/suggestions'), {matches: filteredMatches, filters: filters.filterBy});
 			});
@@ -69,7 +70,7 @@ exports.getMatches = (req, res, next) => {
 			liked.forEach(user => {
 				likedUserIDs.push(user.likedUser); // profiles that current user has liked
 			});
-			User.find({_id: {$in: likedUserIDs}},(err, likedUsrs) => {
+			User.find({_id: {$in: likedUserIDs}, username: {$nin: currUser.blocked}},(err, likedUsrs) => {
 				Likes.find({likedUser: currUser._id}, (err, currLiked) => { // people that have liked the current user
 					var matched = filters.getMatched(currLiked, likedUsrs); // filtered out people who user hasn't liked
 													//filter matched users that also liked current user from likedUsers
@@ -107,6 +108,28 @@ exports.like = (req, res, next) => {
 							console.log(res.status(400).send(err));
 						}
 					});
+					var transporter = nodemailer.createTransport({
+						service: 'gmail',
+						auth: {
+						  user: "wethinkcodematcha@gmail.com",
+						  pass: "Matcha1matcha"
+						}
+					});
+					var mailOptions = {
+						from: 'wethinkcodematcha@gmail.com',
+						to: doc.email,
+						subject: 'Someone likes you...',
+						html: `
+						  <h1>Someone is interested in you... Why?</h1>
+						`
+					};
+					transporter.sendMail(mailOptions, function(error, info){
+						if (error) {
+						  console.log(error);
+						} else {
+						  console.log('Email sent: ' + info.response);
+						}
+					});
 					res.redirect('/suggestions');
 				}
 			});
@@ -114,20 +137,32 @@ exports.like = (req, res, next) => {
 	});
 }
 
-exports.unlike = (req, res) => {
-	var likedID = req.body.liked;
-	currUser = req.session.user;
-	User.findOneAndUpdate({_id: likedID}, {$inc:{fame:-1}}, {new: true}, (err, doc) => {
-		if(err){
-			res.status(400);
-		}
-	});
-	Likes.findOneAndDelete({likeBy: currUser._id, likedUser: likedID}, (err, doc) => {
-		if (err) {
-			res.status(400);
-		}
+exports.block = (req, res) => {
+		var likedUsername = req.body.liked;
+		console.log(likedUsername);
+		currUser = req.session.user;
+		User.findOneAndUpdate({username: likedUsername}, {$inc:{fame:-1}}, {new: true}, (err, doc) => {
+			if(err){
+				res.status(400).send(err);
+			}
+		});
+		User.findOneAndUpdate({_id: currUser._id}, {$push: {blocked: likedUsername}}, (err, usr) => {
+			if (err) {
+				res.status(400).send(err);
+			}
+		});
+		User.findOneAndUpdate({username: likedUsername}, {$push: {blocked: currUser.username}}, (err, usr) => {
+			if (err) {
+				res.status(400);
+			}
+		});
+		Likes.findOneAndDelete({likeBy: currUser._id, likedUser: likedUsername}, (err, doc) => {
+			if (err) {
+				res.status(400);
+			}
+		});
+		req.session.user.blocked.push(likedUsername)
 		res.redirect('/matches');
-	});
 }
 
 exports.getFilter = (req, res, next) => {
