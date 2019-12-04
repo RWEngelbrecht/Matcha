@@ -305,7 +305,7 @@ exports.postresetpwd = (req, res, next) => {
 			return res.redirect('/login');
 		}
 		else {
-			console.log('Invalid email');
+			console.log('Email does not exist, piss off');
 			return res.redirect('/login');
 		}
 	});
