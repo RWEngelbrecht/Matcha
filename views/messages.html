@@ -21,11 +21,10 @@
         <br>
         <button id="send" class="btn btn-success">Send</button>
     </div>
-    <div id="messages">
         {% for obj in messages %}
-            <h5>{{ obj.sentBy }}</h5>
-            <h4>{{ obj.message }}</h4>
+            <h6>{{ obj.sentBy }} : {{ obj.message }}</h6>
         {% endfor %}
+    <div id="messages">
 
     </div>
 </div>
@@ -35,13 +34,21 @@
    // gets the message from the form, send name and message back.
     $(() => {
         $("#send").click(()=>{
-            sendMessage({name: $("#name").val(), message: $("#message").val()});
+            sendMessage({message: $("#message").val()});
         })
+        getMessages()
     })
     socket.on('message', addMessages)
     // this displays the message
     function addMessages(message){
         $("#messages").append(`<h4> ${message.name} </h4> <p> ${message.message} </p>`)
+    }
+    // gets the messages and sendd them to add message to be displayed
+    function getMessages(){
+      $.get('http://localhost:8000/messages', (data) => {
+        console.log(data);
+        addMessages(data);
+      })
     }
     // sends the message to the backend
     function sendMessage(message){
