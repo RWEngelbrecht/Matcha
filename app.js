@@ -14,7 +14,9 @@ MONGODB_URI		= "mongodb+srv://Yano:80058024@cluster0-jszpy.mongodb.net/matcha";
 // APP SETUP.
 const app = express();
 const server = http.createServer(app);
-const io = require('socket.io').listen(server);
+const io = require('socket.io')(server);
+module.exports = io;
+// app.set("io", io);
 app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
 app.use(session({ secret: 'matcha', resave: true, saveUninitialized: false}));
@@ -23,10 +25,6 @@ app.use(express.static('static'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false, limit: '5mb'}));
 session.user = 0;
-
-io.on('connection', () =>{
-	console.log('IO Connection established')
-});
 
 // ROUTES
 // const user = require('./routes/user');
