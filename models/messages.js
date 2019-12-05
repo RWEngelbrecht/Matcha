@@ -3,6 +3,10 @@ const User = require('./umod');
 const Schema = mongoose.Schema;
 
 const messagetable = new Schema({
+	chatID: {
+		type: String,
+		required: true,
+	},
 	sentBy: {
 		type: String,
 		required: true

@@ -5,23 +5,19 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var mongoose = require('mongoose');
+const Message	= require('../models/messages');
 
 app.use(express.static(__dirname));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}))
 
-var Message = mongoose.model('Message',{
-  name : String,
-  message : String
-})
-
 var dbUrl = "mongodb+srv://Yano:80058024@cluster0-jszpy.mongodb.net/matcha";
 
 // GETS METHOD
 exports.getmessages = (req, res) => {
-Message.find({chatID: "ArataGeorgia"},(err, messages)=> {
-        res.render(path.resolve('views/messages'), {messages: messages})
-    });
+  Message.find({chatID: "ArataGeorgia"},(err, messages)=> {
+    res.render(path.resolve('views/messages'), {messages: messages})
+  });
 };
 
 // POST METHOD
