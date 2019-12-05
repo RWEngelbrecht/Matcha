@@ -40,7 +40,7 @@ app.use(uhandle);
 app.use(user_info);
 app.use(umatch);
 app.use(photo);
-app.use(message);
+// app.use(message);
 
 mongoose.set('useFindAndModify', false);
 mongoose
