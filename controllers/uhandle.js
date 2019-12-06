@@ -242,8 +242,6 @@ exports.getconfirm = (req, res, next) => {
 		}
 		console.log(doc);
 	});
-	req.session.user = key;
-	console.log(req.session.user);
 	// Doesnt have to go to home, should probably set user logged in or out and take to login or my account
 	return (res.redirect('/'));
 }

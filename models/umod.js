@@ -96,7 +96,11 @@ const usertable = new Schema({
 	viewedBy: [{
 		type:String,
 		default: null
-	}]
+	}],
+	notif: {
+		type: Number,
+		default: 0,	
+	},
 });
 
 module.exports = mongoose.model('User', usertable);
