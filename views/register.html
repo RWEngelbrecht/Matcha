@@ -19,28 +19,28 @@
 		<div class="col-10 mx-auto rounded" style="background-color: rgb(40,40,40,0.5)">
 			<br />
 			<h1 class="text-warning display-4">Start your fire</h2>
-			<form action="" method="POST" enctype="multipart/form-data" novalidate>
+			<form action="" method="POST" enctype="multipart/form-data">
 				<br />
 				<div class="form-row">
 					<div class="col">
-						<input type="text" class="form-control" name="firstname" id="firstname" placeholder="First name">
+						<input type="text" class="form-control" name="firstname" id="firstname" placeholder="First name" required>
 					</div>
 					<div class="col">
-						<input type="text" class="form-control" name="surname" id="surname" placeholder="Surname">
+						<input type="text" class="form-control" name="surname" id="surname" placeholder="Surname" required>
 					</div>
 				</div>
 				<br />
 				<div >
-					<input class="form-control" type="email" name="email" id="email" placeholder="Email">
+					<input class="form-control" type="email" name="email" id="email" placeholder="Email" required>
 					<small id="emailHelp" class="form-text text-warning">We'll never share your personal info with anyone else</small>
 				</div>
 				<br />
 				<div class="form-row">
 					<div class="col">
-						<input class="form-control" data-container="body" data-toggle="popover" title="requirements" data-trigger="focus" data-placement="top" data-content="Must contain 8 characters, one uppercase letter and a number" type="password" name="password" id="password" placeholder="Password">
+						<input class="form-control" data-container="body" data-toggle="popover" title="requirements" data-trigger="focus" data-placement="top" data-content="Must contain 8 characters, one uppercase letter and a number" type="password" name="password" id="password" placeholder="Password" required>
 					</div>
 					<div class="col">
-						<input class="form-control" type="password" name="confirm_password" id="confirm_password" placeholder="Confirm password">
+						<input class="form-control" type="password" name="confirm_password" id="confirm_password" placeholder="Confirm password" required>
 					</div>
 				</div>
 				<br />
@@ -48,34 +48,34 @@
 					<div class="input-group-prepend">
 						<span class="input-group-text" id="basic-addon1">@</span>
 					</div>
-					<input class="form-control" type="text" name="username" id="username" placeholder="Username">
+					<input class="form-control" type="text" name="username" id="username" placeholder="Username" required>
 				</div>
 				<br />
 				<div class="form-row">
 					<div class="col">
-						<input class="form-control" type="number" name="age" id="age" placeholder="Age">
+						<input class="form-control" type="number" name="age" id="age" placeholder="Age" required>
 					</div>
 					<div class="col">
-						<input class="form-control" type="number" name="dist" id="dist" placeholder="Max distance (km)">
+						<input class="form-control" type="number" name="dist" id="dist" placeholder="Max distance (km)" required>
 					</div>
 				</div>
 				<br />
 				<div class="form-row">
 					<div class="col">
-					<input class="form-control"type="text" name="gender" id="gender" placeholder="Gender">
+					<input class="form-control"type="text" name="gender" id="gender" placeholder="Gender" required>
 					</div>
 					<div class="col">
-					<input class="form-control" type="text" name="gender_pref" id="gender_pref" placeholder="Gender preference">
+					<input class="form-control" type="text" name="gender_pref" id="gender_pref" placeholder="Gender preference" required>
 					</div>
 				</div>
 				<br />
 				<div >
-					<input class="form-control" type="text" name="about" id="about" placeholder="Share some info about yourself...">
+					<input class="form-control" type="text" name="about" id="about" placeholder="Share some info about yourself..." required>
 				</div>
 				<br />
 				<div>
 					<h4 class="text-warning mt-4" for="photo">Profile Picture</h4>
-					<input class="mt-1" type="file" name="photo" id="photo" accept="image/*">
+					<input class="mt-1" type="file" name="photo" id="photo" accept="image/*" required>
 				</div>
 				<br />
 				<h4 class="text-warning mt-4" for="photo">Interests</h4>

@@ -7,192 +7,110 @@ class Order {
         this.interests = interests;
     }
 
-    OrderByNBInterests(/* THIS MAY TAKE AN ARRAY MAKING THE "User.find" REDUNDANT */) {
-        var this_user = this.user;
+    OrderByNBInterests(users) {
         var this_interests = this.interests;
         return new Promise(function(resolve, reject) {
-            User.find({_id: {$ne: this_user}}, (err, users) => {
-                if (err) {
-				    console.log(err);
-			    } else {
-                    var array = [];
-                    users.forEach(user => {
-                        var common = _.intersection(this_interests, user.interests).length;
-                        array.push([user._id, common]);
-                    });
-                    var i = 0, temp = [];
-                    while (i + 1 < array.length) {
-                        if (array[i][1] == 0) {
-                            array.splice(1, i);
-                            i = 0;
-                        };
-                        if (array[i][1] < array[i + 1][1]) {
-                            temp = array[i];
-                            array[i] = array[i + 1];
-                            array[i + 1] = temp;
-                            i = 0; 
-                        }
-                        i++;
-                    }
-                    if (array) {
-                        resolve (array);
-                    } else {
-                        reject (array);
-                    }
+            var i = 0, temp = [];
+            while (i + 1 < users.length) {
+                if (users[i][1] == 0) {
+                    users.splice(1, i);
+                    i = 0;
                 };
-            });
+                if (_.intersection(this_interests, users[i][1]).length < _.intersection(this_interests, users[i + 1][1]).length) {
+                    temp = users[i];
+                    users[i] = users[i + 1];
+                    users[i + 1] = temp;
+                    i = 0; 
+                }
+                i++;
+            }
+            if (users) {
+                resolve (users);
+            } else {
+                reject (users);
+            }
         });
     };
     
-    OrderByAgeAsc() {
-        var this_user = this.user;
-        var this_interests = this.interests;
+    OrderByAgeAsc(users) {
         return new Promise(function(resolve, reject) {
-            User.find({_id: {$ne: this_user}}, (err, users) => {
-                if (err) {
-                    console.log(err);
-                    reject(users);
-			    } else {
-                    var array = [];
-                    users.forEach(user => {
-                        array.push([user._id, user.age]);
-                    });
-                    var i = 0, temp = [];
-                    while (i + 1 < array.length) {
-                        if (array[i][1] > array[i + 1][1]) {
-                            temp = array[i];
-                            array[i] = array[i + 1];
-                            array[i + 1] = temp;
-                            i = 0; 
-                        }
-                        i++;
-                    }
-                    if (array) {
-                        resolve (array);
-                    } else {
-                        reject (array);
-                    }
-                };
-            });
-        });
-    }
-
-    OrderByAgeDesc() {
-        var this_user = this.user;
-        var this_interests = this.interests;
-        return new Promise(function(resolve, reject) {
-            User.find({_id: {$ne: this_user}}, (err, users) => {
-                if (err) {
-                    console.log(err);
-                    reject(users);
-			    } else {
-                    var array = [];
-                    users.forEach(user => {
-                        array.push([user._id, user.age]);
-                    });
-                    var i = 0, temp = [];
-                    while (i + 1 < array.length) {
-                        if (array[i][1] < array[i + 1][1]) {
-                            temp = array[i];
-                            array[i] = array[i + 1];
-                            array[i + 1] = temp;
-                            i = 0; 
-                        }
-                        i++;
-                    }
-                    if (array) {
-                        resolve (array);
-                    } else {
-                        reject (array);
-                    }
-                };
-            });
-        });
-    }
-
-    OderByLocation(uloc) {
-        var this_user = this.user;
-        var this_interests = this.interests;
-        return new Promise(function(resolve, reject) {
-            User.find({_id: {$ne: this_user}}, (err, users) => {
-                if (err) {
-                    console.log(err);
-                    reject(users);
-                } else {
-                    var array = [];
-                    users.forEach(user => {
-                        array.push([user._id, user.location]);
-                    });
-                    var i = 0, temp = [], suburb = 0, city = 0, tcount = 0;
-                    while (i + 1 < array.length) {
-                        if (array[i][1][0] == uloc[0]) {
-                            temp[tcount] = array[i];
-                            tcount++;
-                            array.splice(1, i);
-                            i = 0;
-                        }
-                        if (suburb == 1 && (array[i][1][1] == uloc[1])) {
-                            temp[tcount] = array[i];
-                            tcount++;
-                            array.splice(1, i);
-                            i = 0;
-                        }
-                        if (suburb == 1 && city == 1) {
-                            temp[tcount] = array[i];
-                            tcount++;
-                            array.splice(1, i);
-                            i = 0;
-                        }
-                        i++;
-                        if ((i + 1 == array.length) && (suburb == 0)) {
-                            suburb = 1;
-                            i = 0;
-                        }
-                        if ((i + 1 == array.length) && (city == 0)) {
-                            city = 1;
-                            i = 0;
-                        }
-                    }
-                    resolve(temp);
+            var i = 0, temp = [];
+            while (i + 1 < users.length) {
+                if (users[i].age > users[i + 1].age) {
+                    temp = users[i];
+                    users[i] = users[i + 1];
+                    users[i + 1] = temp;
+                    i = 0; 
                 }
-
-            });
-        }); 
-    }
-
-    OderByFame() {
-        var this_user = this.user;
-        var this_interests = this.interests;
-        return new Promise(function(resolve, reject) {
-            User.find({_id: {$ne: this_user}}, (err, users) => {
-                if (err) {
-                    console.log(err);
-                    reject(users);
-                } else {
-                    var array = [];
-                    users.forEach(user => {
-                        array.push([user._id, user.fame]);
-                    });
-                    var i = 0;
-                    while (i + 1 < array.length) {
-                        if (array[i][1] < array[i + 1][1]) {
-                            temp = array[i];
-                            array[i] = array[i + 1];
-                            array[i + 1] = temp;
-                            i = 0; 
-                        }
-                        i++;
-                    }
-                    if (array) {
-                        resolve(array);
-                    } else {
-                        reject(array);
-                    }
-                }
-
-            });
+                i++;
+            }
+            if (users) {
+                resolve (users);
+            } else {
+                reject (users);
+            }
         });
     }
-    
+
+    OrderByAgeDesc(user) {
+        var users = user
+        return new Promise(function(resolve, reject) {
+            var i = 0, temp = [];
+            while (i + 1 < users.length) {
+                if (users[i].age < users[i + 1].age) {
+                    temp = users[i];
+                    users[i] = users[i + 1];
+                    users[i + 1] = temp;
+                    i = 0; 
+                }
+                i++;
+            }
+            if (users) {
+                resolve (users);
+            } else {
+                reject (users);
+            }
+        });
+    }
+
+    OderByFameAsc(users) {
+        return new Promise(function(resolve, reject) {
+            var i = 0;
+            while (i + 1 < users.length) {
+                if (users[i].fame > users[i + 1].fame) {
+                    temp = users[i];
+                    users[i] = users[i + 1];
+                    users[i + 1] = temp;
+                    i = 0; 
+                }
+                i++;
+            }
+            if (users) {
+                resolve(users);
+            } else {
+                reject(users);
+            }
+        });
+    }
+
+    OderByFameDesc(users) {
+        return new Promise(function(resolve, reject) {
+            var i = 0;
+            while (i + 1 < users.length) {
+                if (users[i].fame < users[i + 1].fame) {
+                    temp = users[i];
+                    users[i] = users[i + 1];
+                    users[i + 1] = temp;
+                    i = 0; 
+                }
+                i++;
+            }
+            if (users) {
+                resolve(users);
+            } else {
+                reject(users);
+            }
+        });
+    }
 }
 module.exports = Order;
