@@ -2,7 +2,6 @@
 const express	= require('express');
 const session	= require('express-session')
 const http		= require('http');
-const flash		= require('connect-flash');
 const mongoose	= require('mongoose');
 const swig		= require('swig');
 const bodyParser= require('body-parser');
@@ -17,7 +16,6 @@ module.exports = io;
 app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
 app.use(session({ secret: 'matcha', resave: true, saveUninitialized: false}));
-app.use(flash());
 app.use(express.static('static'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false, limit: '5mb'}));
