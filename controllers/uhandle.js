@@ -74,7 +74,8 @@ exports.postlogin = (req, res) => {
 				return (res.redirect('/'));
 			});
 		} else {
-			console.log('Invalid login');
+			let message = "Invalid login";
+			req.flash(message);
 			return res.redirect('/login');
 		}
 	});
