@@ -23,12 +23,6 @@ var all_pos_interests = [
 // Home
 exports.gethome = (req, res, next) => {
 	console.log("uhandle home reached(Controller)");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-	}
 	if (!req.session.user) {
 		logged = false;
 		return (res.redirect('/login'));
@@ -53,24 +47,12 @@ exports.gethome = (req, res, next) => {
 // GET method
 exports.getlogin = (req, res, next) => {
 	console.log("uhandle getlogin reached(Controller)");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-	}
 	loggedUser = 0;
 	return (res.render(path.resolve('views/login'),{user: loggedUser}));
 }
 // POST method
 exports.postlogin = (req, res) => {
 	console.log("uhandle postlogin reached(Controller)");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-	}
 	var hashpw = crypto.createHash('whirlpool').update(req.body.password).digest('hex');
 	User.findOne({email: req.body.email, password: hashpw}, (err, user) => {
 		if (err) {
@@ -125,12 +107,6 @@ function getLocation(id) {
 // GET method
 exports.getregister = (req, res, next) => {
 	console.log("uhandle getregister reached(Controller)");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-	}
 	loggedUser = 0;
 	return (res.render(path.resolve('views/register'),{
 		user: loggedUser
@@ -139,12 +115,6 @@ exports.getregister = (req, res, next) => {
 // POST method
 exports.postregister = (req, res, next) => {
 	console.log("uhandle postregister reached(Controller)");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-	}
 	var validate = new Validate();
 	check_reg = validate.validateregister(req.body);
 	if (check_reg == 0) {
@@ -265,12 +235,6 @@ exports.getresetpwd = (req, res, next) => {
 // POST method
 exports.postresetpwd = (req, res, next) => {
 	console.log("uhandle postresetpwd reached(Controller)");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-	}
 	User.findOne({email: req.body.resetpwd_email}, (err, user) => {
 		if (err) {
 			console.log(res.status(400).send(err));
@@ -320,12 +284,6 @@ exports.getresetpassword = (req, res, next) => {
 // POST method
 exports.postresetpassword = (req, res, next) => {
 	console.log("uhandle postresetpassword reached(Controller)");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-	}
 	User.findOne({email: req.body.confirm_email}, (err, user) => {
 		if (err) {
 			console.log(res.status(400).send(err));
