@@ -38,7 +38,6 @@ router.get('/messages/:id', (req, res) => {
     User.findOne({$and: [{username: {$in: chatters}}, {username: {$ne: from} }]})
     .then(toUsr => {
         to = toUsr.username;
-        console.log(`toUser: ${to}`);
         Message.find({chatID: chatID}, (err, messages) => {
             res.render(path.resolve('views/messages'), {messages: messages, from: from, chatID: chatID});
         })
