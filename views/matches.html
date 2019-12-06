@@ -22,6 +22,7 @@
 							{% endif %}
 					</small>
 					</div>
+					<a class="text-decoration-none h4 align-self-bottom text-warning" href="/messages/{{[match.username, user.username]|sort|join('-')}}"><button class="btn btn-sm btn-warning text-dark">Message</button></a>
 					<form class="col" action="" method="POST">
 							<div class="form-row">
 								<input type="hidden" name="liked" id="liked" value="{{match.username}}">
