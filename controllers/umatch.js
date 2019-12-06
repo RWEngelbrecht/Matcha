@@ -3,7 +3,6 @@ const Likes = require('../models/likemod');
 const Filter = require('./filter.class')
 const path	= require('path');
 const nodemailer = require('nodemailer');
-const mongoose	= require('mongoose');
 var currUser;
 var filters = new Filter();
 
@@ -39,9 +38,13 @@ exports.getMatchSuggestions = (req, res, next) => {
 				else {
 					var interestMatches = filters.getInterestMatches(currUser, matches);
 					var likeableMatches = filters.getLikeableMatches(likedUsers, interestMatches);
-					var filteredMatches = filters.FilterFrom(currUser, likeableMatches);
+					var filteredMatches = filters.FilterFrom(currUser, likeableMatches)
+					filteredMatches.then(function(result) {
+						console.log("filtered matches")
+						console.log(filteredMatches)
+						res.render(path.resolve('views/suggestions'), {matches: result, filters: filters.filterBy, loggedUser: currUser});
+					});
 				}
-				res.render(path.resolve('views/suggestions'), {matches: filteredMatches, filters: filters.filterBy, loggedUser: currUser});
 			});
 		}
 		else {
@@ -175,6 +178,8 @@ exports.getFilter = (req, res, next) => {
 
 exports.postFilter = (req, res, next) => {
 	//give filter class all filters
+	console.log("CHECK");
+	console.log(req.body.filterCrit);
 	filters.SetFilters(req.body.filterCrit);
 	res.redirect('/suggestions');
 }
