@@ -8,7 +8,11 @@
 	</header>
 	<section id="chats">
 		{% for chat in chats %}
-			<a class="text-decoration-none h4 align-self-bottom text-warning" href="/messages/{{chat.id}}">{{chat.chatTo[0]}}</a>
+		<div class="row">
+			<div class="col">
+				<a class="text-decoration-none h4 align-self-bottom text-warning" href="/messages/{{chat.id}}">{{chat.chatTo[0]}}</a>
+			</div>
+		</div>
 		{% endfor %}
 	</section>
 {% endblock %}
