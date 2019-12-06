@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+
+{% block title %}Matcha - Login{% endblock %}
+
+{% block body %}
+	<header>
+		<h1>Your chats</h1>
+	</header>
+	<section id="chats">
+		{% for chat in chats %}
+			<a class="text-decoration-none h4 align-self-bottom text-warning" href="/messages/{{chat.id}}">{{chat.chatTo[0]}}</a>
+		{% endfor %}
+	</section>
+{% endblock %}
