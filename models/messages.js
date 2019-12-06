@@ -29,4 +29,8 @@ const messagetable = new Schema({
     }
 });
 
+messagetable.index({
+	chatID: 'text'
+}, {name: 'search'});
+
 module.exports = mongoose.model('Message', messagetable);
