@@ -7,6 +7,27 @@ const io        = require("../app.js");
 var from, to, chatID;
 
 // routes
+router.get('/messages', (req, res) => {
+    if (req.session.user == 0 || !req.session.user) {
+        res.redirect('/login');
+    }
+    var chatters = [];
+    var conversations = [];
+    // find any chatIDs where session.user.username appears
+    Message.find({ $text: {$search: req.session.user.username}}).distinct('chatID').then(chats => {
+        chats.forEach(chat => {
+            chatters = chat.split('-');
+            conversations.push({
+                id: chat,
+                chatTo: chatters.filter(function(value) {
+                    return value != req.session.user.username;
+                })
+            })
+        });
+        res.render(path.resolve('views/chat'), {chats: conversations});
+    });
+})
+
 router.get('/messages/:id', (req, res) => {
     if (req.session.user == 0 || !req.session.user) {
         res.redirect('/login');
@@ -28,10 +49,6 @@ io.on('connection', (socket) => {
     console.log("new user connected");
     // set username. // from would never be anyone else than logged in user
     socket.username = from;
-    // listen on change_username
-    socket.on('change_username', (data) => {
-        socket.username = data.username;
-    });
     // listen on new message
     socket.on('new_message', (data) => {
         var message = data.message;
