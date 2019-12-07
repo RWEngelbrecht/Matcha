@@ -11,6 +11,7 @@
     "connect-mongodb-session": "^2.2.0",
     "crypto": "^1.0.1",
     "express": "^4.17.1",
+    "express-flash": "0.0.2",
     "express-flash-notification": "^0.5.0",
     "express-ip-middleware": "^1.1.0",
     "express-session": "^1.17.0",

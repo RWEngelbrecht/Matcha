@@ -58,6 +58,11 @@
 		</nav>
 	</header><br />
 	<section class="mt-4 mb-4" role="main">
+		{% if message %}
+			<div>
+				{{ message }}
+			</div>
+		{% endif %}
 		<br />
 		{% block body %}{% endblock %}
 		<br />

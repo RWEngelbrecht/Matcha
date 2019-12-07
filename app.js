@@ -5,7 +5,7 @@ const http		= require('http');
 const mongoose	= require('mongoose');
 const swig		= require('swig');
 const bodyParser= require('body-parser');
-const flash		= require('express-flash-notification');
+const flash		= require('connect-flash');
 MONGODB_URI		= "mongodb+srv://Yano:80058024@cluster0-jszpy.mongodb.net/matcha";
 // MONGODB_URI		= "mongodb+srv://Rigardt:80058024@cluster0-e6mik.mongodb.net/matcha";
 
@@ -17,7 +17,7 @@ module.exports = io;
 app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
 app.use(session({ secret: 'matcha', resave: true, saveUninitialized: false}));
-app.use(flash(app));
+app.use(flash());
 app.use(express.static('static'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false, limit: '5mb'}));
