@@ -16,7 +16,6 @@ $(function(){
 
     // Listen for a new message
     socket.on('new_message', (data) => {
-        console.log(data);
         chatroom.append("<p style='color: white'>" + data.username + ": " +  data.message + "</p>");
     });
 
