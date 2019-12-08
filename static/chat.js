@@ -1,6 +1,7 @@
 $(function(){
     // make connection.
     var socket = io.connect('http://localhost:8000');
+    console.log(socket);
 
     // buttons and inputs.
     var message = $("#message");
@@ -8,6 +9,7 @@ $(function(){
     var send_message = $("#send_message");
     var send_username = $("#send_username");
     var chatroom = $("#chatroom");
+    var notifblock = $("#notifblock");
 
     // Emit a new message
     send_message.click(function() {
@@ -17,6 +19,11 @@ $(function(){
     // Listen for a new message
     socket.on('new_message', (data) => {
         chatroom.append("<p style='color: white'>" + data.username + ": " +  data.message + "</p>");
+    });
+
+    // Listen for a new message
+    socket.on('new_notification', (data) => {
+        notifblock.append("<p style='color: white'>" + data.message + " " + data.user + "</p>");
     });
 
     // Emit a username

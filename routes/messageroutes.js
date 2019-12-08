@@ -58,6 +58,7 @@ io.on('connection', (socket) => {
         var message = data.message;
         // show message
         io.sockets.emit('new_message', {message : message, username: socket.username});
+        io.sockets.emit('new_notification', {message : 'You have a new message from', user : from});
         var newMessage = new Message({
             chatID: chatID,
             sentBy: from,
