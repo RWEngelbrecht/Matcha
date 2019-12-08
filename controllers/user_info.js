@@ -201,6 +201,10 @@ exports.postpassword = (req, res, next) => {
 			req.session.user = 0;
 		});
 	}
+	else {
+		req.flash('error_msg', 'Passwords do not match');
+		return(res.redirect('/updateinfo'));
+	}
 	return (res.redirect('/updateinfo'));
 }
 // GET about
