@@ -4,7 +4,10 @@ const router	= express.Router();
 const Message	= require('../models/messages');
 const User      = require('../models/umod');
 const io        = require("../app.js");
+
 var from, to, chatID;
+
+const nsp = io.of(`/messages/${chatID}`)
 
 // routes
 router.get('/messages', (req, res) => {
@@ -43,16 +46,17 @@ router.get('/messages/:id', (req, res) => {
                 console.error(err);
             }
         });
-        Message.find({chatID: chatID}, (err, messages) => {
+        Message.find({chatID: chatID, sentTo: from}, (err, messages) => {
             res.render(path.resolve('views/messages'), {messages: messages, from: from, chatID: chatID});
         });
     });
 });
 
-io.on('connection', (socket) => {
+nsp.on('connection', (socket) => {
     console.log("new user connected");
     // set username. // from would never be anyone else than logged in user
     socket.username = from;
+    socket.id = to;
     // listen on new message
     socket.on('new_message', (data) => {
         var message = data.message;
