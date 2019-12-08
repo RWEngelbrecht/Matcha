@@ -24,7 +24,7 @@ exports.postusername = (req, res, next) => {
 	var validate = new Validate();
 	var check = validate.ValidateUsername(req.body.new_username);
 	if (check == 0) {
-		console.log("USERNAME CHECK WORKING HERE(UPDATE USERNAME)")
+		req.flash('error_msg', 'Username cannot contain special characters and must be at least 5 characters long');
 		return(res.redirect('/updateinfo'));
 	}
 	key = req.session.user.verifkey;
@@ -49,7 +49,7 @@ exports.postname = (req, res, next) => {
 	var checkfname = validate.isAlpha(req.body.new_firstname);
 	var checksurname = validate.isAlpha(req.body.new_surname);
 	if (checkfname == 0 || checksurname == 0) {
-		console.log("NAME & SURNAME CHECK WORKING HERE(UPDATE NAME)")
+		req.flash('error_msg', 'No special characters or numbers allowed');
 		return(res.redirect('/updateinfo'));
 	}
     key = req.session.user.verifkey;
@@ -76,7 +76,7 @@ exports.postage = (req, res, next) => {
 	var checkageprefupper = validate.isNumeric(req.body.new_ageupper);
 	var checkagepreflower = validate.isNumeric(req.body.new_agelower);
 	if (checkage == 0 || checkagepreflower == 0 || checkageprefupper == 0) {
-		console.log("AGE CHECK WORKING HERE(UPDATE AGE)")
+		req.flash('error_msg', 'only numbers please');
 		return(res.redirect('/updateinfo'));
 	}
     key = req.session.user.verifkey;
@@ -130,7 +130,7 @@ exports.postemail = (req, res, next) => {
 	var validate = new Validate();
 	var check = validate.isEmail(req.body.new_email);
 	if (check == 0) {
-		console.log("EMAIL CHECK WORKING HERE(UPDATE EMAIL)")
+		req.flash('error_msg', 'Invalid Email');
 		return(res.redirect('/updateinfo'));
 	}
     key = req.session.user.verifkey;
@@ -184,7 +184,7 @@ exports.postpassword = (req, res, next) => {
 	var validate = new Validate();
 	var check = validate.ValidatePassword(req.body.new_password);
 	if (check == 0) {
-		console.log("PASSWORD CHECK WORKING HERE(UPDATE PASSWORD)")
+		req.flash('error_msg', 'Password must conatin at least one Uppercase letter and a number and no special characters');
 		return(res.redirect('/updateinfo'));
 	}
 	if (req.body.new_password === req.body.confirm_new_password) {
@@ -214,7 +214,7 @@ exports.postabout = (req, res, next) => {
 	var validate = new Validate();
 	var check = validate.isAlphanumeric(req.body.new_about);
 	if (check == 0) {
-		console.log("ABOUT CHECK WORKING HERE(UPDATE ABOUT)")
+		req.flash('error_msg', 'No special characters allowed')
 		return(res.redirect('/updateinfo'));
 	}
 	key = req.session.user.verifkey;

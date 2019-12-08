@@ -70,6 +70,7 @@ io.on('connection', (socket) => {
             }
         })
         io.sockets.to(toSocketID).emit('new_message', {message : message, username: socket.username});
+        io.sockets.emit('new_notification', {message : 'You have a new message from', user : from});
         var newMessage = new Message({
             chatID: chatID,
             sentBy: from,
