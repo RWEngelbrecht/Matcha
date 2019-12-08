@@ -23,7 +23,10 @@ $(function(){
 
     // Listen for a new message
     socket.on('new_notification', (data) => {
-        notifblock.append("<p style='color: white'>" + data.message + " " + data.user + "</p>");
+        notifblock.append("<div class='alert alert-danger alert-dismissible fade show' role='alert'>"
+            + data.message + " " + data.user + 
+            "<button type='button' class='close' data-dismiss='alert' aria-label='close'><span aria=hidden='true'>&times;</span></span></button>"
+            + "</div>");
     });
 
     // Emit a username
