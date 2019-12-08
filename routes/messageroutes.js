@@ -38,10 +38,15 @@ router.get('/messages/:id', (req, res) => {
     User.findOne({$and: [{username: {$in: chatters}}, {username: {$ne: from} }]})
     .then(toUsr => {
         to = toUsr.username;
+        Message.updateMany({chatID: chatID, sentTo: from}, {read:true}, (err, chat) => {
+            if (err) {
+                console.error(err);
+            }
+        });
         Message.find({chatID: chatID}, (err, messages) => {
             res.render(path.resolve('views/messages'), {messages: messages, from: from, chatID: chatID});
-        })
-    })
+        });
+    });
 });
 
 io.on('connection', (socket) => {
@@ -62,4 +67,5 @@ io.on('connection', (socket) => {
         newMessage.save().then(() => console.log('message saved to db'));
     });
 });
+
 module.exports = router;

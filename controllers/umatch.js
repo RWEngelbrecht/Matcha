@@ -34,8 +34,6 @@ exports.getMatchSuggestions = (req, res, next) => {
 					var likeableMatches = filters.getLikeableMatches(likedUsers, interestMatches);
 					var filteredMatches = filters.FilterFrom(currUser, likeableMatches)
 					filteredMatches.then(function(result) {
-						console.log("filtered matches")
-						console.log(filteredMatches)
 						res.render(path.resolve('views/suggestions'), {matches: result, filters: filters.filterBy, loggedUser: currUser});
 					});
 				}
