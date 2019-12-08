@@ -74,7 +74,7 @@ exports.postlogin = (req, res) => {
 				return (res.redirect('/'));
 			});
 		} else {
-			req.flash('error_msg', 'Invalud username or password!');
+			req.flash('error_msg', 'Invalid username or password!');
 			return res.redirect('/login');
 		}
 	});
