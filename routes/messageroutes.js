@@ -5,6 +5,7 @@ const Message	= require('../models/messages');
 const User      = require('../models/umod');
 const io        = require("../app.js");
 var from, to, chatID;
+const connectedUsers = [];
 
 // routes
 router.get('/messages', (req, res) => {
@@ -43,21 +44,32 @@ router.get('/messages/:id', (req, res) => {
                 console.error(err);
             }
         });
-        Message.find({chatID: chatID}, (err, messages) => {
+        Message.find({chatID: chatID, sentTo: from}, (err, messages) => {
             res.render(path.resolve('views/messages'), {messages: messages, from: from, chatID: chatID});
         });
     });
 });
 
+
 io.on('connection', (socket) => {
     console.log("new user connected");
     // set username. // from would never be anyone else than logged in user
     socket.username = from;
+    // socket.id = to;
+    connectedUsers.push({userName: from, id: socket.id});
+
+    console.log(connectedUsers);
     // listen on new message
     socket.on('new_message', (data) => {
         var message = data.message;
+        var toSocketID;
         // show message
-        io.sockets.emit('new_message', {message : message, username: socket.username});
+        connectedUsers.forEach(con => {
+            if (con.userName == to) {
+                toSocketID = con.id;
+            }
+        })
+        io.sockets.to(toSocketID).emit('new_message', {message : message, username: socket.username});
         io.sockets.emit('new_notification', {message : 'You have a new message from', user : from});
         var newMessage = new Message({
             chatID: chatID,
@@ -67,6 +79,14 @@ io.on('connection', (socket) => {
         });
         newMessage.save().then(() => console.log('message saved to db'));
     });
+    socket.on('disconnect', () => {
+        for(let i = 0; i < connectedUsers.length; i++) {
+            if (connectedUsers[i].id === socket.id) {
+                connectedUsers.splice(i, 1);
+            }
+            io.emit('exit', connectedUsers);
+        }
+    })
 });
 
 module.exports = router;
