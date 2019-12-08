@@ -3,6 +3,7 @@ const Likes = require('../models/likemod');
 const Filter = require('./filter.class')
 const path	= require('path');
 const nodemailer = require('nodemailer');
+const Notifications = require('../models/notifmod');
 var currUser;
 var filters = new Filter();
 
@@ -76,7 +77,6 @@ exports.getMatches = (req, res, next) => {
 exports.like = (req, res, next) => {
 	var likedkey = req.body.potmatch;
 	currUser = req.session.user;
-	console.log('liking......');
 	User.findOneAndUpdate(
 		{verifkey: likedkey},
 		{$inc:{fame:1},
@@ -95,6 +95,16 @@ exports.like = (req, res, next) => {
 					});
 					like.save((err) => {
 						if (err){
+							res.status(400).send(err);
+						}
+					});
+					var notification = new Notifications({
+						notifiedUser: doc.username,
+						notifType: "like",
+						notifBody: `You have been liked by ${currUser.username}`
+					});
+					notification.save(err => {
+						if (err) {
 							res.status(400).send(err);
 						}
 					});
