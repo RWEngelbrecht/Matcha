@@ -17,7 +17,6 @@ module.exports = io;
 app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
 app.use(session({ secret: 'matcha', resave: true, saveUninitialized: false}));
-app.use(flash());
 app.use(express.static('static'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false, limit: '5mb'}));
@@ -31,11 +30,29 @@ const photo = require('./routes/photos');
 const umatch = require('./routes/matchroutes');
 const message = require('./routes/messageroutes');
 
+app.use(flash());
+app.use(function(req, res, next) {
+	res.locals.success_msg = req.flash('success_msg');
+	res.locals.error_msg = req.flash('error_msg');
+	res.locals.error = req.flash('error');
+	next();
+  });
+
 app.use(uhandle);
 app.use(user_info);
 app.use(umatch);
 app.use(photo);
 app.use(message);
+
+app.use(function(err, req, res, next) {
+	// set locals, only providing error in development
+	res.locals.message = err.message;
+	res.locals.error = req.app.get('env') === 'development' ? err : {};
+  
+	// render the error page
+	res.status(err.status || 500);
+	res.render('error');
+  });
 
 mongoose.set('useFindAndModify', false);
 mongoose

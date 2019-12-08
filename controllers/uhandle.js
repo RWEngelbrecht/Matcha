@@ -74,8 +74,7 @@ exports.postlogin = (req, res) => {
 				return (res.redirect('/'));
 			});
 		} else {
-			let message = "Invalid login";
-			req.flash(message);
+			req.flash('error_msg', 'Invalud username or password!');
 			return res.redirect('/login');
 		}
 	});
@@ -124,7 +123,7 @@ exports.postregister = (req, res, next) => {
 	var vkey = crypto.createHash('whirlpool').update(req.body.username).digest('hex');
 	if (req.body.password != req.body.confirm_password) {
 		// DISPLAY ERROR MESSAGE.
-		console.log("Passwords do not match");
+		req.flash('error_msg', 'Passwords do not match');
 		return (res.redirect('/register'));
 		// TODO send email.
 	} else {
@@ -175,7 +174,7 @@ exports.postregister = (req, res, next) => {
 		// query schema to see if username or email exists
 		User.findOne({$or: [ {username: user.username}, {email: user.email} ]}, (err, docs) => {
 			if (docs != null) {
-				console.log("Invalid username or password.");
+				req.flash('error_msg', 'Invalid username or password.');
 				return (res.redirect('/register'));
 			} else {
 				user.save().then(item => {
@@ -268,7 +267,7 @@ exports.postresetpwd = (req, res, next) => {
 			return res.redirect('/login');
 		}
 		else {
-			console.log('Email does not exist, piss off');
+			req.flash('error_msg', 'Email does not exist, piss off');
 			return res.redirect('/login');
 		}
 	});
@@ -291,7 +290,7 @@ exports.postresetpassword = (req, res, next) => {
 			return res.redirect('/login');
 		} if (user != null) {
 			if (req.body.new_pass_forgot != req.body.confirm_new_pass_forgot) {
-				console.log("Passwords do not match");
+				req.flash('error_msg', 'Passwords do not match');
 				return res.redirect('/login');
 			} else {
 				var check = new Validate();
@@ -372,4 +371,3 @@ exports.getProfile = (req, res, next) => {
 		});
 	});
 }
-
