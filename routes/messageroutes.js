@@ -55,7 +55,7 @@ io.on('connection', (socket) => {
     console.log("new user connected");
     // set username. // from would never be anyone else than logged in user
     socket.username = from;
-    // socket.id = to;
+    // socket.id = chatID;
     connectedUsers.push({userName: from, id: socket.id});
 
     console.log(connectedUsers);
@@ -70,7 +70,8 @@ io.on('connection', (socket) => {
             }
         })
         io.sockets.to(toSocketID).emit('new_message', {message : message, username: socket.username});
-        io.sockets.emit('new_notification', {message : 'You have a new message from', user : from});
+        io.sockets.to(socket.id).emit('new_message', {message : message, username: socket.username});
+        io.sockets.to(toSocketID).emit('new_notification', {message : 'You have a new message from', user : from});
         var newMessage = new Message({
             chatID: chatID,
             sentBy: from,
