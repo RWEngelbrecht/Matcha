@@ -40,7 +40,7 @@
 				<div class="row">
 					<!-- Want to put profile picture here -->
 					<div class="col">
-						<h4 class="h4 text-warning">{{liked.username}}</h4>
+						<a class="text-decoration-none h4 align-self-bottom text-warning" href="/profile/{{liked._id.toString()}}">{{liked.username}}</a>
 					</div>
 					<div class="col">
 						<form method="POST">
@@ -59,7 +59,7 @@
 	<div>
 		{% if user.likedBy != undefined %}
 			{% for liker in user.likedBy %}
-				<h2 style="color:white">{{liker}}</h2>
+				<a class="text-decoration-none h4 align-self-bottom text-warning" href="/profile/{{liker._id.toString}}">{{liker}}</a>
 			{% endfor %}
 		{% endif %}
 	</div>
