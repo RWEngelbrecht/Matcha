@@ -7,12 +7,6 @@ var currUser;
 var filters = new Filter();
 
 exports.getMatchSuggestions = (req, res, next) => {
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-	}
 	currUser = req.session.user;
 	if (!currUser) {
 		res.redirect('/');
@@ -53,12 +47,6 @@ exports.getMatchSuggestions = (req, res, next) => {
 
 exports.getMatches = (req, res, next) => {
 
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-	}
 
 	currUser = req.session.user;
 	if (!currUser)

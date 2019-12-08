@@ -5,12 +5,6 @@ const path	= require('path');
 // GET photo landing page
 exports.getphoto = (req, res, next) => {
 	console.log("getphoto controller reached reached");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-    }
     userphotocount = req.session.user.photocount;
 	loggedUser = req.session.user.username 
 	return (res.render(path.resolve('views/photos'), {
@@ -46,12 +40,6 @@ exports.postphoto = (req, res, next) => {
 // GET deletephoto page
 exports.getdeletephoto = (req, res, next) => {
 	console.log("getdeletephoto controller reached reached");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-    }
     curr_user = req.session.user._id;
 	Photo.find(
 		{user: curr_user}, (err, photos) => {
@@ -79,12 +67,6 @@ exports.getdeletephoto = (req, res, next) => {
 exports.postdeletephoto = (req, res, next) => {
     userphotocount = req.session.user.photocount;
 	console.log("postdeletephoto controller reached reached");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-    }
     curr_user = req.session.user._id;
     to_delete = req.body.photo;
     console.log(curr_user);
@@ -111,12 +93,6 @@ exports.postdeletephoto = (req, res, next) => {
 // GET editprofilepicture
 exports.geteditprofilepicture = (req, res, next) => {
     console.log("geteditprofilepicture controller reached reached");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-    }
     loggedUser = req.session.user.username 
     return (res.render(path.resolve('views/photo_profile_edit'), {
         user: loggedUser
@@ -125,12 +101,6 @@ exports.geteditprofilepicture = (req, res, next) => {
 // POST editprofilepicture
 exports.posteditprofilepicture = (req, res, next) => {
     console.log("posteditprofilepicture controller reached reached");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-    }
     userid = req.session.user._id;
     if (req.session.user.photocount === 5) {
         Photo.deleteOne({user: userid, isprofile: 1}, function(err, doc) {
@@ -190,23 +160,11 @@ exports.posteditprofilepicture = (req, res, next) => {
 // GET takephoto (BONUS)
 exports.getakephoto = (req, res, next) => {
 	console.log("gettakephoto controller reached reached");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-    }
 	return (res.render(path.resolve('views/takephoto')));
 }
 // POST takephoto (BONUS)
 exports.postakephoto = (req, res, next) => {
     console.log("gettakephoto controller reached reached");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-    }
     date = Date.now();
     var ret = req.body.webcamimage.replace('data:image/png;base64,','');
     const image = new Photo({
@@ -234,23 +192,11 @@ exports.postakephoto = (req, res, next) => {
 // GET takeprofilephoto (BONUS)
 exports.getakeprofilephoto = (req, res, next) => {
 	console.log("gettakeprofilephoto controller reached reached");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-    }
 	return (res.render(path.resolve('views/takeprofilephoto')));
 }
 // POST takeprofilephoto (BONUS)
 exports.postakeprofilephoto = (req, res, next) => {
     console.log("postakeprofilephoto controller reached reached");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-    }
     userid = req.session.user._id;
     var ret = req.body.webcamimage.replace('data:image/png;base64,','');
     if (req.session.user.photocount === 5) {

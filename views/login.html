@@ -3,6 +3,12 @@
 {% block title %}Matcha - Login{% endblock %}
 
 {% block body %}
+{% if error %}
+<div class="alert alert-success alert-dismissable">
+		<button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+	 {{ flash }}
+</div>
+{% endif %}
 <div class = "row" style="min-height: 82vh; height:82vh">
 		<div class = "col-10 align-self-center mx-auto rounded" style="background-color: rgb(40,40,40,0.5)">
 			<br />

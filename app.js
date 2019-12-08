@@ -2,10 +2,10 @@
 const express	= require('express');
 const session	= require('express-session')
 const http		= require('http');
-const flash		= require('connect-flash');
 const mongoose	= require('mongoose');
 const swig		= require('swig');
 const bodyParser= require('body-parser');
+const flash		= require('connect-flash');
 MONGODB_URI		= "mongodb+srv://Yano:80058024@cluster0-jszpy.mongodb.net/matcha";
 // MONGODB_URI		= "mongodb+srv://Rigardt:80058024@cluster0-e6mik.mongodb.net/matcha";
 
@@ -39,13 +39,13 @@ app.use(message);
 
 mongoose.set('useFindAndModify', false);
 mongoose
-	.connect(MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true})
-	.then(result => {
-		server.listen(8000);
-	})
-	.then(result => {
-		console.log(`Server has started, Port: 8000`);
-	})
-	.catch(err => {
-		console.log(err)
-	});
+.connect(MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true})
+.then(result => {
+	server.listen(8000);
+})
+.then(result => {
+	console.log(`Server has started, Port: 8000`);
+})
+.catch(err => {
+	console.log(err)
+});

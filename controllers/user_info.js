@@ -8,12 +8,6 @@ const nodemailer = require('nodemailer');
 // Landing page for updating user information.
 exports.updateinfo = (req, res, next) => {
 	console.log("updateinfo controller reached reached");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-	}
 	loggedUser = req.session.user.username
 	return (res.render(path.resolve('views/update_info'),{
 		user: loggedUser
@@ -22,23 +16,11 @@ exports.updateinfo = (req, res, next) => {
 // GET username (updates)
 exports.getusername = (req, res, next) => {
 	console.log("getusername controller reached reached");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-	}
 	return (res.render(path.resolve('views/update_username')));
 }
 // POST username (updates)
 exports.postusername = (req, res, next) => {
 	console.log("postusername controller reached reached");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-	}
 	var validate = new Validate();
 	var check = validate.ValidateUsername(req.body.new_username);
 	if (check == 0) {
@@ -58,23 +40,11 @@ exports.postusername = (req, res, next) => {
 // GET name & surname
 exports.getname = (req, res, next) => {
     console.log("getname controller reached reached");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-	}
 	return (res.render(path.resolve('views/update_name')));
 }
 // POST name & surname
 exports.postname = (req, res, next) => {
     console.log("postname controller reached reached");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-	}
 	var validate = new Validate();
 	var checkfname = validate.isAlpha(req.body.new_firstname);
 	var checksurname = validate.isAlpha(req.body.new_surname);
@@ -96,23 +66,11 @@ exports.postname = (req, res, next) => {
 // GET age, and age pref.
 exports.getage = (req, res, next) => {
     console.log("getage controller reached reached");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-	}
 	return (res.render(path.resolve('views/update_age')));
 }
 // POST age, and age pref.
 exports.postage = (req, res, next) => {
     console.log("postage controller reached reached");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-	}
 	var validate = new Validate();
 	var checkage = validate.isNumeric(req.body.new_age);
 	var checkageprefupper = validate.isNumeric(req.body.new_ageupper);
@@ -139,12 +97,6 @@ exports.postage = (req, res, next) => {
 // GET maxdist
 exports.getmaxdist = (req, res, next) => {
     console.log("getmaxdist controller reached reached");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-	}
 	return (res.render(path.resolve('views/update_maxdist')));
 }
 // POST maxdist
@@ -170,23 +122,11 @@ exports.postmaxdist = (req, res, next) => {
 // GET email
 exports.getemail = (req, res, next) => {
     console.log("getemail controller reached reached");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-	}
 	return (res.render(path.resolve('views/update_email')));
 }
 // POST email
 exports.postemail = (req, res, next) => {
     console.log("postemail controller reached reached");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-	}
 	var validate = new Validate();
 	var check = validate.isEmail(req.body.new_email);
 	if (check == 0) {
@@ -235,23 +175,11 @@ exports.postemail = (req, res, next) => {
 // GET password
 exports.getpassword = (req, res, next) => {
     console.log("getpassword controller reached reached");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-	}
 	return (res.render(path.resolve('views/update_password')));
 }
 // POST password
 exports.postpassword = (req, res, next) => {
     console.log("postpassword controller reached reached");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-	}
 	// checks for password strength.
 	var validate = new Validate();
 	var check = validate.ValidatePassword(req.body.new_password);
@@ -278,23 +206,11 @@ exports.postpassword = (req, res, next) => {
 // GET about
 exports.getabout = (req, res, next) => {
     console.log("getabout controller reached reached");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-	}
 	return (res.render(path.resolve('views/update_about')));
 }
 // POST about
 exports.postabout = (req, res, next) => {
 	console.log("postabout controller reached reached");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-	}
 	var validate = new Validate();
 	var check = validate.isAlphanumeric(req.body.new_about);
 	if (check == 0) {
@@ -315,23 +231,11 @@ exports.postabout = (req, res, next) => {
 // GET location
 exports.getlocation = (req, res, next) => {
     console.log("getlocation controller reached reached");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-	}
 	return (res.render(path.resolve('views/update_location')));
 }
 // POST location
 exports.postlocation = (req, res, next) => {
 	console.log("postabout controller reached reached");
-	let message = req.flash('Something went wrong, please try again later!');
-	if (message.length > 0) {
-		message = message[0];
-	} else {
-		message = null;
-	}
 	key = req.session.user.verifkey;
 	var new_loc = [req.body.new_postal, req.body.new_city, req.body.new_province];
 	User.findOneAndUpdate({verifkey: key}, {$set:{location:new_loc}}, {new: true},function(err, doc){
