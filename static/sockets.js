@@ -13,7 +13,7 @@ $(function(){
 
     // Emit a new message
     send_message.click(function() {
-        socket.emit('new_message', {message: message.val()});
+        socket.emit('new_message', {message: message.val(), socketID: socket.id});
     });
 
     // Listen for a new message
@@ -24,7 +24,7 @@ $(function(){
     // Listen for a new message
     socket.on('new_notification', (data) => {
         notifblock.append("<div class='alert alert-danger alert-dismissible fade show' role='alert'>"
-            + data.message + " " + data.user + 
+            + data.message + " " + data.user +
             "<button type='button' class='close' data-dismiss='alert' aria-label='close'><span aria=hidden='true'>&times;</span></span></button>"
             + "</div>");
     });
