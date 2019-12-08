@@ -162,15 +162,12 @@ class Filter {
 			if (filter == 1) {
 				var ret = sortBy.OrderByAgeAsc(filteredMatches);
 				ret.then(function(result) {
-					console.log(result);
 					resolve(result);
 				}, function(err) {
-					console.log(err);
 				})
 			}
 			var ret = sortBy.OrderByAgeAsc(matches);
 			ret.then(function(result) {
-				console.log(result);
 				resolve(result);
 			}, function(err) {
 				console.log(err);
@@ -179,7 +176,6 @@ class Filter {
 			if (filter == 1) {
 				var ret = sortBy.OrderByAgedesc(filteredMatches);
 				ret.then(function(result) {
-					console.log(result);
 					resolve(result);
 				}, function(err) {
 					console.log(err);
@@ -195,7 +191,6 @@ class Filter {
 			if (filter == 1) {
 				var ret = sortBy.OrderByFameAsc(filteredMatches);
 				ret.then(function(result) {
-					console.log(result);
 					resolve(result);
 				}, function(err) {
 					console.log(err);
@@ -211,7 +206,6 @@ class Filter {
 			if (filter == 1) {
 				var ret = sortBy.OrderByFameDesc(filteredMatches);
 				ret.then(function(result) {
-					console.log(result);
 					resolve(result);
 				}, function(err) {
 					console.log(err);
@@ -227,7 +221,6 @@ class Filter {
 			if (filter == 1) {
 				var ret = sortBy.OrderByNBInterests(filteredMatches);
 				ret.then(function(result) {
-					console.log(result);
 					resolve(result);
 				}, function(err) {
 					console.log(err);
