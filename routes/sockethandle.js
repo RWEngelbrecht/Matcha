@@ -1,17 +1,20 @@
-const io        = require("../app.js");
 const Message	= require("../models/messages.js");
-module.exports = function(server) {
+const io = require('../app.js');
+
+module.exports = function(connectedUsers) {
+	
 	io.on('connection', (socket) => {
+		var user = {};
+		
 		// adds email and socket id to connectedUsers arr on login
 		socket.on('login', (data) => {
-			var user = {};
-			console.log("new user connected");
-			user.user = data.email
-			user.id = socket.id
-			connectedUsers.push(user);
+			user.user = data.email;
+			user.id = socket.id;
+			connectedUsers.push(user)
 			console.log('1', connectedUsers);
-		});
+		})
 		console.log('2', connectedUsers);
+
 		socket.on('join_chat', (data) => {
 			socket.join(data.chatID)
 		});
@@ -38,13 +41,13 @@ module.exports = function(server) {
 			newMessage.save().then(() => console.log('message saved to db'));
 		});
 
-		socket.on('disconnect', () => {
-			for(let i = 0; i < connectedUsers.length; i++) {
-				if (connectedUsers[i].id === socket.id) {
-					connectedUsers.splice(i, 1);
-				}
-				io.emit('exit', connectedUsers);
-			}
-		});
+			// socket.on('disconnect', () => {
+			// 	for(let i = 0; i < connectedUsers.length; i++) {
+			// 		if (connectedUsers[i].id === socket.id) {
+			// 			connectedUsers.splice(i, 1);
+			// 		}
+			// 		io.emit('exit', connectedUsers);
+			// 	}
+			// });
 	});
 }

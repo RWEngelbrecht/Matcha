@@ -26,7 +26,7 @@ $(function(){
         console.log(email.val());
         socket.emit('login', {email: email.val()});
     })
-
+    
     chat.click(function() {
         socket.emit('join_chat', {chatID: joinChatID.val()})
     })
