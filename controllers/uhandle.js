@@ -59,6 +59,13 @@ exports.postlogin = (req, res) => {
 			console.log(res.status(400).send(err));
 		}
 		else if (user && user.verified == true) {
+			console.log('connected users: ',connectedUsers);
+			connectedUsers.forEach(conUsr => {
+				if (conUsr.email === user.email) {
+					conUsr.email = user.username;
+					console.log(conUsr);
+				}
+			});
 			console.log('Login Success!');
 			User.findOneAndUpdate({_id: user._id}, {$set: {loggedIn: true}}, err => {
 				if (err){
