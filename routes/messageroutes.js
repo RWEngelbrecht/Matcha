@@ -52,18 +52,19 @@ router.get('/messages/:id', (req, res) => {
 
 
 io.on('connection', (socket) => {
-    console.log("new user connected");
     // set username. // from would never be anyone else than logged in user
     socket.username = from;
     // socket.id = chatID;
     socket.join(chatID);
-    connectedUsers.push({userName: from, id: socket.id});
-
+    // connectedUsers.push({userName: from, id: socket.id});
+    
     console.log(connectedUsers);
     // listen on new message
     socket.on('new_message', (data) => {
         var message = data.message;
         var toSocketID;
+        connectedUsers.push({userName: from, id: socket.id})
+        console.log("new user connected");
         // show message
         connectedUsers.forEach(con => {
             if (con.userName == to) {
