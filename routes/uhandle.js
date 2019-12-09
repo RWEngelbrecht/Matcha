@@ -61,16 +61,5 @@ router.post('/interests', uhandle.postinterests);
 
 router.get('/profile/:id',uhandle.getProfile);
 
-io.on('connection', socket => {
-
-	socket.on('login', (data) => {
-		connectedUsers.push({email: data.email, id: socket.id});
-	});
-
-	socket.on('join_chat', (data) => {
-		socket.join(data.chatID)
-	});
-	console.log("connected users: ", connectedUsers)
-});
 
 module.exports = router;

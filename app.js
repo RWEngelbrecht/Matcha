@@ -13,6 +13,8 @@ MONGODB_URI		= "mongodb+srv://Rigardt:80058024@cluster0-e6mik.mongodb.net/matcha
 const app = express();
 const server = http.createServer(app);
 const io = require('socket.io')(server);
+var connectedUsers = [];
+app.set('connectedUsers', connectedUsers);
 module.exports = io;
 app.engine('html', swig.renderFile);
 app.set('view engine', 'html');
@@ -41,7 +43,7 @@ app.use(function(req, res, next) {
 	next();
   });
 
-app.use(uhandle);
+app.use(uhandle, connectedUsers);
 app.use(user_info);
 app.use(umatch);
 app.use(photo);
@@ -69,3 +71,5 @@ mongoose
 .catch(err => {
 	console.log(err)
 });
+
+require('./routes/sockethandle')(server, connectedUsers);
