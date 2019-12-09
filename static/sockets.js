@@ -9,15 +9,31 @@ $(function(){
     var send_username = $("#send_username");
     var chatroom = $("#chatroom");
     var notifblock = $("#notifblock");
+    var login = $("#login");
+    var email = $("#email");
+    var chat = $("#chat");
+    var joinChatID = $("#joinChatId");
+    var sendChatID = $("#sendChatId");
+    var chatFrom = $("#chatFrom");
+    var chatTo = $("#chatTo");
 
     // Emit a new message
     send_message.click(function() {
-        socket.emit('new_message', {message: message.val(), socketID: socket.id});
+        socket.emit('new_message', {message: message.val(), chatFrom: chatFrom.val(), chatTo: chatTo.val(), chatID: sendChatID.val()});
     });
+
+    login.click(function() {
+        console.log(email.val());
+        socket.emit('login', {email: email.val()});
+    })
+    
+    chat.click(function() {
+        socket.emit('join_chat', {chatID: joinChatID.val()})
+    })
 
     // Listen for a new message
     socket.on('new_message', (data) => {
-        chatroom.append("<p style='color: white'>" + data.username + ": " +  data.message + "</p>");
+        chatroom.append("<p style='color: white'>" + data.chatFrom + ": " +  data.message + "</p>");
     });
 
     // Listen for a new message
@@ -34,3 +50,4 @@ $(function(){
         socket.emit('change_username', {username: username.val()});
     });
 });
+

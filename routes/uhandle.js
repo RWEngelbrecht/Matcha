@@ -2,10 +2,13 @@
 const express	= require('express');
 const router	= express.Router();
 const uhandle	= require('../controllers/uhandle.js');
+const io        = require("../app.js");
 const { body }	= require('express-validator');
 const multer= require('multer');
 var storage = multer.memoryStorage();
 var upload = multer({ storage: storage });
+
+global.connectedUsers = [];
 
 console.log("uhandle reached(Routes)");
 // HOME
@@ -57,5 +60,6 @@ router.get('/interests', uhandle.getinterests);
 router.post('/interests', uhandle.postinterests);
 
 router.get('/profile/:id',uhandle.getProfile);
+
 
 module.exports = router;
