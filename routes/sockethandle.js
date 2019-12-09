@@ -1,4 +1,5 @@
 const Message	= require("../models/messages.js");
+const User= require("../models/umod.js");
 const io = require('../app.js');
 
 module.exports = function(connectedUsers) {
@@ -8,29 +9,33 @@ module.exports = function(connectedUsers) {
 		
 		// adds email and socket id to connectedUsers arr on login
 		socket.on('login', (data) => {
-			user.user = data.email;
-			user.id = socket.id;
-			connectedUsers.push(user)
-			console.log('1', connectedUsers);
+			User.findOne({email: data.email}, function(err, doc) {
+				user.user = doc.username;
+				user.id = socket.id;
+				connectedUsers.push(user)
+			});
 		})
-		console.log('2', connectedUsers);
 
 		socket.on('join_chat', (data) => {
 			socket.join(data.chatID)
 		});
 
 		socket.on('new_message', (data) => {
+			var from, to;
 			var message = data.message;
 			var chatID = data.chatID;
 			console.log(chatID);
-			// show message
+			// show messagers
 			connectedUsers.forEach(con => {
-				if (con.email == data.chatTo) {
-					toSocketID = con.id;
-					console.log("toSocketID");
+				if (con.user == data.chatFrom) {
+					from = con.id;
+				}
+				if (con.user == data.chatTo) {
+					to = con.id;
 				}
 			});
-			io.sockets.to(chatID).emit('new_message', {message : message, username: socket.username});
+			// socket.emit('new_message', {message : message, username: socket.username});
+			// io.sockets.to(to).emit('new_message', {message : message, username: socket.username});
 			// io.sockets.to(toSocketID).emit('new_notification', {message : 'You have a new message from', user : from});
 			var newMessage = new Message({
 				chatID: chatID,
@@ -49,5 +54,6 @@ module.exports = function(connectedUsers) {
 			// 		io.emit('exit', connectedUsers);
 			// 	}
 			// });
+			console.log('connected users', connectedUsers)
 	});
 }

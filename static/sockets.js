@@ -1,7 +1,6 @@
 $(function(){
     // make connection.
     var socket = io.connect('http://localhost:8000');
-
     // buttons and inputs.
     var message = $("#message");
     var username = $("#username");
@@ -33,7 +32,8 @@ $(function(){
 
     // Listen for a new message
     socket.on('new_message', (data) => {
-        chatroom.append("<p style='color: white'>" + data.chatFrom + ": " +  data.message + "</p>");
+        console.log("ME");
+        chatroom.append("<p style='color: white'>" + data.username + ": " +  data.message + "</p>");
     });
 
     // Listen for a new message

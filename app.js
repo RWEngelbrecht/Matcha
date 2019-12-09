@@ -39,11 +39,11 @@ app.use(function(req, res, next) {
 	next();
 });
   
-app.use(uhandle);
-app.use(user_info);
-app.use(umatch);
-app.use(photo);
-app.use(message);
+app.use(uhandle, connectedUsers);
+app.use(user_info, connectedUsers);
+app.use(umatch, connectedUsers);
+app.use(photo, connectedUsers);
+app.use(message, connectedUsers);
 
 app.use(function(err, req, res, next) {
 	// set locals, only providing error in development

@@ -36,6 +36,14 @@ exports.gethome = (req, res, next) => {
 		return (res.redirect('/interests'));
 	}
 	currUser = req.session.user
+	connectedUsers.forEach(conUsr => {
+		console.log("here");
+		if (conUsr.email === req.session.user.email) {
+			conUsr.email = req.session.user.username;
+			console.log('conUsr', conUsr)
+		}
+	});
+	console.log('connected users: ',connectedUsers);
 	Photo.find({user: currUser._id}, (err, photos) => {
 		if (err) {
 			console.log("Could not find photos.");
@@ -59,13 +67,6 @@ exports.postlogin = (req, res) => {
 			console.log(res.status(400).send(err));
 		}
 		else if (user && user.verified == true) {
-			console.log('connected users: ',connectedUsers);
-			connectedUsers.forEach(conUsr => {
-				if (conUsr.email === user.email) {
-					conUsr.email = user.username;
-					console.log(conUsr);
-				}
-			});
 			console.log('Login Success!');
 			User.findOneAndUpdate({_id: user._id}, {$set: {loggedIn: true}}, err => {
 				if (err){
