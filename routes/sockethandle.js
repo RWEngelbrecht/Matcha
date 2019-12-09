@@ -16,16 +16,17 @@ module.exports = function(connectedUsers) {
 			});
 		})
 
-		socket.on('join_chat', (data) => {
-			socket.join(data.chatID)
-		});
+		// socket.on('join_chat', function (data) {
+		// 	socket.join(data.chatID)
+		// 	console.log('data.chatID:', data.chatID);
+		// 	// console.log('socket rooms', io.sockets.adapter.rooms);
+		// });
 
 		socket.on('new_message', (data) => {
 			var from, to;
 			var message = data.message;
 			var chatID = data.chatID;
-			console.log(chatID);
-			// show messagers
+
 			connectedUsers.forEach(con => {
 				if (con.user == data.chatFrom) {
 					from = con.id;
@@ -34,26 +35,19 @@ module.exports = function(connectedUsers) {
 					to = con.id;
 				}
 			});
-			// socket.emit('new_message', {message : message, username: socket.username});
-			// io.sockets.to(to).emit('new_message', {message : message, username: socket.username});
-			// io.sockets.to(toSocketID).emit('new_notification', {message : 'You have a new message from', user : from});
+			// chat should have a message from 1 if sending to specific room works
+			// 2 is just to make sure it is sending in general
+			io.sockets.in(io.sockets.adapter.rooms.chatID).emit('new message', {message: message, username: 1 });
+			io.sockets.emit('new_message', {message : message, username: 2});
 			var newMessage = new Message({
 				chatID: chatID,
 				sentBy: data.chatFrom,
 				sentTo: data.chatTo,
 				message: message
 			});
-			newMessage.save().then(() => console.log('message saved to db'));
+			// newMessage.save().then(() => console.log('message saved to db'));
 		});
-
-			// socket.on('disconnect', () => {
-			// 	for(let i = 0; i < connectedUsers.length; i++) {
-			// 		if (connectedUsers[i].id === socket.id) {
-			// 			connectedUsers.splice(i, 1);
-			// 		}
-			// 		io.emit('exit', connectedUsers);
-			// 	}
-			// });
-			console.log('connected users', connectedUsers)
+		console.log('connected users', connectedUsers)
 	});
 }
+ZPe7m3L0RrwmWuISAAAC

@@ -26,13 +26,14 @@ $(function(){
         socket.emit('login', {email: email.val()});
     })
     
-    chat.click(function() {
-        socket.emit('join_chat', {chatID: joinChatID.val()})
-    })
+    // chat.click(function() {
+    //     console.log(joinChatID.val());
+    //     socket.emit('join_chat', {chatID: joinChatID.val()})
+    // })
 
     // Listen for a new message
     socket.on('new_message', (data) => {
-        console.log("ME");
+        console.log(data);
         chatroom.append("<p style='color: white'>" + data.username + ": " +  data.message + "</p>");
     });
 
