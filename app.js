@@ -22,6 +22,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false, limit: '5mb'}));
 session.user = 0;
 
+var connections = [];
+app.set('connections', connections);
+
 // ROUTES
 // const user = require('./routes/user');
 const uhandle = require('./routes/uhandle');
