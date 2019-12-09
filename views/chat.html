@@ -10,7 +10,7 @@
 		{% for chat in chats %}
 		<div class="row">
 			<div class="col">
-				<input type="hidden" id="chatid" value="{{chat.id}}">
+				<input type="hidden" id="joinChatId" value="{{chat.id}}">
 				<a class="text-decoration-none h4 align-self-bottom text-warning" href="/messages/{{chat.id}}" id="chat">{{chat.chatTo[0]}}</a>
 			</div>
 		</div>
