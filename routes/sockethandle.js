@@ -16,7 +16,7 @@ module.exports = function(connectedUsers) {
 				console.log('room joined: ', room);
 			});
 		}
-		console.log(socket.rooms);
+		// console.log(socket.rooms);
 		// adds email and socket id to connectedUsers arr on login
 		socket.on('login', (data) => {
 			User.findOne({email: data.email}, function(err, doc) {
@@ -25,11 +25,29 @@ module.exports = function(connectedUsers) {
 					user.id = socket.id;
 					connectedUsers.push(user);
 					chatRooms = doc.chatRooms;
-					console.log(chatRooms)
+					console.log('CHATROOMS AT LOGIN:  ',doc.chatRooms);
+					console.log('GLOBAL VARIABLE CHATROOMS: ',chatRooms);
 				} else {
 					console.error(err);
 				}
 			});
+		})
+
+		socket.on('like', data => {
+			User.findOne({username: data.liker}, (err, doc) => {
+				to_update = doc.chatRooms;
+				console.log("TO UPDATE 1", to_update);
+				to_update.push(data.chatID);
+				console.log("TO UPDATE 2", to_update);
+				// console.log("DOC", doc);
+				User.findOneAndUpdate({username: data.liker}, {$set: {chatRooms: to_update}}, {new:true}, (err, docs) => {
+					// console.log("DOCS YES DOCS", docs);
+					console.log('UPDATED CHATROOMS ON LIKE: ', docs.chatRooms);
+					// console.log("PRE FINAL: ", chatRooms);
+				})
+				chatRooms = to_update;
+			})
+			// console.log('FINAL : ',chatRooms);
 		})
 
 	// 	socket.on('join_chat', function (data) {
@@ -53,7 +71,7 @@ module.exports = function(connectedUsers) {
 					toName = con.user;
 				}
 			});
-			console.log('chatID: ',chatID)
+			// console.log('chatID: ',chatID)
 			// socket.join(chatID);
 	// chat should have a message from 1 if sending to specific room works
 	// 2 is just to make sure it is sending in general
@@ -68,6 +86,6 @@ module.exports = function(connectedUsers) {
 			});
 			newMessage.save().then(() => console.log('message saved to db'));
 		});
-		console.log('connected users', connectedUsers)
+		// console.log('connected users', connectedUsers)
 	});
 }
