@@ -16,7 +16,7 @@ module.exports = function(connectedUsers) {
 				console.log('room joined: ', room);
 			});
 		}
-
+		console.log(socket.rooms);
 		// adds email and socket id to connectedUsers arr on login
 		socket.on('login', (data) => {
 			User.findOne({email: data.email}, function(err, doc) {
@@ -25,17 +25,18 @@ module.exports = function(connectedUsers) {
 					user.id = socket.id;
 					connectedUsers.push(user);
 					chatRooms = doc.chatRooms;
+					console.log(chatRooms)
 				} else {
 					console.error(err);
 				}
 			});
 		})
 
-		socket.on('join_chat', function (data) {
-			socket.join(data.chatID)
-			console.log('data.chatID:', data.chatID);
-	// console.log('socket rooms', io.sockets.adapter.rooms);
-		});
+	// 	socket.on('join_chat', function (data) {
+	// 		socket.join(data.chatID)
+	// 		console.log('data.chatID:', data.chatID);
+	// // console.log('socket rooms', io.sockets.adapter.rooms);
+	// 	});
 
 		socket.on('new_message', (data) => {
 			var fromID, toID, fromName, toName;
