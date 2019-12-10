@@ -23,7 +23,10 @@ router.get('/messages', (req, res) => {
                     return value != req.session.user.username;
                 })
             })
+            User.findOneAndUpdate({username: req.session.user.username}, {$set: {chatRooms: chats}})
+                .catch(err => console.error(err));
         });
+        req.session.user.chatRooms = chats;
         res.render(path.resolve('views/chat'), {chats: conversations});
     });
 })
