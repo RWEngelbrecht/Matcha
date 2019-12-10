@@ -9,7 +9,6 @@ module.exports = function(connectedUsers) {
 	io.on('connection', (socket) => {
 		var user = {};
 
-
 		if (chatRooms.length > 0) {
 			chatRooms.forEach(room => {
 				socket.join(room);
@@ -52,12 +51,20 @@ module.exports = function(connectedUsers) {
 					toName = con.user;
 				}
 			});
-			console.log('chatID: ',chatID)
+			connectedUsers.forEach(user => {
+				if (user.id === toID) {
+					socket.join(chatID);
+					io.sockets.to(chatID).emit('new_message', {message: message, username: 1});
+				}
+				// if (user.id === fromID) {
+				// 	socket.join(chatID);
+				// 	io.sockets.to(chatID).emit('new_message', {message: message, username: 2});
+				// }
+			})
+			// console.log('chatID: ',chatID)
 			// socket.join(chatID);
-	// chat should have a message from 1 if sending to specific room works
-	// 2 is just to make sure it is sending in general
 			// io.sockets.in(io.sockets.adapter.rooms.chatID).emit('new message', {message: message, username: 1 });
-			io.sockets.to(chatID).emit('new_message', {message: message, username: fromName});
+			// io.sockets.to(chatID).emit('new_message', {message: message, username: 1});
 			// io.sockets.emit('new_message', {message : message, username: 2});
 			var newMessage = new Message({
 				chatID: chatID,
@@ -65,7 +72,7 @@ module.exports = function(connectedUsers) {
 				sentTo: data.chatTo,
 				message: message
 			});
-			newMessage.save().then(() => console.log('message saved to db'));
+			// newMessage.save().then(() => console.log('message saved to db'));
 		});
 		console.log('connected users', connectedUsers)
 	});
