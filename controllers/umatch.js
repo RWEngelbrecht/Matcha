@@ -76,10 +76,10 @@ exports.getMatches = (req, res, next) => {
 }
 
 exports.like = (req, res, next) => {
-	var likedkey = req.body.potmatch;
+	var likedName = req.body.potmatch;
 	currUser = req.session.user;
 	User.findOneAndUpdate(
-		{verifkey: likedkey},
+		{username: likedName},
 		{$inc:{fame:1},
 		$push:{likedBy: currUser.username}},
 		{new: true})

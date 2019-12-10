@@ -15,6 +15,9 @@ $(function(){
     var sendChatID = $("#sendChatId");
     var chatFrom = $("#chatFrom");
     var chatTo = $("#chatTo");
+    var like = $("#like");
+    var liked = $("#potmatch");
+    var liker = $("#liker");
 
     // Emit a new message
     send_message.click(function() {
@@ -24,6 +27,10 @@ $(function(){
     login.click(function() {
         console.log(email.val());
         socket.emit('login', {email: email.val()});
+    })
+
+    like.click(function() {
+        socket.emit('like', {chatID: [liker.val(), liked.val()].sort().join('-'), liker: liker.val()});
     })
 
     // chat.click(function() {
