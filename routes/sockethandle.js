@@ -72,6 +72,8 @@ module.exports = function(connectedUsers) {
 				}
 			});
 			// console.log('chatID: ',chatID)
+			// console.log('fromID: ',chatID)
+			// console.log('chatID: ',chatID)
 			// socket.join(chatID);
 	// chat should have a message from 1 if sending to specific room works
 	// 2 is just to make sure it is sending in general
