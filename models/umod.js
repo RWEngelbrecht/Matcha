@@ -99,8 +99,12 @@ const usertable = new Schema({
 	}],
 	notif: {
 		type: Number,
-		default: 0,	
+		default: 0,
 	},
+	chatRooms: [{
+		type: String,
+		default: null
+	}]
 });
 
 module.exports = mongoose.model('User', usertable);

@@ -4,6 +4,7 @@ const Filter = require('./filter.class')
 const path	= require('path');
 const nodemailer = require('nodemailer');
 const Notifications = require('../models/notifmod');
+const Message = require('../models/messages');
 var currUser;
 var filters = new Filter();
 
@@ -129,6 +130,11 @@ exports.like = (req, res, next) => {
 						} else {
 						  console.log('Email sent: ' + info.response);
 						}
+					});
+					// find any chatIDs where session.user.username appears
+					Message.find({ $text: {$search: req.session.user.username}}).distinct('chatID').then(chats => {
+							User.findOneAndUpdate({username: req.session.user.username}, {$set: {chatRooms: chats}})
+								.catch(err => console.error(err));
 					});
 					res.redirect('/suggestions');
 				}

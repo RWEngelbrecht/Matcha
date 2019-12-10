@@ -11,21 +11,36 @@ router.get('/messages', (req, res) => {
     if (req.session.user == 0 || !req.session.user) {
         res.redirect('/login');
     }
+
     var chatters = [];
     var conversations = [];
-    // find any chatIDs where session.user.username appears
-    Message.find({ $text: {$search: req.session.user.username}}).distinct('chatID').then(chats => {
-        chats.forEach(chat => {
-            chatters = chat.split('-');
+    User.find({username: req.session.user.username}, 'chatRooms', (err, rooms) => {
+        rooms.forEach(room => {
+            chatters = room.split('-');
             conversations.push({
-                id: chat,
+                id: room,
                 chatTo: chatters.filter(function(value) {
                     return value != req.session.user.username;
                 })
-            })
+            });
         });
-        res.render(path.resolve('views/chat'), {chats: conversations});
     });
+    // // find any chatIDs where session.user.username appears
+    // Message.find({ $text: {$search: req.session.user.username}}).distinct('chatID').then(chats => {
+    //     chats.forEach(chat => {
+    //         chatters = chat.split('-');
+    //         conversations.push({
+    //             id: chat,
+    //             chatTo: chatters.filter(function(value) {
+    //                 return value != req.session.user.username;
+    //             })
+    //         })
+    //         User.findOneAndUpdate({username: req.session.user.username}, {$set: {chatRooms: chats}})
+    //             .catch(err => console.error(err));
+    //     });
+    //     req.session.user.chatRooms = chats;
+        res.render(path.resolve('views/chat'), {chats: conversations});
+    // });
 })
 
 router.get('/messages/:id', (req, res) => {
