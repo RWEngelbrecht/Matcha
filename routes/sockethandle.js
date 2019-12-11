@@ -32,10 +32,17 @@ module.exports = function(connectedUsers) {
 		// updates the connectedusers array to get the new socket id coming from client side
 		socket.on('update', function(data) {
 			console.log("update data -->", data)
+			var check = 0;
 			for (var i in connectedUsers) {
 				if (connectedUsers[i].user == data.user) {
 					connectedUsers[i].socketId = data.id;
+					check = 1;
 				}
+			}
+			if (check === 0) {
+				user.user = data.user
+				user.socketId = data.id
+				connectedUsers.push(user);
 			}
 			console.log('connected users after update', connectedUsers)
 		})
@@ -45,18 +52,18 @@ module.exports = function(connectedUsers) {
 			for (var i in connectedUsers) {
 				if (connectedUsers[i].user === data.chatFrom) {
 					console.log("emitting now");
-					io.sockets.to(connectedUsers[i].socketId).emit('new_message', {message: "SPECIFIC", username: "SPECIFIC"});
+					io.sockets.to(connectedUsers[i].socketId).emit('new_message', {message: data.message, username: data.chatFrom});
 				}
 				if (connectedUsers[i].user === data.chatTo) {
 					console.log("emitting now");
-					io.sockets.to(connectedUsers[i].socketId).emit('new_message', {message: "SPECIFIC", username: "SPECIFIC"});
+					io.sockets.to(connectedUsers[i].socketId).emit('new_message', {message: data.message, username: data.chatFrom});
 				}
 			}
 			var newMessage = new Message({
-				chatID: chatID,
+				chatID: "chatID",
 				sentBy: data.chatFrom,
 				sentTo: data.chatTo,
-				message: message
+				message: data.message
 			});
 			newMessage.save().then(() => console.log('message saved to db'));
 		});

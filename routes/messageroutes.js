@@ -27,6 +27,7 @@ router.get('/messages', (req, res) => {
         req.session.user.chatRooms = chats;
         res.render(path.resolve('views/chat'), {chats: conversations, user: req.session.user});
         res.render(path.resolve('views/chat'), {chats: conversations});
+    });
 })
 
 router.get('/messages/:id', (req, res) => {
