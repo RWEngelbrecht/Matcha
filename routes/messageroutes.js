@@ -27,7 +27,7 @@ router.get('/messages', (req, res) => {
                 .catch(err => console.error(err));
         });
         req.session.user.chatRooms = chats;
-        res.render(path.resolve('views/chat'), {chats: conversations});
+        res.render(path.resolve('views/chat'), {chats: conversations, user: req.session.user});
     });
 })
 
@@ -47,7 +47,7 @@ router.get('/messages/:id', (req, res) => {
             }
         });
         Message.find({chatID: chatID}, (err, messages) => {
-            res.render(path.resolve('views/messages'), {messages: messages, chatFrom: from, chatTo: to, chatID: chatID});
+            res.render(path.resolve('views/messages'), {messages: messages, chatFrom: from, chatTo: to, chatID: chatID, user: req.session.user});
         });
     });
 });

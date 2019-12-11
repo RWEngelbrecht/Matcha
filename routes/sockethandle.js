@@ -1,67 +1,61 @@
 const Message	= require("../models/messages.js");
 const User= require("../models/umod.js");
 const io = require('../app.js');
-var chatRooms = [];
-
 
 module.exports = function(connectedUsers) {
 
-	io.on('connection', (socket) => {
+	io.sockets.on('connection', function (socket) {
+		console.log("some id coming from connection", socket.id)
 		var user = {};
 
 		// adds email and socket id to connectedUsers arr on login
-		socket.on('login', (data) => {
+		socket.on('login', function(data) {
 			User.findOne({email: data.email}, function(err, doc) {
+				if (err) throw error;
 				if (doc) {
+					var verif = 0;
 					user.user = doc.username;
-					user.id = socket.id;
-					connectedUsers.push(user);
-					chatRooms = doc.chatRooms;
-				} else {
-					console.error(err);
+					user.socketId = socket.id;
+					for (var i in connectedUsers) {
+						if (connectedUsers[i].user == doc.username) {
+							connectedUsers[i].socketId = user.socketId;
+							verif = 1;
+						};
+					};
+					if (verif == 0) {
+						connectedUsers.push(user);
+					};
 				}
 			});
-		})
+		});
 
-		socket.on('new_message', (data) => {
-			console.log(data);
-			// var message = data.message;
-			// var chatID = data.chatID;
-			var fromID;
-			connectedUsers.forEach(con => {
-				if (con.user == data.chatFrom) {
-					fromID = con.id;
-			// 		fromName = con.user;
+		// updates the connectedusers array to get the new socket id coming from client side
+		socket.on('update', function(data) {
+			console.log("update data -->", data)
+			for (var i in connectedUsers) {
+				if (connectedUsers[i].user == data.user) {
+					connectedUsers[i].socketId = data.id;
 				}
-			// 	if (con.user == data.chatTo) {
-			// 		toID = con.id;
-			// 		toName = con.user;
-			});
-			console.log(fromID);
-			// });
-			// connectedUsers.forEach(user => {
-			// 	if (user.id === toID) {
-			// 		socket.join(chatID);
-			// 		io.sockets.to(chatID).emit('new_message', {message: message, username: 1});
-			// 	}
-				// if (user.id === fromID) {
-				// 	socket.join(chatID);
-				// 	io.sockets.to(chatID).emit('new_message', {message: message, username: 2});
-				// }
-			// })
-			// console.log('chatID: ',chatID)
-			// socket.join(chatID);
-			// io.sockets.in(io.sockets.adapter.rooms.chatID).emit('new message', {message: message, username: 1 });
-			// io.sockets.to(chatID).emit('new_message', {message: message, username: 1});
-			socket.to(fromID).emit('new_message', {message : "message", username: "username"});
-			// var newMessage = new Message({
-			// 	chatID: chatID,
-			// 	sentBy: data.chatFrom,
-			// 	sentTo: data.chatTo,
-			// 	message: message
-			// });
-			// newMessage.save().then(() => console.log('message saved to db'));
+			}
 			console.log('connected users', connectedUsers)
+		})
+		
+		socket.on('new_message', (data) => {
+			console.log("data coming in as a paramater ->", data);
+			for (var i in connectedUsers) {
+				if (connectedUsers[i].user === data.chatFrom) {
+					console.log("emitting now");
+					io.sockets.to(connectedUsers[i].socketId).emit('new_message', {message: "SPECIFIC", username: "SPECIFIC"});
+					io.sockets.emit('new_message', {message: "ALL", username: "ALL"});
+				}
+			}
+		// 	var newMessage = new Message({
+		// 		chatID: chatID,
+		// 		sentBy: data.chatFrom,
+		// 		sentTo: data.chatTo,
+		// 		message: message
+		// 	});
+		// 	newMessage.save().then(() => console.log('message saved to db'));
 		});
 	});
 }
