@@ -10,7 +10,7 @@ $(function(){
     var user = $("#is_user");
     var login = $("#login");
     var email = $("#email");
-    var matches = $("#email");
+    var matches = $("#matches");
     var mpage = $("#mpage");
     var profile = $("#profile");
     var home = $("#home");
@@ -22,6 +22,7 @@ $(function(){
     function update() {
         socket.emit('update', {user: user.val(), id: socket.id});
     }
+  
     // Emit a new message
     send_message.click(function() {
         console.log("user val send message", user.val());
@@ -34,7 +35,6 @@ $(function(){
         socket.emit('update', {user: user.val(), id: socket.id});
         socket.emit('login', {email: email.val()});
     })
-
     // Listen for a new message
     socket.on('new_message', (data) => {
         chatroom.append("<p style='color: white'>" + data.username + ": " +  data.message + "</p>");

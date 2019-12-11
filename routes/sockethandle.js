@@ -7,7 +7,7 @@ module.exports = function(connectedUsers) {
 	io.sockets.on('connection', function (socket) {
 		console.log("some id coming from connection", socket.id)
 		var user = {};
-
+   
 		// adds email and socket id to connectedUsers arr on login
 		socket.on('login', function(data) {
 			User.findOne({email: data.email}, function(err, doc) {
@@ -28,7 +28,7 @@ module.exports = function(connectedUsers) {
 				}
 			});
 		});
-
+    
 		// updates the connectedusers array to get the new socket id coming from client side
 		socket.on('update', function(data) {
 			console.log("update data -->", data)
@@ -60,6 +60,6 @@ module.exports = function(connectedUsers) {
 		// 	});
 		// 	newMessage.save().then(() => console.log('message saved to db'));
 		});
-		console.log('connected users', connectedUsers)
+		// console.log('connected users', connectedUsers)
 	});
 }

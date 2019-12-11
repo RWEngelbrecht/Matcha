@@ -22,7 +22,8 @@
 				<tr>
 					<form action="" method="POST">
 						<td style="color: white">{{match.username}}</td>
-						<td>{{ input("hidden", "potmatch", "potmatch", match.verifkey) }}</td>
+						<td>{{input("hidden", "liker", "liker", loggedUser.username)}}</td>
+						<td>{{ input("hidden", "potmatch", "potmatch", match.username) }}</td>
 						<td>{{ input("submit", "like", "like", "Like") }}</td>
 					</form>
 				</tr>

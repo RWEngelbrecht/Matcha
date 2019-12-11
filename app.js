@@ -6,8 +6,8 @@ const mongoose	= require('mongoose');
 const swig		= require('swig');
 const bodyParser= require('body-parser');
 const flash		= require('connect-flash');
-MONGODB_URI		= "mongodb+srv://Yano:80058024@cluster0-jszpy.mongodb.net/matcha";
-// MONGODB_URI		= "mongodb+srv://Rigardt:80058024@cluster0-e6mik.mongodb.net/matcha";
+// MONGODB_URI		= "mongodb+srv://Yano:80058024@cluster0-jszpy.mongodb.net/matcha";
+MONGODB_URI		= "mongodb+srv://Rigardt:80058024@cluster0-e6mik.mongodb.net/matcha";
 
 // APP SETUP.
 const app = express();

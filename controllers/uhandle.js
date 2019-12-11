@@ -36,13 +36,6 @@ exports.gethome = (req, res, next) => {
 		return (res.redirect('/interests'));
 	}
 	currUser = req.session.user
-	connectedUsers.forEach(conUsr => {
-		console.log("here");
-		if (conUsr.email === req.session.user.email) {
-			conUsr.email = req.session.user.username;
-			console.log('conUsr', conUsr)
-		}
-	});
 	Photo.find({user: currUser._id}, (err, photos) => {
 		if (err) {
 			console.log("Could not find photos.");
