@@ -43,7 +43,6 @@ exports.gethome = (req, res, next) => {
 			console.log('conUsr', conUsr)
 		}
 	});
-	console.log('connected users: ',connectedUsers);
 	Photo.find({user: currUser._id}, (err, photos) => {
 		if (err) {
 			console.log("Could not find photos.");

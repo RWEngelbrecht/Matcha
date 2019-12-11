@@ -37,7 +37,7 @@ module.exports = function(connectedUsers) {
 					connectedUsers[i].socketId = data.id;
 				}
 			}
-			console.log('connected users', connectedUsers)
+			console.log('connected users after update', connectedUsers)
 		})
 		
 		socket.on('new_message', (data) => {
@@ -46,7 +46,10 @@ module.exports = function(connectedUsers) {
 				if (connectedUsers[i].user === data.chatFrom) {
 					console.log("emitting now");
 					io.sockets.to(connectedUsers[i].socketId).emit('new_message', {message: "SPECIFIC", username: "SPECIFIC"});
-					io.sockets.emit('new_message', {message: "ALL", username: "ALL"});
+				}
+				if (connectedUsers[i].user === data.chatTo) {
+					console.log("emitting now");
+					io.sockets.to(connectedUsers[i].socketId).emit('new_message', {message: "SPECIFIC", username: "SPECIFIC"});
 				}
 			}
 		// 	var newMessage = new Message({
@@ -57,5 +60,6 @@ module.exports = function(connectedUsers) {
 		// 	});
 		// 	newMessage.save().then(() => console.log('message saved to db'));
 		});
+		console.log('connected users', connectedUsers)
 	});
 }
