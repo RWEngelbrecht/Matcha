@@ -52,14 +52,13 @@ module.exports = function(connectedUsers) {
 					io.sockets.to(connectedUsers[i].socketId).emit('new_message', {message: "SPECIFIC", username: "SPECIFIC"});
 				}
 			}
-		// 	var newMessage = new Message({
-		// 		chatID: chatID,
-		// 		sentBy: data.chatFrom,
-		// 		sentTo: data.chatTo,
-		// 		message: message
-		// 	});
-		// 	newMessage.save().then(() => console.log('message saved to db'));
+			var newMessage = new Message({
+				chatID: chatID,
+				sentBy: data.chatFrom,
+				sentTo: data.chatTo,
+				message: message
+			});
+			newMessage.save().then(() => console.log('message saved to db'));
 		});
-		// console.log('connected users', connectedUsers)
 	});
 }
