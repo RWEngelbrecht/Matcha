@@ -367,7 +367,7 @@ exports.getProfile = (req, res, next) => {
 			if (err) {
 				console.log("Could not find photos.");
 			}
-			res.render(path.resolve('views/index'),{user: user, photos: photos});
+			res.render(path.resolve('views/index'),{user: user, photos: photos, loggedUser: req.session.user});
 		});
 	});
 }
