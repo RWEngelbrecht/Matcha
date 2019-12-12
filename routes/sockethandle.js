@@ -2,12 +2,10 @@ const Message	= require("../models/messages.js");
 const User= require("../models/umod.js");
 const Likes = require('../models/likemod');
 const io = require('../app.js');
-const _	= require('underscore');
 
 module.exports = function(connectedUsers) {
 
 	io.sockets.on('connection', function (socket) {
-		console.log("some id coming from connection", socket.id)
 		var user = {};
 
 		// adds email and socket id to connectedUsers arr on login
@@ -33,7 +31,6 @@ module.exports = function(connectedUsers) {
 
 		// updates the connectedusers array to get the new socket id coming from client side
 		socket.on('update', function(data) {
-			console.log("update data -->", data)
 			var check = 0;
 			for (var i in connectedUsers) {
 				if (connectedUsers[i].user == data.user) {
@@ -46,19 +43,15 @@ module.exports = function(connectedUsers) {
 				user.socketId = data.id
 				connectedUsers.push(user);
 			}
-			console.log('connected users after update', connectedUsers)
 		})
 
 		// message handler
 		socket.on('new_message', (data) => {
-			console.log("data coming in as a paramater ->", data);
 			for (var i in connectedUsers) {
 				if (connectedUsers[i].user === data.chatFrom) {
-					console.log("emitting now");
 					io.sockets.to(connectedUsers[i].socketId).emit('new_message', {message: data.message, username: data.chatFrom, chatID: data.chatID});
 				}
 				if (connectedUsers[i].user === data.chatTo) {
-					console.log("emitting now");
 					io.sockets.to(connectedUsers[i].socketId).emit('new_message', {message: data.message, username: data.chatFrom, chatID: data.chatID});
 				}
 			}
@@ -68,16 +61,32 @@ module.exports = function(connectedUsers) {
 				sentTo: data.chatTo,
 				message: data.message
 			});
-			newMessage.save().then(() => console.log('message saved to db'));
+			newMessage.save();
 		});
 
 		// notif on like handler
 		socket.on('new_like', (data) => {
-			
-		})
+			Likes.find({liker: data.liked}, (err, user_likes) => {
+				var match = 0;
+				user_likes.forEach(user => {
+					if (user.liked === data.liker) {
+						// you have a match
+						for(var i in connectedUsers) {
+							if (connectedUsers[i].user === data.liked) {
+								io.sockets.to(connectedUsers[i].socketId).emit('new_notification', {message: "You have a new match with", user: data.liker});
+							}
+						}
+					}
+				});
+				if (match === 0) {
+					for(var i in connectedUsers) {
+						if (connectedUsers[i].user === data.liked) {
+							io.sockets.to(connectedUsers[i].socketId).emit('new_notification', {message: "You have been liked by", user: data.liker});
+						}
+					}
+				};
+			});
+		});
 	});
 
 }
-
-
-// _.intersection(data.user, doc.likedBy).length != 0

@@ -7,7 +7,7 @@ $(function(){
 	var chatroom = $("#chatroom");
 	var chatRoomName = $("#sendChatId");
 
-    // buttons and inputs for handling the morphin socket ids
+    // buttons and inputs for handling the morphing socket ids
     var user = $("#is_user");
     var login = $("#login");
     var email = $("#email");
@@ -44,7 +44,9 @@ $(function(){
 
     // Send notif info on a like click to server
     like.click(function() {
-        socket.emit('new_like', {user: potmatch.val(), liker: liker.val()});
+        socket.emit('update', {user: user.val(), id: socket.id});
+        console.log("liker value -->", liker.val());
+        socket.emit('new_like', {liked: potmatch.val(), liker: liker.val()});
     }) 
 
     // Listen for a new notif
