@@ -1,6 +1,7 @@
 const Message	= require("../models/messages.js");
 const User= require("../models/umod.js");
 const Likes = require('../models/likemod');
+const Notifications = require('../models/notifmod');
 const io = require('../app.js');
 
 module.exports = function(connectedUsers) {
@@ -71,6 +72,21 @@ module.exports = function(connectedUsers) {
 				user_likes.forEach(user => {
 					if (user.liked === data.liker) {
 						// you have a match
+						User.findOne({username: data.liked}, function (err, doc){
+							console.log("doc ---->", doc);
+							if (doc.loggedIn === false) {
+								var notification = new Notifications({
+									notifiedUser: doc.username,
+									notifType: "like",
+									notifBody: `You have been liked by ${data.liker}`
+								});
+								notification.save(err => {
+									if (err) {
+										res.status(400).send(err);
+									}
+								});
+							}
+						})
 						for(var i in connectedUsers) {
 							if (connectedUsers[i].user === data.liked) {
 								io.sockets.to(connectedUsers[i].socketId).emit('new_notification', {message: "You have a new match with", user: data.liker});
@@ -79,6 +95,21 @@ module.exports = function(connectedUsers) {
 					}
 				});
 				if (match === 0) {
+					User.findOne({username: data.liked}, function (err, doc){
+						console.log("doc ---->", doc);
+						if (doc.loggedIn === false) {
+							var notification = new Notifications({
+								notifiedUser: doc.username,
+								notifType: "like",
+								notifBody: `You have a new match with ${data.liker}`
+							});
+							notification.save(err => {
+								if (err) {
+									res.status(400).send(err);
+								}
+							});
+						}
+					})
 					for(var i in connectedUsers) {
 						if (connectedUsers[i].user === data.liked) {
 							io.sockets.to(connectedUsers[i].socketId).emit('new_notification', {message: "You have been liked by", user: data.liker});

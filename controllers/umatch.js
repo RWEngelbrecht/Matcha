@@ -113,16 +113,6 @@ exports.like = (req, res, next) => {
 							res.status(400).send(err);
 						}
 					});
-					var notification = new Notifications({
-						notifiedUser: doc.username,
-						notifType: "like",
-						notifBody: `You have been liked by ${currUser.username}`
-					});
-					notification.save(err => {
-						if (err) {
-							res.status(400).send(err);
-						}
-					});
 					var transporter = nodemailer.createTransport({
 						service: 'gmail',
 						auth: {
