@@ -52,15 +52,11 @@ module.exports = function(connectedUsers) {
 			for (var i in connectedUsers) {
 				if (connectedUsers[i].user === data.chatFrom) {
 					console.log("emitting now");
-					// if we know who should be emitted to (eg with chatID), we can limit who we emit to.
-					// Might need to join room at some point
-					if (data.chatID.includes(data.chatFrom))
-						io.sockets.to(connectedUsers[i].socketId).emit('new_message', {message: data.message, username: data.chatFrom, chatID: data.chatID});
+					io.sockets.to(connectedUsers[i].socketId).emit('new_message', {message: data.message, username: data.chatFrom, chatID: data.chatID});
 				}
 				if (connectedUsers[i].user === data.chatTo) {
 					console.log("emitting now");
-					if (data.chatID.includes(data.chatTo))
-						io.sockets.to(connectedUsers[i].socketId).emit('new_message', {message: data.message, username: data.chatFrom, chatID: data.chatID});
+					io.sockets.to(connectedUsers[i].socketId).emit('new_message', {message: data.message, username: data.chatFrom, chatID: data.chatID});
 				}
 			}
 			var newMessage = new Message({
