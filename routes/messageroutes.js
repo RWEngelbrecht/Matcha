@@ -11,24 +11,24 @@ router.get('/messages', (req, res) => {
     if (req.session.user == 0 || !req.session.user) {
         res.redirect('/login');
     }
+	var currUser = req.session.user;
+	Message.find({$or: [{sentTo: currUser.username}, {sentBy: currUser.username}]}, (err, messages) => {
+		var chatters = [];
+		var conversations = [];
 
-    var chatters = [];
-    var conversations = [];
-    User.find({username: req.session.user.username}, 'chatRooms', (err, rooms) => {
-        rooms.forEach(room => {
-            chatters = room.split('-');
-            conversations.push({
-                id: room,
+		messages.forEach(msg => {
+			chatters = msg.chatID.split('-');
+			conversations.push({
+                id: msg.chatID,
                 chatTo: chatters.filter(function(value) {
-                    return value != req.session.user.username;
+                    return value != currUser.username;
                 })
-            });
-        });
-        req.session.user.chatRooms = chats;
-        res.render(path.resolve('views/chat'), {chats: conversations, user: req.session.user});
-        res.render(path.resolve('views/chat'), {chats: conversations});
-    });
+			});
+		});
+		res.render(path.resolve('views/chat'), {chats: conversations, user: currUser});
+	});
 })
+
 
 router.get('/messages/:id', (req, res) => {
     if (req.session.user == 0 || !req.session.user) {
