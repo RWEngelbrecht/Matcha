@@ -1,6 +1,8 @@
 const Message	= require("../models/messages.js");
 const User= require("../models/umod.js");
+const Likes = require('../models/likemod');
 const io = require('../app.js');
+const _	= require('underscore');
 
 module.exports = function(connectedUsers) {
 
@@ -47,6 +49,7 @@ module.exports = function(connectedUsers) {
 			console.log('connected users after update', connectedUsers)
 		})
 
+		// message handler
 		socket.on('new_message', (data) => {
 			console.log("data coming in as a paramater ->", data);
 			for (var i in connectedUsers) {
@@ -67,5 +70,14 @@ module.exports = function(connectedUsers) {
 			});
 			newMessage.save().then(() => console.log('message saved to db'));
 		});
+
+		// notif on like handler
+		socket.on('new_like', (data) => {
+			
+		})
 	});
+
 }
+
+
+// _.intersection(data.user, doc.likedBy).length != 0
