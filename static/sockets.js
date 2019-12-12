@@ -4,7 +4,8 @@ $(function(){
     var chatTo = $("#chatTo");
     var send_message = $("#send_message");
     var message = $("#message");
-    var chatroom = $("#chatroom");
+	var chatroom = $("#chatroom");
+	var chatRoomName = $("#sendChatId");
 
     // buttons and inputs for handling the morphin socket ids
     var user = $("#is_user");
@@ -22,13 +23,13 @@ $(function(){
     function update() {
         socket.emit('update', {user: user.val(), id: socket.id});
     }
-  
+
     // Emit a new message
     send_message.click(function() {
         console.log("user val send message", user.val());
         // this sends the new client id, will change it to do that on reload of any page
         socket.emit('update', {user: user.val(), id: socket.id});
-        socket.emit('new_message', {message: message.val(), chatFrom: chatFrom.val(), chatTo: chatTo.val()});
+        socket.emit('new_message', {message: message.val(), chatFrom: chatFrom.val(), chatTo: chatTo.val(), chatID: [chatTo.val(), chatFrom.val()].sort().join('-')});
     });
 
     login.click(function() {
@@ -37,7 +38,8 @@ $(function(){
     })
     // Listen for a new message
     socket.on('new_message', (data) => {
-        chatroom.append("<p style='color: white'>" + data.username + ": " +  data.message + "</p>");
+		if (data.chatID.includes(data.username) && chatRoomName.val() === data.chatID)
+			chatroom.append("<p style='color: white'>" + data.username + ": " +  data.message + "</p>");
     });
 
     // Listen for a new notif
