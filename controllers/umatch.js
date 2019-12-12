@@ -49,7 +49,6 @@ exports.getMatchSuggestions = (req, res, next) => {
 
 exports.getMatches = (req, res, next) => {
 
-
 	currUser = req.session.user;
 	if (!currUser)
 		res.redirect('/');
