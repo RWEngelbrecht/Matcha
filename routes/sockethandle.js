@@ -7,7 +7,7 @@ module.exports = function(connectedUsers) {
 	io.sockets.on('connection', function (socket) {
 		console.log("some id coming from connection", socket.id)
 		var user = {};
-   
+
 		// adds email and socket id to connectedUsers arr on login
 		socket.on('login', function(data) {
 			User.findOne({email: data.email}, function(err, doc) {
@@ -28,7 +28,7 @@ module.exports = function(connectedUsers) {
 				}
 			});
 		});
-    
+
 		// updates the connectedusers array to get the new socket id coming from client side
 		socket.on('update', function(data) {
 			console.log("update data -->", data)
@@ -46,7 +46,7 @@ module.exports = function(connectedUsers) {
 			}
 			console.log('connected users after update', connectedUsers)
 		})
-		
+
 		socket.on('new_message', (data) => {
 			console.log("data coming in as a paramater ->", data);
 			for (var i in connectedUsers) {
@@ -60,7 +60,7 @@ module.exports = function(connectedUsers) {
 				}
 			}
 			var newMessage = new Message({
-				chatID: "chatID",
+				chatID: [data.chatFrom, data.chatTo].sort().join('-'),
 				sentBy: data.chatFrom,
 				sentTo: data.chatTo,
 				message: data.message
