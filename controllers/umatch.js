@@ -137,11 +137,6 @@ exports.like = (req, res, next) => {
 						  console.log('Email sent: ' + info.response);
 						}
 					});
-					// find any chatIDs where session.user.username appears
-					Message.find({ $text: {$search: req.session.user.username}}).distinct('chatID').then(chats => {
-							User.findOneAndUpdate({username: req.session.user.username}, {$set: {chatRooms: chats}})
-								.catch(err => console.error(err));
-					});
 					res.redirect('/suggestions');
 				}
 			});
