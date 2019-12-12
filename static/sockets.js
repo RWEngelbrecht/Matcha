@@ -11,10 +11,9 @@ $(function(){
     var user = $("#is_user");
     var login = $("#login");
     var email = $("#email");
-    var matches = $("#matches");
-    var mpage = $("#mpage");
-    var profile = $("#profile");
-    var home = $("#home");
+    var like = $("#like");
+    var liker = $("#liker");
+    var potmatch = $("#potmatch");
     // buttons and inputs for the notifications
     var notifblock = $("#notifblock");
     // make connection.
@@ -32,6 +31,7 @@ $(function(){
         socket.emit('new_message', {message: message.val(), chatFrom: chatFrom.val(), chatTo: chatTo.val(), chatID: [chatTo.val(), chatFrom.val()].sort().join('-')});
     });
 
+    // create a tracker for a user on login
     login.click(function() {
         socket.emit('update', {user: user.val(), id: socket.id});
         socket.emit('login', {email: email.val()});
@@ -41,6 +41,11 @@ $(function(){
 		if (data.chatID.includes(data.username) && chatRoomName.val() === data.chatID)
 			chatroom.append("<p style='color: white'>" + data.username + ": " +  data.message + "</p>");
     });
+
+    // Send notif info on a like click to server
+    like.click(function() {
+        socket.emit('new_like', {user: potmatch.val(), liker: liker.val()});
+    }) 
 
     // Listen for a new notif
     socket.on('new_notification', (data) => {
