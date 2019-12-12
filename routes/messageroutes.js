@@ -12,14 +12,15 @@ router.get('/messages', (req, res) => {
         res.redirect('/login');
     }
 	var currUser = req.session.user;
-	Message.find({$or: [{sentTo: currUser.username}, {sentBy: currUser.username}]}, (err, messages) => {
+	Message.find({$or: [{sentTo: currUser.username}, {sentBy: currUser.username}]}).distinct('chatID',(err, chats) => {
+
 		var chatters = [];
 		var conversations = [];
 
-		messages.forEach(msg => {
-			chatters = msg.chatID.split('-');
+		chats.forEach(chat => {
+			chatters = chat.split('-');
 			conversations.push({
-                id: msg.chatID,
+                id: chat,
                 chatTo: chatters.filter(function(value) {
                     return value != currUser.username;
                 })
