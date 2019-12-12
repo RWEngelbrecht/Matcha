@@ -73,7 +73,7 @@ module.exports = function(connectedUsers) {
 					if (user.liked === data.liker) {
 						// you have a match
 						User.findOne({username: data.liked}, function (err, doc){
-							console.log("doc ---->", doc);
+							var notifs = doc.notif + 1
 							if (doc.loggedIn === false) {
 								var notification = new Notifications({
 									notifiedUser: doc.username,
@@ -83,6 +83,11 @@ module.exports = function(connectedUsers) {
 								notification.save(err => {
 									if (err) {
 										res.status(400).send(err);
+									}
+								});
+								User.findOneAndUpdate({username: data.liked}, {$set:{notif: notifs}}, function(err, doc) {
+									if (err) {
+										console.log(err);
 									}
 								});
 							}
@@ -96,7 +101,7 @@ module.exports = function(connectedUsers) {
 				});
 				if (match === 0) {
 					User.findOne({username: data.liked}, function (err, doc){
-						console.log("doc ---->", doc);
+						var notifs = doc.notif + 1
 						if (doc.loggedIn === false) {
 							var notification = new Notifications({
 								notifiedUser: doc.username,
@@ -106,6 +111,11 @@ module.exports = function(connectedUsers) {
 							notification.save(err => {
 								if (err) {
 									res.status(400).send(err);
+								}
+							});
+							User.findOneAndUpdate({username: data.liked}, {$set:{notif: notifs}}, function(err, doc) {
+								if (err) {
+									console.log(err);
 								}
 							});
 						}
