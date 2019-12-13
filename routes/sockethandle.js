@@ -51,14 +51,6 @@ module.exports = function(connectedUsers) {
 					if (verif == 0) {
 						connectedUsers.push(user);
 					};
-					if (doc.notif > 0) {
-						io.sockets.to(user.socketId).emit('new_notification', {message: "You have " + doc.notif + " notification/s, please check your email"});
-						user.findOneAndUpdate({email: data.email}, {$set: {notif: 0}}, (err, doc) => {
-							if (err) {
-								console.log(err);
-							}
-						})
-					};
 				}
 			});
 		});
@@ -77,6 +69,18 @@ module.exports = function(connectedUsers) {
 				user.socketId = data.id
 				connectedUsers.push(user);
 			}
+			User.findOne({username: data.user}, (err, doc) => {
+				if (doc) {
+					if (doc.notif > 0 && data.page == "http://localhost:8000/") {
+						io.sockets.to(data.id).emit('new_notification', {message: "You have " + doc.notif + " notification/s, please check your email"});
+						User.findOneAndUpdate({username: data.user}, {$set: {notif: 0}}, (err, doc) => {
+							if (err) {
+								console.log(err);
+							}
+						})
+					};
+				};
+			})
 		})
 
 		// message handler
