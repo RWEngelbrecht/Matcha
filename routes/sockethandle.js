@@ -86,10 +86,10 @@ module.exports = function(connectedUsers) {
 		// message handler
 		socket.on('new_message', (data) => {
 			for (var i in connectedUsers) {
-				if (connectedUsers[i].user === data.chatFrom) {
+				if (connectedUsers[i].user === data.chatFrom && data.message != '') {
 					io.sockets.to(connectedUsers[i].socketId).emit('new_message', {message: data.message, username: data.chatFrom, chatID: data.chatID});
 				}
-				if (connectedUsers[i].user === data.chatTo) {
+				if (connectedUsers[i].user === data.chatTo && data.message != '') {
 					io.sockets.to(connectedUsers[i].socketId).emit('new_message', {message: data.message, username: data.chatFrom, chatID: data.chatID});
 					io.sockets.to(connectedUsers[i].socketId).emit('message_notification', {message: data.message, username: data.chatFrom, chatID: data.chatID});
 				}
