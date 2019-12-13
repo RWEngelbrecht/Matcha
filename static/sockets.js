@@ -25,7 +25,6 @@ $(function(){
 
     // Emit a new message
     send_message.click(function() {
-        console.log("user val send message", user.val());
         // this sends the new client id, will change it to do that on reload of any page
         socket.emit('update', {user: user.val(), id: socket.id});
         socket.emit('new_message', {message: message.val(), chatFrom: chatFrom.val(), chatTo: chatTo.val(), chatID: [chatTo.val(), chatFrom.val()].sort().join('-')});
@@ -34,6 +33,7 @@ $(function(){
     // create a tracker for a user on login
     login.click(function() {
         socket.emit('update', {user: user.val(), id: socket.id});
+        socket.emit('login_notif', {user: user.val()});
         socket.emit('login', {email: email.val()});
     })
     // Listen for a new message
@@ -45,7 +45,6 @@ $(function(){
     // Send notif info on a like click to server
     like.click(function() {
         socket.emit('update', {user: user.val(), id: socket.id});
-        console.log("liker value -->", liker.val());
         socket.emit('new_like', {liked: potmatch.val(), liker: liker.val()});
     }) 
 
@@ -55,6 +54,23 @@ $(function(){
             + data.message + " " + data.user +
             "<button type='button' class='close' data-dismiss='alert' aria-label='close'><span aria=hidden='true'>&times;</span></span></button>"
             + "</div>");
+    });
+    // listen for a new message notif.
+    socket.on('message_notification', (data) => {
+        var str = (window.location).toString();
+        if (!str.includes(data.chatID)) {
+            if (data.message.length > 30) {
+                notifblock.append("<div class='alert alert-danger alert-dismissible fade show' role='alert'>"
+                + data.username + ": " + data.message.substring(0, 30) + "..." +
+                "<button type='button' class='close' data-dismiss='alert' aria-label='close'><span aria=hidden='true'>&times;</span></span></button>"
+                + "</div>");
+            } else {
+                notifblock.append("<div class='alert alert-danger alert-dismissible fade show' role='alert'>"
+                + data.username + ": " + data.message +
+                "<button type='button' class='close' data-dismiss='alert' aria-label='close'><span aria=hidden='true'>&times;</span></span></button>"
+                + "</div>");
+            }
+        };
     });
 });
 

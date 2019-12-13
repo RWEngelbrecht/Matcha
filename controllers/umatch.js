@@ -99,33 +99,13 @@ exports.like = (req, res, next) => {
 						liker: currUser.username,
 						liked: likedName,
 						likeBy: currUser._id,
-						likedUser: doc._id
+						likedUser: doc._id,
+						liker: currUser.username,
+						liked: likedName,
 					});
 					like.save((err) => {
 						if (err){
 							res.status(400).send(err);
-						}
-					});
-					var transporter = nodemailer.createTransport({
-						service: 'gmail',
-						auth: {
-						  user: "wethinkcodematcha@gmail.com",
-						  pass: "Matcha1matcha"
-						}
-					});
-					var mailOptions = {
-						from: 'wethinkcodematcha@gmail.com',
-						to: doc.email,
-						subject: 'Someone likes you...',
-						html: `
-						  <h1>Someone is interested in you... Why?</h1>
-						`
-					};
-					transporter.sendMail(mailOptions, function(error, info){
-						if (error) {
-						  console.log(error);
-						} else {
-						  console.log('Email sent: ' + info.response);
 						}
 					});
 					res.redirect('/suggestions');

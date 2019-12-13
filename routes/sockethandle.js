@@ -2,7 +2,32 @@ const Message	= require("../models/messages.js");
 const User= require("../models/umod.js");
 const Likes = require('../models/likemod');
 const Notifications = require('../models/notifmod');
+const nodemailer = require('nodemailer');
 const io = require('../app.js');
+
+function sendEmail(to, message, subject) {
+
+	var transporter = nodemailer.createTransport({
+		service: 'gmail',
+		auth: {
+			user: "wethinkcodematcha@gmail.com",
+			pass: "Matcha1matcha"
+		}
+	});
+	var mailOptions = {
+		from: 'wethinkcodematcha@gmail.com',
+		to: to,
+		subject: subject,
+		html: `<h1>` + message + `</h1>`
+	};
+	transporter.sendMail(mailOptions, function(error, info){
+		if (error) {
+			console.log(error);
+		} else {
+			console.log('Email sent: ' + info.response);
+		}
+	});
+}
 
 module.exports = function(connectedUsers) {
 
@@ -54,8 +79,30 @@ module.exports = function(connectedUsers) {
 				}
 				if (connectedUsers[i].user === data.chatTo) {
 					io.sockets.to(connectedUsers[i].socketId).emit('new_message', {message: data.message, username: data.chatFrom, chatID: data.chatID});
+					io.sockets.to(connectedUsers[i].socketId).emit('message_notification', {message: data.message, username: data.chatFrom, chatID: data.chatID});
 				}
 			}
+			User.findOne({username: data.chatTo}, (err, doc) => {
+				if (doc.loggedIn === false) {
+					sendEmail(doc.email, `You have a new message from ${data.chatFrom}`, "You have a new message");
+					var notification = new Notifications({
+						notifiedUser: doc.username,
+						notifType: "message",
+						notifBody: `You have a new message from ${data.chatFrom}`
+					});
+					notification.save(err => {
+						if (err) {
+							res.status(400).send(err);
+						}
+					});
+					var notifs = doc.notif + 1;
+					user.findOneAndUpdate({username: data.chatTo}, {$set:{notif: notifs}}, (err, doc) => {
+						if (err) {
+							console.log(err);
+						}
+					})
+				}
+			})
 			var newMessage = new Message({
 				chatID: [data.chatFrom, data.chatTo].sort().join('-'),
 				sentBy: data.chatFrom,
@@ -73,18 +120,24 @@ module.exports = function(connectedUsers) {
 					if (user.liked === data.liker) {
 						// you have a match
 						User.findOne({username: data.liked}, function (err, doc){
-							console.log("doc ---->", doc);
+							var notifs = doc.notif + 1
 							if (doc.loggedIn === false) {
 								var notification = new Notifications({
 									notifiedUser: doc.username,
 									notifType: "like",
-									notifBody: `You have been liked by ${data.liker}`
+									notifBody: `You have a new match with ${data.liker}`
 								});
 								notification.save(err => {
 									if (err) {
 										res.status(400).send(err);
 									}
 								});
+								User.findOneAndUpdate({username: data.liked}, {$set:{notif: notifs}}, function(err, doc) {
+									if (err) {
+										console.log(err);
+									}
+								});
+								sendEmail(doc.email, `You have a new match with ${data.liker}`, "You have a new match");
 							}
 						})
 						for(var i in connectedUsers) {
@@ -96,18 +149,24 @@ module.exports = function(connectedUsers) {
 				});
 				if (match === 0) {
 					User.findOne({username: data.liked}, function (err, doc){
-						console.log("doc ---->", doc);
+						var notifs = doc.notif + 1
 						if (doc.loggedIn === false) {
 							var notification = new Notifications({
 								notifiedUser: doc.username,
 								notifType: "like",
-								notifBody: `You have a new match with ${data.liker}`
+								notifBody: `You have been liked by ${data.liker}`
 							});
 							notification.save(err => {
 								if (err) {
 									res.status(400).send(err);
 								}
 							});
+							User.findOneAndUpdate({username: data.liked}, {$set:{notif: notifs}}, function(err, doc) {
+								if (err) {
+									console.log(err);
+								}
+							});
+							sendEmail(doc.email, `You have been liked by ${data.liker}`, "You have a new like");
 						}
 					})
 					for(var i in connectedUsers) {
@@ -119,5 +178,4 @@ module.exports = function(connectedUsers) {
 			});
 		});
 	});
-
 }
