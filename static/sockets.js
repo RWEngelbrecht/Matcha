@@ -16,6 +16,8 @@ $(function(){
     var potmatch = $("#potmatch");
     // buttons and inputs for the notifications
     var notifblock = $("#notifblock");
+    var view = $("#profile_view");
+    var viewed = $("#profile_viewed");
     // make connection.
     var socket = io.connect();
     socket.on('connect', () => update());
@@ -76,5 +78,11 @@ $(function(){
             }
         };
     });
+    // send to server on profile getting viewed
+    view.click(function() {
+        var str = (window.location).toString();
+        socket.emit('update', {user: user.val(), id: socket.id, page: str});
+        socket.emit('new_view', {viewer: user.val(), viewed: viewed.val()});
+    })
 });
 
