@@ -83,15 +83,6 @@ exports.getMatches = (req, res, next) => {
 exports.like = (req, res, next) => {
 	var likedName = req.body.potmatch;
 	currUser = req.session.user;
-	var new_like = new Likes ({
-		liker: currUser.username,
-		liked: likedName,
-	})
-	new_like.save((err) => {
-		if (err){
-			res.status(400).send(err);
-		}
-	});
 	User.findOneAndUpdate(
 		{username: likedName},
 		{$inc:{fame:1},
@@ -106,7 +97,9 @@ exports.like = (req, res, next) => {
 				} else {
 					const like = new Likes({
 						likeBy: currUser._id,
-						likedUser: doc._id
+						likedUser: doc._id,
+						liker: currUser.username,
+						liked: likedName,
 					});
 					like.save((err) => {
 						if (err){
@@ -179,8 +172,6 @@ exports.getFilter = (req, res, next) => {
 
 exports.postFilter = (req, res, next) => {
 	//give filter class all filters
-	console.log("CHECK");
-	console.log(req.body.filterCrit);
 	filters.SetFilters(req.body.filterCrit);
 	res.redirect('/suggestions');
 }
