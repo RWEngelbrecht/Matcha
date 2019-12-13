@@ -99,7 +99,9 @@ exports.like = (req, res, next) => {
 						liker: currUser.username,
 						liked: likedName,
 						likeBy: currUser._id,
-						likedUser: doc._id
+						likedUser: doc._id,
+						liker: currUser.username,
+						liked: likedName,
 					});
 					like.save((err) => {
 						if (err){
@@ -172,8 +174,6 @@ exports.getFilter = (req, res, next) => {
 
 exports.postFilter = (req, res, next) => {
 	//give filter class all filters
-	console.log("CHECK");
-	console.log(req.body.filterCrit);
 	filters.SetFilters(req.body.filterCrit);
 	res.redirect('/suggestions');
 }

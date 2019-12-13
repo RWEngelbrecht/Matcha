@@ -48,12 +48,14 @@ module.exports = function(connectedUsers) {
 
 		// message handler
 		socket.on('new_message', (data) => {
+			console.log("REQUEST URL", socket.request.url);
 			for (var i in connectedUsers) {
 				if (connectedUsers[i].user === data.chatFrom) {
 					io.sockets.to(connectedUsers[i].socketId).emit('new_message', {message: data.message, username: data.chatFrom, chatID: data.chatID});
 				}
 				if (connectedUsers[i].user === data.chatTo) {
 					io.sockets.to(connectedUsers[i].socketId).emit('new_message', {message: data.message, username: data.chatFrom, chatID: data.chatID});
+					io.sockets.to(connectedUsers[i].socketId).emit('message_notification', {message: data.message, username: data.chatFrom, chatID: data.chatID});
 				}
 			}
 			var newMessage = new Message({
@@ -73,7 +75,7 @@ module.exports = function(connectedUsers) {
 					if (user.liked === data.liker) {
 						// you have a match
 						User.findOne({username: data.liked}, function (err, doc){
-							console.log("doc ---->", doc);
+							var notifs = doc.notif + 1
 							if (doc.loggedIn === false) {
 								var notification = new Notifications({
 									notifiedUser: doc.username,
@@ -83,6 +85,11 @@ module.exports = function(connectedUsers) {
 								notification.save(err => {
 									if (err) {
 										res.status(400).send(err);
+									}
+								});
+								User.findOneAndUpdate({username: data.liked}, {$set:{notif: notifs}}, function(err, doc) {
+									if (err) {
+										console.log(err);
 									}
 								});
 							}
@@ -96,7 +103,7 @@ module.exports = function(connectedUsers) {
 				});
 				if (match === 0) {
 					User.findOne({username: data.liked}, function (err, doc){
-						console.log("doc ---->", doc);
+						var notifs = doc.notif + 1
 						if (doc.loggedIn === false) {
 							var notification = new Notifications({
 								notifiedUser: doc.username,
@@ -106,6 +113,11 @@ module.exports = function(connectedUsers) {
 							notification.save(err => {
 								if (err) {
 									res.status(400).send(err);
+								}
+							});
+							User.findOneAndUpdate({username: data.liked}, {$set:{notif: notifs}}, function(err, doc) {
+								if (err) {
+									console.log(err);
 								}
 							});
 						}
@@ -118,6 +130,13 @@ module.exports = function(connectedUsers) {
 				};
 			});
 		});
-	});
 
+		// notifs on login
+		socket.on('login_notif', (data) => {
+			// TODO, handle notifs on login.
+			// search for more than one interest
+			// fix like only working on the first button.
+			Notifications.find()
+		});
+	});
 }
