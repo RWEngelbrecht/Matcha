@@ -70,7 +70,6 @@ class Validate {
     isEmail(string) {
         // BASIC CHECK BECAUSE WE CANT REALLY CHECK IF ITS VALID WITH JUSTY REGEX
         var checkemail = new RegExp("\\S+@\\S+\\.\\S+");
-        console.log(checkemail);
         if (checkemail.test(string) == false) {
             console.log("Please format your email properly");
             return (0);
@@ -85,7 +84,6 @@ class Validate {
         var email = this.isEmail(body.email);
         var password = this.ValidatePassword(body.password);
         var age = this.isNumeric(body.age);
-        // var about = this.isAlphanumeric(body.about);
         if (
             firstname == 0 ||
             surname == 0 ||
@@ -93,7 +91,6 @@ class Validate {
             email == 0 ||
             password == 0 ||
             age == 0
-            // about == 0
         ) {
             return (0);
         }

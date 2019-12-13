@@ -108,7 +108,7 @@ module.exports = function(connectedUsers) {
 						}
 					});
 					var notifs = doc.notif + 1;
-					user.findOneAndUpdate({username: data.chatTo}, {$set:{notif: notifs}}, (err, doc) => {
+					User.findOneAndUpdate({username: data.chatTo}, {$set:{notif: notifs}}, (err, doc) => {
 						if (err) {
 							console.log(err);
 						}

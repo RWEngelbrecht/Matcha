@@ -21,7 +21,7 @@
 			{% for match in matches %}
 				<tr>
 					<form action="" method="POST">
-						<td style="color: white">{{match.username}}</td>
+						<td style="color: white">{{match.username}} : {{match.about}}</td>
 						<td>{{input("hidden", "liker", "liker", loggedUser.username)}}</td>
 						<td>{{ input("hidden", "potmatch", "potmatch", match.username) }}</td>
 						<td>{{ input("submit", "like", "like", "Like") }}</td>

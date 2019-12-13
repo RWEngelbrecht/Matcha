@@ -14,9 +14,9 @@
 
         {% for hobby in all_interests %}
             {% if interests.includes(hobby) %}
-                {{hobby}}<input type="checkbox" name="interests" id={{hobby}} value="{{hobby}}" checked><br>
+                <h10 style="color: white">{{hobby}}  -> </h10><input type="checkbox" name="interests" id={{hobby}} value="{{hobby}}" checked><br>
             {% else %}
-                {{hobby}}<input type="checkbox" name="interests" id={{hobby}} value="{{hobby}}"><br>
+            <h10 style="color: white">{{hobby}}  -> </h10><input type="checkbox" name="interests" id={{hobby}} value="{{hobby}}"><br>
             {% endif %}
         {% endfor %}
 		<input type="hidden" name="_csrf" value="<%= csrfToken %>">

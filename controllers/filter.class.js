@@ -6,13 +6,18 @@ class Filter {
 		this.orderBy;
 	}
 
-	SetFilters = filters => {
+	SetFilters = (filters, sort) => {
+		var i = 4;
+
 		this.filterBy['ageFilter'] = filters[0];
 		this.filterBy['fameFilter'] = filters[1];
 		this.filterBy['genderFilter'] = filters[2];
 		this.filterBy['locationFilter'] = filters[3];
-		this.filterBy['interestsFilter'] = filters[4];
-		this.orderBy = filters[5];
+		this.filterBy['interestsFilter'] = [];
+		for (let i = 4; i < filters.length; i++) {
+			this.filterBy['interestsFilter'].push(filters[i]);
+		}
+		this.orderBy = sort;
 	}
 
 	ClearFilters = () => {
@@ -26,7 +31,7 @@ class Filter {
 	getInterestMatches(user, matches) {
 		var userInterests = user.interests;
 		var matchInterests = [];
-		for (var i = 0; i < matches.length; i += 1) {
+		for (var i = 0; i < matches.length; i++) {
 			if (matches[i].interests != null) {
 				if (matches[i].interests.some(e => userInterests.indexOf(e) >= 0)) {
 					matchInterests.push(matches[i]);
@@ -153,8 +158,8 @@ class Filter {
 					else if (filterby['locationFilter'] === 'city' && element.location[1] === user.location[1])
 					filteredMatches.push(element);
 				}
-			else if (element.interests.indexOf(filterby['interestsFilter'])  > -1 && filterby['interestsFilter'] != '')
-			filteredMatches.push(element);
+			else if (element.interests.some(r => filterby['interestsFilter'].indexOf(r)  >= 0) && filterby['interestsFilter'] != '')
+				filteredMatches.push(element);
 		});
 		var sortBy = new Sort(user._id, user.interests);
 		var ret = [];
@@ -174,7 +179,7 @@ class Filter {
 			})
 		} if (orderby == 2) {
 			if (filter == 1) {
-				var ret = sortBy.OrderByAgedesc(filteredMatches);
+				var ret = sortBy.OrderByAgeDesc(filteredMatches);
 				ret.then(function(result) {
 					resolve(result);
 				}, function(err) {
