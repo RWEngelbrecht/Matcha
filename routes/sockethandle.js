@@ -128,6 +128,13 @@ module.exports = function(connectedUsers) {
 				};
 			});
 		});
-	});
 
+		// notifs on login
+		socket.on('login_notif', (data) => {
+			// TODO, handle notifs on login.
+			// search for more than one interest
+			// fix like only working on the first button.
+			Notifications.find()
+		});
+	});
 }
