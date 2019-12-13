@@ -35,6 +35,10 @@ exports.gethome = (req, res, next) => {
 		return (res.redirect('/interests'));
 	}
 	currUser = req.session.user
+	if (!req.session.user.interests || req.session.user.interests[0] == null) {
+		req.flash('error_msg', 'Please fill out our rather interesting interests form');
+		return res.redirect('/interests');
+	}
 	Photo.find({user: currUser._id}, (err, photos) => {
 		if (err) {
 			console.log(err);
@@ -159,8 +163,7 @@ exports.postregister = (req, res, next) => {
 			ageprefupper: parseInt(req.body.age) + 10,
 			about: req.body.about,
 			verifkey: vkey,
-			maxdist: req.body.dist,
-			interests: req.body.interests
+			maxdist: req.body.dist
 		});
 		// query schema to see if username or email exists
 		User.findOne({$or: [ {username: user.username}, {email: user.email} ]}, (err, docs) => {
