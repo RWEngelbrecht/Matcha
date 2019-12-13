@@ -9,12 +9,10 @@ var currUser;
 var filters = new Filter();
 
 exports.getMatchSuggestions = (req, res, next) => {
-	// if (!req.session.user) {
-	// 	res.redirect('/');
-	// }
-	User.find({username: req.session.user.username}, (err, user) => {
-		currUser = user[0];
-
+		currUser = req.session.user;
+		if (!req.session.user) {
+			res.redirect('/');
+		}
 		var likedUsers;
 		Likes.find({likeBy: currUser._id}, (err, liked) => {
 			if (err) {
@@ -49,8 +47,7 @@ exports.getMatchSuggestions = (req, res, next) => {
 				res.redirect('/');
 			}
 		});
-	});
-	req.session.user = currUser;
+
 }
 
 exports.getMatches = (req, res, next) => {
