@@ -212,6 +212,19 @@ module.exports = function(connectedUsers) {
 					});
 					sendEmail(doc.email, `You have been viewed by ${data.viewer}`, "You have been viewed");
 				}
+				var exist = 0;
+				doc.viewedBy.forEach(eye => {
+					if (eye === data.viewer) {
+						exist = 1;
+					}
+				});
+				if (exist === 0) {
+					user.findOneAndUpdate({username: data.liked}, {$push:{likedBy: data.viewer}}, (err, doc) => {
+						if (err) {
+							console.log(err);
+						}
+					})
+				}
 			});
 			for(var i in connectedUsers) {
 				if (connectedUsers[i].user === data.viewed) {
