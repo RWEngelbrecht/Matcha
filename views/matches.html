@@ -14,7 +14,9 @@
 					<!-- Want to put profile picture here -->
 					<div class="col">
 					<a class="text-decoration-none h4 align-self-bottom text-warning" href="/profile/{{match._id.toString()}}" id="profile_view">{{match.username}}</a>
-					<input type="hidden" value="{{match.useranme}}" id="profile_viewed">
+					<form action="" method="POST">
+						<input type="hidden" id="profile_viewed" value={{match.username}}>
+					</form>
 					<small class="form-text text-warning">
 							{% if match.loggedIn == true %}
 								{{"Online"}}

@@ -192,6 +192,8 @@ module.exports = function(connectedUsers) {
 
 		// listen for a new view
 		socket.on('new_view', (data) => {
+			console.log("Connected Users-->", connectedUsers);
+			console.log("DATA -->", data);
 			User.findOne({username: data.viewed}, (err, doc) => {
 				var notifs = doc.notif + 1
 				if (doc.loggedIn === false) {
@@ -211,6 +213,19 @@ module.exports = function(connectedUsers) {
 						}
 					});
 					sendEmail(doc.email, `You have been viewed by ${data.viewer}`, "You have been viewed");
+				}
+				var exist = 0;
+				doc.viewedBy.forEach(eye => {
+					if (eye === data.viewer) {
+						exist = 1;
+					}
+				});
+				if (exist === 0) {
+					User.findOneAndUpdate({username: data.liked}, {$push:{likedBy: data.viewer}}, (err, doc) => {
+						if (err) {
+							console.log(err);
+						}
+					})
 				}
 			});
 			for(var i in connectedUsers) {
