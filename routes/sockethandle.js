@@ -108,7 +108,7 @@ module.exports = function(connectedUsers) {
 						}
 					});
 					var notifs = doc.notif + 1;
-					user.findOneAndUpdate({username: data.chatTo}, {$set:{notif: notifs}}, (err, doc) => {
+					User.findOneAndUpdate({username: data.chatTo}, {$set:{notif: notifs}}, (err, doc) => {
 						if (err) {
 							console.log(err);
 						}
@@ -189,5 +189,35 @@ module.exports = function(connectedUsers) {
 				};
 			});
 		});
+
+		// listen for a new view
+		socket.on('new_view', (data) => {
+			User.findOne({username: data.viewed}, (err, doc) => {
+				var notifs = doc.notif + 1
+				if (doc.loggedIn === false) {
+					var notification = new Notifications({
+						notifiedUser: doc.username,
+						notifType: "view",
+						notifBody: `You have been viewed ${data.viewer}`
+					});
+					notification.save(err => {
+						if (err) {
+							res.status(400).send(err);
+						}
+					});
+					User.findOneAndUpdate({username: data.liked}, {$set:{notif: notifs}}, function(err, doc) {
+						if (err) {
+							console.log(err);
+						}
+					});
+					sendEmail(doc.email, `You have been viewed by ${data.viewer}`, "You have been viewed");
+				}
+			});
+			for(var i in connectedUsers) {
+				if (connectedUsers[i].user === data.viewed) {
+					io.sockets.to(connectedUsers[i].socketId).emit('new_notification', {message: "You have been viewed by", user: data.viewer});
+				}
+			}
+		})
 	});
 }

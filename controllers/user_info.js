@@ -214,32 +214,22 @@ exports.getabout = (req, res, next) => {
 }
 // POST about
 exports.postabout = (req, res, next) => {
-	console.log("postabout controller reached reached");
-	var validate = new Validate();
-	var check = validate.isAlphanumeric(req.body.new_about);
-	if (check == 0) {
-		req.flash('error_msg', 'No special characters allowed')
-		return(res.redirect('/updateinfo'));
-	}
 	key = req.session.user.verifkey;
 	User.findOneAndUpdate({verifkey: key}, {$set:{about:req.body.new_about}}, {new: true},function(err, doc){
 		if(err){
 			console.log("Something wrong when updating data!");
 		}
-		console.log("Maximum Distance updated successfully");
+		console.log("About me updated successfully");
 	});
 	req.session.user.about = req.body.new_about;
-	console.log(req.session.user.about);
 	return (res.redirect('/updateinfo'));
 }
 // GET location
 exports.getlocation = (req, res, next) => {
-    console.log("getlocation controller reached reached");
 	return (res.render(path.resolve('views/update_location')));
 }
 // POST location
 exports.postlocation = (req, res, next) => {
-	console.log("postabout controller reached reached");
 	key = req.session.user.verifkey;
 	var new_loc = [req.body.new_postal, req.body.new_city, req.body.new_province];
 	User.findOneAndUpdate({verifkey: key}, {$set:{location:new_loc}}, {new: true},function(err, doc){
