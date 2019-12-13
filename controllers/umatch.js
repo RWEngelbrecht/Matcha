@@ -66,7 +66,6 @@ exports.getMatches = (req, res, next) => {
 						currUserLikedBy.push(likedBy.likeBy.toString())
 					});
 					User.find({_id: {$in: currUserLikedBy}}, (err, currLikedBy) => {
-						console.log('current user is liked By: ',currLikedBy);
 						var matched = filters.getMatched(currLiked, likedUsrs); // filtered out people who user hasn't liked
 														//filter matched users that also liked current user from likedUsers
 						var notMatched = filters.filterMatches(likedUsrs, matched);
@@ -84,6 +83,15 @@ exports.getMatches = (req, res, next) => {
 exports.like = (req, res, next) => {
 	var likedName = req.body.potmatch;
 	currUser = req.session.user;
+	var new_like = new Likes ({
+		liker: currUser.username,
+		liked: likedName,
+	})
+	new_like.save((err) => {
+		if (err){
+			res.status(400).send(err);
+		}
+	});
 	User.findOneAndUpdate(
 		{username: likedName},
 		{$inc:{fame:1},
@@ -102,16 +110,6 @@ exports.like = (req, res, next) => {
 					});
 					like.save((err) => {
 						if (err){
-							res.status(400).send(err);
-						}
-					});
-					var notification = new Notifications({
-						notifiedUser: doc.username,
-						notifType: "like",
-						notifBody: `You have been liked by ${currUser.username}`
-					});
-					notification.save(err => {
-						if (err) {
 							res.status(400).send(err);
 						}
 					});

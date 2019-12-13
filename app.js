@@ -56,6 +56,7 @@ app.use(function(err, req, res, next) {
 });
 
 mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
 mongoose
 .connect(MONGODB_URI, {useNewUrlParser: true, useUnifiedTopology: true})
 .then(result => {
