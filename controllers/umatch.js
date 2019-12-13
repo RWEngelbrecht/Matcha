@@ -9,75 +9,84 @@ var currUser;
 var filters = new Filter();
 
 exports.getMatchSuggestions = (req, res, next) => {
-	currUser = req.session.user;
-	if (!currUser) {
-		res.redirect('/');
-	}
-	var likedUsers;
-	Likes.find({likeBy: currUser._id}, (err, liked) => {
-		if (err) {
-			res.status(400).send(err);
-		}
-		likedUsers = liked;
-	}).then(() => {
-		if (currUser) {
-			User.find(
-				{_id: {$ne: currUser._id}, username: {$nin: currUser.blocked}, gender: currUser.genderpref,
-				genderpref: currUser.gender, age: {$gte: currUser.agepreflower,
-					$lte: currUser.ageprefupper}}, {}, {sort: {fame: -1}},(err, matches) => {
-				if (err) {
-					res.status(400).send(err);
-				}
-				else if (!matches) {
-					console.log('No matches for you!');
-				}
-				else {
-					var interestMatches = filters.getInterestMatches(currUser, matches);
-					var likeableMatches = filters.getLikeableMatches(likedUsers, interestMatches);
-					var filteredMatches = filters.FilterFrom(currUser, likeableMatches)
-					filteredMatches.then(function(result) {
-						res.render(path.resolve('views/suggestions'), {matches: result, filters: filters.filterBy, loggedUser: currUser, user: currUser});
-					});
-				}
-			});
-		}
-		else {
-			res.redirect('/');
-		}
+	// if (!req.session.user) {
+	// 	res.redirect('/');
+	// }
+	User.find({username: req.session.user.username}, (err, user) => {
+		currUser = user[0];
+
+		var likedUsers;
+		Likes.find({likeBy: currUser._id}, (err, liked) => {
+			if (err) {
+				res.status(400).send(err);
+			}
+			likedUsers = liked;
+		}).then(() => {
+			if (currUser) {
+				User.find(
+					{_id: {$ne: currUser._id}, username: {$nin: currUser.blocked}, gender: currUser.genderpref,
+					genderpref: currUser.gender, age: {$gte: currUser.agepreflower,
+						$lte: currUser.ageprefupper}}, {}, {sort: {fame: -1}},(err, matches) => {
+					if (err) {
+						console.log('something fucked up')
+						// res.status(400).send(err);
+						console.error(err);
+					}
+					else if (!matches) {
+						console.log('No matches for you!');
+					}
+					else {
+						var interestMatches = filters.getInterestMatches(currUser, matches);
+						var likeableMatches = filters.getLikeableMatches(likedUsers, interestMatches);
+						var filteredMatches = filters.FilterFrom(currUser, likeableMatches)
+						filteredMatches.then(function(result) {
+							res.render(path.resolve('views/suggestions'), {matches: result, filters: filters.filterBy, loggedUser: currUser, user: currUser});
+						});
+					}
+				});
+			}
+			else {
+				res.redirect('/');
+			}
+		});
 	});
+	req.session.user = currUser;
 }
 
 exports.getMatches = (req, res, next) => {
-
-	currUser = req.session.user;
-	if (!currUser)
+	if (!req.session.user)
 		res.redirect('/');
 
-	var likedUserIDs = [];
-	var currUserLikedBy = [];
-	Likes.find({likeBy: currUser._id}).then((liked) => {
-			liked.forEach(user => {
-				likedUserIDs.push(user.likedUser); // profiles that current user has liked
-			});
-			User.find({_id: {$in: likedUserIDs}, username: {$nin: currUser.blocked}},(err, likedUsrs) => {
-				Likes.find({likedUser: currUser._id}, (err, currLiked) => {
-					// people that have liked the current user
-					currLiked.forEach(likedBy => {
-						currUserLikedBy.push(likedBy.likeBy.toString())
-					});
-					User.find({_id: {$in: currUserLikedBy}}, (err, currLikedBy) => {
-						var matched = filters.getMatched(currLiked, likedUsrs); // filtered out people who user hasn't liked
-														//filter matched users that also liked current user from likedUsers
-						var notMatched = filters.filterMatches(likedUsrs, matched);
+	User.find({username: req.session.user.username}, (err, loggedInUser) => {
+		currUser = loggedInUser[0];
 
-						res.render(path.resolve('views/matches'), {likedMatches: notMatched, matched: matched, user: currUser, likedBy: currLikedBy});
-					})
+		var likedUserIDs = [];
+		var currUserLikedBy = [];
+		Likes.find({likeBy: currUser._id}).then((liked) => {
+				liked.forEach(user => {
+					likedUserIDs.push(user.likedUser); // profiles that current user has liked
 				});
+				User.find({_id: {$in: likedUserIDs}, username: {$nin: currUser.blocked}},(err, likedUsrs) => {
+					Likes.find({likedUser: currUser._id}, (err, currLiked) => {
+						// people that have liked the current user
+						currLiked.forEach(likedBy => {
+							currUserLikedBy.push(likedBy.likeBy.toString())
+						});
+						User.find({_id: {$in: currUserLikedBy}}, (err, currLikedBy) => {
+							var matched = filters.getMatched(currLiked, likedUsrs); // filtered out people who user hasn't liked
+															//filter matched users that also liked current user from likedUsers
+							var notMatched = filters.filterMatches(likedUsrs, matched);
+
+							res.render(path.resolve('views/matches'), {likedMatches: notMatched, "matched": matched, user: currUser, likedBy: currLikedBy});
+						})
+					});
+				})
 			})
-		})
-		.catch((error) => {
-			console.log(error);
-		});
+			.catch((error) => {
+				console.log(error);
+			});
+	})
+	// req.session.user = currUser;
 }
 
 exports.like = (req, res, next) => {
