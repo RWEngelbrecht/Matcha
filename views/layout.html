@@ -95,7 +95,7 @@
 			</form>
 			<div class="row mx-auto float-right">
 				{% if user !== 0 %}
-				<a href="/logout"><button class="btn btn-sm btn-outline-danger font-weight-bold" >Logout {{ user.username }} </button></a>
+				<a href="/logout"><button class="btn btn-sm btn-outline-danger font-weight-bold" >Logout {{ loggedUser.username }} </button></a>
 				{% endif %}
 
 				{% if user == 0 %}
