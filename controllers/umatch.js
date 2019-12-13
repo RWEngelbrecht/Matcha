@@ -36,7 +36,7 @@ exports.getMatchSuggestions = (req, res, next) => {
 					var likeableMatches = filters.getLikeableMatches(likedUsers, interestMatches);
 					var filteredMatches = filters.FilterFrom(currUser, likeableMatches)
 					filteredMatches.then(function(result) {
-						res.render(path.resolve('views/suggestions'), {matches: result, filters: filters.filterBy, loggedUser: currUser});
+						res.render(path.resolve('views/suggestions'), {matches: result, filters: filters.filterBy, loggedUser: currUser, user: currUser});
 					});
 				}
 			});
@@ -83,15 +83,6 @@ exports.getMatches = (req, res, next) => {
 exports.like = (req, res, next) => {
 	var likedName = req.body.potmatch;
 	currUser = req.session.user;
-	var new_like = new Likes ({
-		liker: currUser.username,
-		liked: likedName,
-	})
-	new_like.save((err) => {
-		if (err){
-			res.status(400).send(err);
-		}
-	});
 	User.findOneAndUpdate(
 		{username: likedName},
 		{$inc:{fame:1},
@@ -105,6 +96,8 @@ exports.like = (req, res, next) => {
 					res.redirect('/suggestions');
 				} else {
 					const like = new Likes({
+						liker: currUser.username,
+						liked: likedName,
 						likeBy: currUser._id,
 						likedUser: doc._id
 					});
