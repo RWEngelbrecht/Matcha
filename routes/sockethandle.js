@@ -73,7 +73,7 @@ module.exports = function(connectedUsers) {
 
 		// notif on like handler
 		socket.on('new_like', (data) => {
-			
+
 		})
 	});
 
