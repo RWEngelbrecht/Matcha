@@ -51,6 +51,14 @@ module.exports = function(connectedUsers) {
 					if (verif == 0) {
 						connectedUsers.push(user);
 					};
+					if (doc.notif > 0) {
+						io.sockets.to(user.socketId).emit('new_notification', {message: "You have " + doc.notif + " notification/s, please check your email"});
+						user.findOneAndUpdate({email: data.email}, {$set: {notif: 0}}, (err, doc) => {
+							if (err) {
+								console.log(err);
+							}
+						})
+					};
 				}
 			});
 		});
