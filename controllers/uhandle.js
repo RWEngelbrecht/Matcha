@@ -22,7 +22,6 @@ var all_pos_interests = [
 
 // Home
 exports.gethome = (req, res, next) => {
-	console.log("uhandle home reached(Controller)");
 	if (!req.session.user) {
 		logged = false;
 		return (res.redirect('/login'));
@@ -38,7 +37,7 @@ exports.gethome = (req, res, next) => {
 	currUser = req.session.user
 	Photo.find({user: currUser._id}, (err, photos) => {
 		if (err) {
-			console.log("Could not find photos.");
+			console.log(err);
 		}
 		return (res.render(path.resolve('views/index'),{user: currUser, photos: photos}));
 	});
@@ -46,20 +45,17 @@ exports.gethome = (req, res, next) => {
 // Login
 // GET method
 exports.getlogin = (req, res, next) => {
-	console.log("uhandle getlogin reached(Controller)");
 	loggedUser = 0;
 	return (res.render(path.resolve('views/login'),{user: loggedUser}));
 }
 // POST method
 exports.postlogin = (req, res) => {
-	console.log("uhandle postlogin reached(Controller)");
 	var hashpw = crypto.createHash('whirlpool').update(req.body.password).digest('hex');
 	User.findOne({email: req.body.email, password: hashpw}, (err, user) => {
 		if (err) {
 			console.log(res.status(400).send(err));
 		}
 		else if (user && user.verified == true) {
-			console.log('Login Success!');
 			User.findOneAndUpdate({_id: user._id}, {$set: {loggedIn: true}}, err => {
 				if (err){
 					console.log('Something went wrong while updating logged in status!');
@@ -94,7 +90,6 @@ function getLocation(id) {
 				];
 				User.findOneAndUpdate({_id: id}, {$set: {location: location}}, (err, user) => {
 					if (err){
-						console.log('failed to set location');
 						reject(user);
 					}
 				});
@@ -106,7 +101,6 @@ function getLocation(id) {
 // Register
 // GET method
 exports.getregister = (req, res, next) => {
-	console.log("uhandle getregister reached(Controller)");
 	loggedUser = 0;
 	return (res.render(path.resolve('views/register'),{
 		user: loggedUser
@@ -114,23 +108,20 @@ exports.getregister = (req, res, next) => {
 }
 // POST method
 exports.postregister = (req, res, next) => {
-	console.log("uhandle postregister reached(Controller)");
 	var validate = new Validate();
 	check_reg = validate.validateregister(req.body);
 	if (check_reg == 0) {
+		req.flash('error_msg', 'Please check your registration credentials');
 		return (res.redirect('/register'));
 	}
 	var vkey = crypto.createHash('whirlpool').update(req.body.username).digest('hex');
 	if (req.body.password != req.body.confirm_password) {
-		// DISPLAY ERROR MESSAGE.
 		req.flash('error_msg', 'Passwords do not match');
 		return (res.redirect('/register'));
 		// TODO send email.
 	} else {
 		// checks for password strength.
 		var check = new Validate();
-		var pwcheck = check.ValidatePassword(req.body.password);
-		var unamecheck = check.ValidateUsername(req.body.username)
 		var transporter = nodemailer.createTransport({
 			service: 'gmail',
 			auth: {
@@ -174,7 +165,7 @@ exports.postregister = (req, res, next) => {
 		// query schema to see if username or email exists
 		User.findOne({$or: [ {username: user.username}, {email: user.email} ]}, (err, docs) => {
 			if (docs != null) {
-				req.flash('error_msg', 'Invalid username or password.');
+				req.flash('error_msg', 'Invalid username or email is already taken.');
 				return (res.redirect('/register'));
 			} else {
 				user.save().then(item => {
@@ -187,13 +178,11 @@ exports.postregister = (req, res, next) => {
 						isprofile: 1,
 					});
 					new_photo.save().then(item => {
-						console.log("Profile Photo Addition Successful");
 						return (res.redirect('/'));
 					}).catch(err => {
 						console.log(res.status(400).send(err));
 						return (res.redirect('/'));
 					});
-					console.log("User registration Successful")
 				}).catch(err => {
 					console.log(res.status(400).send(err));
 					return (res.redirect('/'));
@@ -296,6 +285,7 @@ exports.postresetpassword = (req, res, next) => {
 				var check = new Validate();
 				var pwcheck = check.ValidatePassword(req.body.new_pass_forgot);
 				if (pwcheck == 0) {
+					// put flash in
 					return(res.redirect('/update_info'));
 				}
 				var forgothashedpw = crypto.createHash('whirlpool').update(req.body.new_pass_forgot).digest('hex');
