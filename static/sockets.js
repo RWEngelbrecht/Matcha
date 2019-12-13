@@ -20,19 +20,22 @@ $(function(){
     var socket = io.connect();
     socket.on('connect', () => update());
     function update() {
-        socket.emit('update', {user: user.val(), id: socket.id});
+        var str = (window.location).toString();
+        socket.emit('update', {user: user.val(), id: socket.id, page: str});
     }
 
     // Emit a new message
     send_message.click(function() {
         // this sends the new client id, will change it to do that on reload of any page
-        socket.emit('update', {user: user.val(), id: socket.id});
+        var str = (window.location).toString();
+        socket.emit('update', {user: user.val(), id: socket.id, page: str});
         socket.emit('new_message', {message: message.val(), chatFrom: chatFrom.val(), chatTo: chatTo.val(), chatID: [chatTo.val(), chatFrom.val()].sort().join('-')});
     });
 
     // create a tracker for a user on login
     login.click(function() {
-        socket.emit('update', {user: user.val(), id: socket.id});
+        var str = (window.location).toString();
+        socket.emit('update', {user: user.val(), id: socket.id, page: str});
         socket.emit('login_notif', {user: user.val()});
         socket.emit('login', {email: email.val()});
     })
@@ -44,7 +47,8 @@ $(function(){
 
     // Send notif info on a like click to server
     like.click(function() {
-        socket.emit('update', {user: user.val(), id: socket.id});
+        var str = (window.location).toString();
+        socket.emit('update', {user: user.val(), id: socket.id, page: str});
         socket.emit('new_like', {liked: potmatch.val(), liker: liker.val()});
     }) 
 

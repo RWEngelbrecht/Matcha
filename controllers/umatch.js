@@ -152,7 +152,7 @@ exports.getFilter = (req, res, next) => {
 
 exports.postFilter = (req, res, next) => {
 	//give filter class all filters
-	filters.SetFilters(req.body.filterCrit);
+	filters.SetFilters(req.body.filterCrit, req.body.sortCrit);
 	res.redirect('/suggestions');
 }
 
