@@ -1,93 +1,83 @@
 const Message	= require("../models/messages.js");
 const User= require("../models/umod.js");
+const Likes = require('../models/likemod');
 const io = require('../app.js');
-var chatRooms = [];
-
+const _	= require('underscore');
 
 module.exports = function(connectedUsers) {
 
-	io.on('connection', (socket) => {
+	io.sockets.on('connection', function (socket) {
+		console.log("some id coming from connection", socket.id)
 		var user = {};
 
-
-		if (chatRooms.length > 0) {
-			chatRooms.forEach(room => {
-				socket.join(room);
-				console.log('room joined: ', room);
-			});
-		}
-		// console.log(socket.rooms);
 		// adds email and socket id to connectedUsers arr on login
-		socket.on('login', (data) => {
+		socket.on('login', function(data) {
 			User.findOne({email: data.email}, function(err, doc) {
+				if (err) throw error;
 				if (doc) {
+					var verif = 0;
 					user.user = doc.username;
-					user.id = socket.id;
-					connectedUsers.push(user);
-					chatRooms = doc.chatRooms;
-					console.log('CHATROOMS AT LOGIN:  ',doc.chatRooms);
-					console.log('GLOBAL VARIABLE CHATROOMS: ',chatRooms);
-				} else {
-					console.error(err);
+					user.socketId = socket.id;
+					for (var i in connectedUsers) {
+						if (connectedUsers[i].user == doc.username) {
+							connectedUsers[i].socketId = user.socketId;
+							verif = 1;
+						};
+					};
+					if (verif == 0) {
+						connectedUsers.push(user);
+					};
 				}
 			});
+		});
+
+		// updates the connectedusers array to get the new socket id coming from client side
+		socket.on('update', function(data) {
+			console.log("update data -->", data)
+			var check = 0;
+			for (var i in connectedUsers) {
+				if (connectedUsers[i].user == data.user) {
+					connectedUsers[i].socketId = data.id;
+					check = 1;
+				}
+			}
+			if (check === 0) {
+				user.user = data.user
+				user.socketId = data.id
+				connectedUsers.push(user);
+			}
+			console.log('connected users after update', connectedUsers)
 		})
 
-		socket.on('like', data => {
-			User.findOne({username: data.liker}, (err, doc) => {
-				to_update = doc.chatRooms;
-				console.log("TO UPDATE 1", to_update);
-				to_update.push(data.chatID);
-				console.log("TO UPDATE 2", to_update);
-				// console.log("DOC", doc);
-				User.findOneAndUpdate({username: data.liker}, {$set: {chatRooms: to_update}}, {new:true}, (err, docs) => {
-					// console.log("DOCS YES DOCS", docs);
-					console.log('UPDATED CHATROOMS ON LIKE: ', docs.chatRooms);
-					// console.log("PRE FINAL: ", chatRooms);
-				})
-				chatRooms = to_update;
-			})
-			// console.log('FINAL : ',chatRooms);
-		})
-
-	// 	socket.on('join_chat', function (data) {
-	// 		socket.join(data.chatID)
-	// 		console.log('data.chatID:', data.chatID);
-	// // console.log('socket rooms', io.sockets.adapter.rooms);
-	// 	});
-
+		// message handler
 		socket.on('new_message', (data) => {
-			var fromID, toID, fromName, toName;
-			var message = data.message;
-			var chatID = data.chatID;
-
-			connectedUsers.forEach(con => {
-				if (con.user == data.chatFrom) {
-					fromID = con.id;
-					fromName = con.user;
+			console.log("data coming in as a paramater ->", data);
+			for (var i in connectedUsers) {
+				if (connectedUsers[i].user === data.chatFrom) {
+					console.log("emitting now");
+					io.sockets.to(connectedUsers[i].socketId).emit('new_message', {message: data.message, username: data.chatFrom, chatID: data.chatID});
 				}
-				if (con.user == data.chatTo) {
-					toID = con.id;
-					toName = con.user;
+				if (connectedUsers[i].user === data.chatTo) {
+					console.log("emitting now");
+					io.sockets.to(connectedUsers[i].socketId).emit('new_message', {message: data.message, username: data.chatFrom, chatID: data.chatID});
 				}
-			});
-			// console.log('chatID: ',chatID)
-			// console.log('fromID: ',chatID)
-			// console.log('chatID: ',chatID)
-			// socket.join(chatID);
-	// chat should have a message from 1 if sending to specific room works
-	// 2 is just to make sure it is sending in general
-			// io.sockets.in(io.sockets.adapter.rooms.chatID).emit('new message', {message: message, username: 1 });
-			io.sockets.to(chatID).emit('new_message', {message: message, username: fromName});
-			// io.sockets.emit('new_message', {message : message, username: 2});
+			}
 			var newMessage = new Message({
-				chatID: chatID,
+				chatID: [data.chatFrom, data.chatTo].sort().join('-'),
 				sentBy: data.chatFrom,
 				sentTo: data.chatTo,
-				message: message
+				message: data.message
 			});
 			newMessage.save().then(() => console.log('message saved to db'));
 		});
-		// console.log('connected users', connectedUsers)
+
+		// notif on like handler
+		socket.on('new_like', (data) => {
+
+		})
 	});
+
 }
+
+
+// _.intersection(data.user, doc.likedBy).length != 0

@@ -58,8 +58,8 @@
 	<!-- block off to the side that should display usernames of people who have liked/viewed your profile -->
 	<div>
 		{% if user.likedBy != undefined %}
-			{% for liker in user.likedBy %}
-				<a class="text-decoration-none h4 align-self-bottom text-warning" href="/profile/{{liker._id.toString}}">{{liker}}</a>
+			{% for liker in likedBy %}
+					<a class="text-decoration-none h4 align-self-bottom text-warning" href="/profile/{{liker._id.toString()}}">{{liker.username}}</a><br>
 			{% endfor %}
 		{% endif %}
 	</div>

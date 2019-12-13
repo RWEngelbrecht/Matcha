@@ -49,24 +49,30 @@ exports.getMatchSuggestions = (req, res, next) => {
 
 exports.getMatches = (req, res, next) => {
 
-
 	currUser = req.session.user;
 	if (!currUser)
 		res.redirect('/');
 
 	var likedUserIDs = [];
-	var likedUsers = [];
+	var currUserLikedBy = [];
 	Likes.find({likeBy: currUser._id}).then((liked) => {
 			liked.forEach(user => {
 				likedUserIDs.push(user.likedUser); // profiles that current user has liked
 			});
 			User.find({_id: {$in: likedUserIDs}, username: {$nin: currUser.blocked}},(err, likedUsrs) => {
-				Likes.find({likedUser: currUser._id}, (err, currLiked) => { // people that have liked the current user
-					var matched = filters.getMatched(currLiked, likedUsrs); // filtered out people who user hasn't liked
-													//filter matched users that also liked current user from likedUsers
-					var notMatched = filters.filterMatches(likedUsrs, matched);
+				Likes.find({likedUser: currUser._id}, (err, currLiked) => {
+					// people that have liked the current user
+					currLiked.forEach(likedBy => {
+						currUserLikedBy.push(likedBy.likeBy.toString())
+					});
+					User.find({_id: {$in: currUserLikedBy}}, (err, currLikedBy) => {
+						console.log('current user is liked By: ',currLikedBy);
+						var matched = filters.getMatched(currLiked, likedUsrs); // filtered out people who user hasn't liked
+														//filter matched users that also liked current user from likedUsers
+						var notMatched = filters.filterMatches(likedUsrs, matched);
 
-					res.render(path.resolve('views/matches'), {likedMatches: notMatched, matched: matched, user: currUser});
+						res.render(path.resolve('views/matches'), {likedMatches: notMatched, matched: matched, user: currUser, likedBy: currLikedBy});
+					})
 				});
 			})
 		})
@@ -130,11 +136,6 @@ exports.like = (req, res, next) => {
 						} else {
 						  console.log('Email sent: ' + info.response);
 						}
-					});
-					// find any chatIDs where session.user.username appears
-					Message.find({ $text: {$search: req.session.user.username}}).distinct('chatID').then(chats => {
-							User.findOneAndUpdate({username: req.session.user.username}, {$set: {chatRooms: chats}})
-								.catch(err => console.error(err));
 					});
 					res.redirect('/suggestions');
 				}
