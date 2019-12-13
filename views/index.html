@@ -51,6 +51,12 @@
 								</small>
 								<br>
 								<a class="text-decoration-none h4 align-self-bottom text-warning" href="/messages/{{[user.username, loggedUser.username]|sort|join('-')}}"><button class="btn btn-sm btn-warning text-dark">Message</button></a>
+								{% elif !user.likedBy.includes(loggedUser.username) && loggedUser.likedBy.includes(user.username) %}
+								<form action="" method="POST">
+									<input type="hidden" name="liker" id="liker" value="{{loggedUser.username}}">
+									<input type="hidden" name="potmatch" id="potmatch" value="{{user.username}}">
+									<input type="submit" name="like" type="like" value="Like">
+								</form>
 							{% endif %}
 						{% endif %}
 					{% endif %}

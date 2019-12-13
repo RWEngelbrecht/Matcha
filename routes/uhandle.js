@@ -2,6 +2,7 @@
 const express	= require('express');
 const router	= express.Router();
 const uhandle	= require('../controllers/uhandle.js');
+const umatch	= require('../controllers/umatch.js');
 const io        = require("../app.js");
 const { body }	= require('express-validator');
 const multer= require('multer');
@@ -60,6 +61,7 @@ router.get('/interests', uhandle.getinterests);
 router.post('/interests', uhandle.postinterests);
 
 router.get('/profile/:id',uhandle.getProfile);
+router.post('/profile/:id', umatch.like);
 
 
 module.exports = router;
