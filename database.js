@@ -110,10 +110,8 @@ async function createSchemas() {
 			table.string('verifkey').notNullable()
 			table.boolean('verified').defaultTo(false)
 			table.integer('maxdist').defaultTo(50)
-			// table.string('interests').notNullable() // will have to add to seperate table, then query with knex('user').join('interest', user.id, '=', interest.user_id)
-			table.timestamp('lastSeen').defaultTo(knex.fn.now())
+			table.specificType('lastSeen', 'BIGINT').defaultTo(Date.now())
 			table.boolean('loggedIn').defaultTo(false)
-			table.string('location').defaultTo('') // how will we store this now?
 		}).then(() => console.log('user table created'))
 			.catch((err) => { throw err; })
 			.finally(() => { knex.destroy(); });
@@ -134,7 +132,7 @@ async function createSchemas() {
 			table.string('interest').defaultTo('')
 		}).then(() => console.log('interest table created'))
 			.catch((err) => { throw err; })
-			.finally(() => { knex.destroy() });
+			.finally(() => { knex.destroy(); });
 	}
 	if (!await knex.schema.hasTable('view')) {
 		knex.schema.createTable('view', (table) => {
@@ -142,7 +140,17 @@ async function createSchemas() {
 			table.integer('viewedBy').notNullable()
 		}).then(() => console.log('view table created'))
 			.catch((err) => { throw err; } )
-			.finally(() => { knex.destroy() });
+			.finally(() => { knex.destroy(); });
+	}
+	if (!await knex.schema.hasTable('location')) {
+		knex.schema.createTable('location', (table) => {
+			table.integer('user_id').notNullable()
+			table.string('postal').notNullable()
+			table.string('city').notNullable()
+			table.string('region').notNullable()
+		}).then(() => console.log('location table created'))
+			.catch((err) => { throw err; })
+			.finally(() => { knex.destroy(); });
 	}
 }
 
