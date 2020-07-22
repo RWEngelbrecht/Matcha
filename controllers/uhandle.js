@@ -37,20 +37,19 @@ exports.gethome = (req, res, next) => {
 	knex('interest')
 		.where({user_id: currUser.id})
 		.then((result) => {
-			if (result.length == 0) {
-				console.log('dat result be ZERO');
+			if (result.length == 0)
 				return (res.redirect('/interests'));
-			}
+			knex('photo')
+				.where({user_id: currUser.id})
+				.then((photos) => {
+					return (res.render(path.resolve('views/index'),{user: currUser, photos: photos}));
+				}).catch((err) => {
+					console.log("Something went wrong! Cannot find photos!", err);
+				});
 		}).catch((err) => {
 			console.log("Something went wrong when looking for interests!")
 		});
-	knex('photo')
-		.where({user_id: currUser.id})
-		.then((photos) => {
-			return (res.render(path.resolve('views/index'),{user: currUser, photos: photos}));
-		}).catch((err) => {
-			console.log("Something went wrong! Cannot find photos!", err);
-		});
+
 }
 // Login
 // GET method
@@ -70,9 +69,9 @@ exports.postlogin = (req, res) => {
 			} else {
 // console.log(user);
 				req.session.user = user[0];
-				me = getLocation(user.id);
+				me = getLocation(user[0].id);
 				me.then(function(result) {
-					global.loc = result;
+					global.loc = [result.postal, result.city, result.region];
 				}).then (function (result){
 					req.session.user.location = global.loc;
 					return (res.redirect('/'));
@@ -112,22 +111,24 @@ function getLocation(id) {
 			if(err) throw err;
 			var lines = data.split('\n');
 			var ip = lines[Math.floor(Math.random()*lines.length)];
+			// will have to store this as object here, AND CHECK WHERE THIS IS USED TO RECONVERT TO []?
 			iplocation(ip, [], (error, res) => {
-				location = [
-					res.postal,
-					res.city,
-					res.region,
-				];
-/**
- * we need a seperate location table or think of another way to store location, we can't do arrays
- * so here, we will store location in own table with user.id as reference in column
- * */
-				// knex('user')
-				// 	.where({id: id})
-				// 	.update({location: location})
-				// 	.then((row) => {
-				// 		console.log('location found...', row);
-				// 	});
+				location = {
+					user_id: id,
+					postal: res.postal,
+					city: res.city,
+					region: res.region
+				};
+				// create row for user location if this is 1st time logging in
+				// otherwise, update location
+				knex('location')
+					.where({user_id: id})
+					.then((row) => {
+						if (row.length === 0)
+							knex('location').insert(location);
+						else
+							knex('location').where({user_id: id}).update(location);
+					}).catch((err) => { console.log('some shit went down'); });
 				resolve(location);
 			});
 		});
@@ -253,13 +254,11 @@ exports.getconfirm = (req, res, next) => {
 	knex('user')
 		.where({verifkey: key})
 		.update({verified: 1})
-		.then(row => {
-			console.log('got confirmation, updated verified...',row);
+		.then(() => {
+			return (res.redirect('/'));
 		}).catch((err) => {
 			console.log("Something wrong when updating data!", err);
 		});
-	// Doesnt have to go to home, should probably set user logged in or out and take to login or my account
-	return (res.redirect('/'));
 }
 // Logout
 // GET method. Doesnt really matter get, post, all.
@@ -277,13 +276,12 @@ exports.getlogout = (req, res, next) => {
 	knex('user')
 		.where({id: req.session.user.id})
 		.update({lastSeen: Date.now(), loggedIn: 0})
-		.then((row) => {
-			console.log('logged out!', row);
+		.then(() => {
+			req.session.user = null;
+			return (res.redirect('/'));
 		}).catch((err) => {
 			console.log('Something went wrong: ', err);
 		});
-	req.session.user = null;
-	return (res.redirect('/'));
 }
 // Send Reset Password Link
 // GET method
@@ -462,7 +460,7 @@ exports.postresetpassword = (req, res, next) => {
 // 		return (res.render(path.resolve('views/interests'), {interests, all_interests}));
 // 	});
 // }
-exports.getinterests = async function (req, res, next) {
+exports.getinterests = (req, res, next) => {
 	console.log("uhandle getinterest reached(Controller)");
 	if (req.session.user === null || req.session.user === 0){
 		return (res.redirect('/login'));
@@ -497,13 +495,11 @@ exports.getinterests = async function (req, res, next) {
 // }
 exports.postinterests = (req, res, next) => {
 	const { interests } = req.body;
-	console.log(req.session.user);
 	var currUser = req.session.user;
 	currUser.interests = [];
 	for (var interest of interests) {
 		knex('interest')
-			.insert({user_id: currUser.id, interest: interest}) // not sure if this'll work
-			.then((row) => console.log('interest inserted: ', row))
+			.insert({user_id: currUser.id, interest: interest})
 			.catch((err) => console.log('Something went wrong when inserting interest!', err));
 	}
 	return (res.redirect('/'));
