@@ -1,6 +1,6 @@
 // const User	= require('../models/umod');
 const knex = require('../database');
-const Photo	= require('../models/photos');
+// const Photo	= require('../models/photos');
 const Validate	= require('./validate.class');
 const path	= require('path');
 const crypto = require('crypto');
@@ -212,7 +212,7 @@ exports.postregister = (req, res, next) => {
 						var date = Date.now();
 						const new_photo = {
 							photo: req.file.buffer.toString('base64'),// might have to store as blob
-							photoid: date,
+							photoid: date+id[0], //so that photoids are more unique
 							user_id: id_to_user,
 							isprofile: 1,
 						}
