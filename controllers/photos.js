@@ -260,7 +260,7 @@ exports.posteditprofilepicture = (req, res, next) => {
     }
     if (req.session.user.photocount <= 4) {
 		knex('photo')
-			.where({user: userid, isprofile: 1})
+			.where({user_id: userid, isprofile: 1})
 			.update({isprofile: 0})
 			.then(() => {
 				date = Date.now();
