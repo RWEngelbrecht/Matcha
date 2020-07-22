@@ -7,9 +7,12 @@ The only limitation with this project is that we are only allowed to use micro-f
 
 ## dotenv setup:
 Make a file called conf.env in root folder that looks like this:
+
+```
 PORT=3000
 HOST=localhost
 DBUSER=<your local server username>
 PASSWD=<your local server password>
 DB=matcha
 DBPORT=8888
+```
