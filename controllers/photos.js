@@ -39,11 +39,15 @@ exports.getphoto = (req, res, next) => {
 //     });
 // }
 exports.postphoto = (req, res, next) => {
-    date = Date.now();
-    const image = {
-        photo: req.file.buffer.toString('base64'),
-        photoid: date,
-        user_id: req.session.user.id
+	date = Date.now();
+	if (!req.file){
+		req.flash('error_msg', 'You haven\'t selected a picture to upload!');
+		return res.redirect('/photos');
+	}
+	const image = {
+		photo: req.file.buffer.toString('base64'),
+		photoid: date+req.session.user.username,
+		user_id: req.session.user.id
 	};
 	knex('photo')
 		.insert(image)
@@ -56,6 +60,7 @@ exports.postphoto = (req, res, next) => {
 				.where({verifkey: key})
 				.update({photocount: pc})
 				.then(() => {
+					req.flash('success_msg', 'Picture uploaded!');
 					return (res.redirect('/photos'));
 				})
 				.catch((err) => { throw err; });
@@ -242,7 +247,7 @@ exports.posteditprofilepicture = (req, res, next) => {
 				const newimage = {
 					isprofile: 1,
 					photo: req.file.buffer.toString('base64'),
-					photoid: date+userid,
+					photoid: date+req.session.user.username,
 					user_id: req.session.user.id,
 				};
 				knex('photo')
@@ -267,7 +272,7 @@ exports.posteditprofilepicture = (req, res, next) => {
 				const newimage = {
 					isprofile: 1,
 					photo: req.file.buffer.toString('base64'),
-					photoid: date+userid,
+					photoid: date+req.session.user.username,
 					user_id: userid
 				};
 				knex('photo')
@@ -331,7 +336,7 @@ exports.postakephoto = (req, res, next) => {
     var ret = req.body.webcamimage.replace('data:image/png;base64,','');
     const image = {
         photo: ret,
-        photoid: date+req.session.user.id,
+        photoid: date+req.session.user.username,
         user_id: req.session.user.id
 	};
 	knex('photo')
@@ -433,7 +438,7 @@ exports.postakeprofilephoto = (req, res, next) => {
 				const image = {
 					isprofile: 1,
 					photo: ret,
-					photoid: date+userid,
+					photoid: date+req.session.user.username,
 					user_id: req.session.user.id,
 				};
 				knex('photo')
@@ -458,7 +463,7 @@ exports.postakeprofilephoto = (req, res, next) => {
 				const newimage = {
 					isprofile: 1,
 					photo: ret,
-					photoid: date+userid,
+					photoid: date+req.session.user.username,
 					user_id: userid
 				};
 				knex('photo')
