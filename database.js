@@ -119,7 +119,7 @@ async function createSchemas() {
 	if (!await knex.schema.hasTable('photo')) {
 		knex.schema.createTable('photo', (table) => {
 			table.specificType('photo', 'LONGTEXT').notNullable()
-			table.specificType('photoid', 'BIGINT').notNullable()
+			table.string('photoid').notNullable()
 			table.integer('user_id').notNullable()
 			table.boolean('isprofile').defaultTo(false)
 		}).then(() => console.log('photo table created'))
@@ -149,6 +149,17 @@ async function createSchemas() {
 			table.string('city').notNullable()
 			table.string('region').notNullable()
 		}).then(() => console.log('location table created'))
+			.catch((err) => { throw err; })
+			.finally(() => { knex.destroy(); });
+	}
+	if (!await knex.schema.hasTable('like')) {
+		knex.schema.createTable('like', (table) => {
+			table.integer('likeBy').notNullable()
+			table.integer('likedUser').notNullable()
+			table.string('liker').nullable()
+			table.string('liked').nullable()
+			table.specificType('dateLiked', 'BIGINT').defaultTo(Date.now())
+		}).then(() => console.log('like table created'))
 			.catch((err) => { throw err; })
 			.finally(() => { knex.destroy(); });
 	}
