@@ -89,7 +89,7 @@ const knex = require('knex')({
 	},
 	pool: { min: 0, max: 10 }
 });
-
+// move these to models as exported methods, require and call in createSchemas()
 async function createSchemas() {
 	if (!await knex.schema.hasTable('user')) {
 		knex.schema.createTable('user', (table) => {
@@ -114,46 +114,50 @@ async function createSchemas() {
 			table.boolean('loggedIn').defaultTo(false)
 		}).then(() => console.log('user table created'))
 			.catch((err) => { throw err; })
-			.finally(() => { knex.destroy(); });
+			// .finally(() => { knex.destroy(); });
 	}
 	if (!await knex.schema.hasTable('photo')) {
 		knex.schema.createTable('photo', (table) => {
+			table.increments('id').primary()
 			table.specificType('photo', 'LONGTEXT').notNullable()
 			table.string('photoid').notNullable()
 			table.integer('user_id').notNullable()
 			table.boolean('isprofile').defaultTo(false)
 		}).then(() => console.log('photo table created'))
 			.catch((err) => { throw err; })
-			.finally(()=> { knex.destroy(); });
+			// .finally(()=> { knex.destroy(); });
 	}
 	if (!await knex.schema.hasTable('interest')) {
 		knex.schema.createTable('interest', (table) => {
+			table.increments('id').primary()
 			table.integer('user_id').notNullable()
 			table.string('interest').defaultTo('')
 		}).then(() => console.log('interest table created'))
 			.catch((err) => { throw err; })
-			.finally(() => { knex.destroy(); });
+			// .finally(() => { knex.destroy(); });
 	}
 	if (!await knex.schema.hasTable('view')) {
 		knex.schema.createTable('view', (table) => {
+			table.increments('id').primary()
 			table.integer('viewedUser').notNullable()
 			table.integer('viewedBy').notNullable()
 		}).then(() => console.log('view table created'))
 			.catch((err) => { throw err; } )
-			.finally(() => { knex.destroy(); });
+			// .finally(() => { knex.destroy(); });
 	}
 	if (!await knex.schema.hasTable('location')) {
 		knex.schema.createTable('location', (table) => {
-			table.integer('user_id').notNullable()
+			table.integer('user_id').primary()
 			table.string('postal').notNullable()
 			table.string('city').notNullable()
 			table.string('region').notNullable()
 		}).then(() => console.log('location table created'))
 			.catch((err) => { throw err; })
-			.finally(() => { knex.destroy(); });
+			// .finally(() => { knex.destroy(); });
 	}
 	if (!await knex.schema.hasTable('like')) {
 		knex.schema.createTable('like', (table) => {
+			table.increments('id').primary()
 			table.integer('likeBy').notNullable()
 			table.integer('likedUser').notNullable()
 			table.string('liker').nullable()
@@ -161,7 +165,16 @@ async function createSchemas() {
 			table.specificType('dateLiked', 'BIGINT').defaultTo(Date.now())
 		}).then(() => console.log('like table created'))
 			.catch((err) => { throw err; })
-			.finally(() => { knex.destroy(); });
+			// .finally(() => { knex.destroy(); });
+	}
+	if (!await knex.schema.hasTable('blocked')) {
+		knex.schema.createTable('blocked', (table) => {
+			table.increments('id').primary()
+			table.integer('blockBy').notNullable()
+			table.integer('blocked').notNullable();
+		}).then(() => console.log('blocked table created'))
+			.catch((err) => { throw err; })
+			// .finally(() => { knex.destroy(); });
 	}
 }
 

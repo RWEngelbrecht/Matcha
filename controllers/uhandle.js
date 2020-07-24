@@ -69,13 +69,19 @@ exports.postlogin = (req, res) => {
 			} else {
 // console.log(user);
 				req.session.user = user[0];
-				me = getLocation(user[0].id);
-				me.then(function(result) {
-					global.loc = [result.postal, result.city, result.region];
-				}).then (function (result){
-					req.session.user.location = global.loc;
-					return (res.redirect('/'));
-				});
+				knex('user')
+					.where({id: req.session.user.id})
+					.update({loggedIn: 1})
+					.then(() => {
+						req.session.user.loggedIn = 1;
+						me = getLocation(user[0].id);
+						me.then(function(result) {
+							global.loc = [result.postal, result.city, result.region];
+						}).then (function (result){
+							req.session.user.location = global.loc;
+							return (res.redirect('/'));
+						});
+					});
 			}
 		}).catch((err) => {
 			console.error(err);
