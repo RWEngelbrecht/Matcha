@@ -69,6 +69,7 @@ exports.postlogin = (req, res) => {
 			} else {
 // console.log(user);
 				req.session.user = user[0];
+				req.session.user.interests = [];
 				knex('user')
 					.where({id: req.session.user.id})
 					.update({loggedIn: 1})
@@ -79,9 +80,18 @@ exports.postlogin = (req, res) => {
 							global.loc = [result.postal, result.city, result.region];
 						}).then (function (result){
 							req.session.user.location = global.loc;
-							return (res.redirect('/'));
 						});
-					});
+					}).then(() => {
+						knex('interest')
+							.where({user_id: req.session.user.id})
+							.then((interests) => {
+								interests.forEach((interest) => {
+									req.session.user.interests.push(interest.interest);
+								});
+							}).then(() => {
+								return (res.redirect('/'));
+							}).catch((err) => { throw err; });
+					}).catch((err) => { throw err; });
 			}
 		}).catch((err) => {
 			console.error(err);
@@ -501,11 +511,12 @@ exports.getinterests = (req, res, next) => {
 // }
 exports.postinterests = (req, res, next) => {
 	const { interests } = req.body;
+	req.session.user.interests = [];
 	var currUser = req.session.user;
-	currUser.interests = [];
 	for (var interest of interests) {
 		knex('interest')
 			.insert({user_id: currUser.id, interest: interest})
+			.then(() => { req.session.user.interests.push(interest) })
 			.catch((err) => console.log('Something went wrong when inserting interest!', err));
 	}
 	return (res.redirect('/'));
