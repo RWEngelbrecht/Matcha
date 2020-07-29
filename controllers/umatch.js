@@ -76,7 +76,6 @@ exports.getMatchSuggestions = (req, res, next) => {
 					for (var block of blocked) {
 						blockedUsers.push(block.blocked);
 					}
-					console.log('blocked users: ',blockedUsers);
 				}).catch((err) => { throw err; })
 		})
 		.then(() => {
@@ -270,7 +269,6 @@ exports.like = (req, res, next) => {
 					};
 					return like;
 				}).then((like) => {
-					console.log('okay, inserting now');
 					knex('like')
 						.insert(like)
 						.then(() => { res.redirect('/suggestions'); })
