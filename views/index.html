@@ -46,7 +46,7 @@
 									{% if user.loggedIn == true %}
 										{{"Online"}}
 									{% else %}
-										{{ " Last seen: " + user.lastSeen.toString().substring(3, 25)}}</p>
+										{{ " Last seen: " + Date(user.lastSeen).toString().substring(3, 25)}}</p>
 									{% endif %}
 								</small>
 								<br>
