@@ -552,10 +552,10 @@ exports.getProfile = (req, res, next) => {
 	if (!currUser) {
 		res.status(400).send(err);
 	}
-	var profileUsrId = req.params.id;
+	var profileUsrId = parseInt(req.params.id);
 	if (profileUsrId != currUser.id) {
 		knex('view')
-			.insert({viewed_user: profileUsrId, viewedBy: currUser.id})
+			.insert({viewedUser: profileUsrId, viewedBy: currUser.id})
 			.then((row) => console.log('view recorded: ', row))
 			.catch((err) => {
 				console.log('Something went wrong when updating views!', err);
@@ -565,10 +565,11 @@ exports.getProfile = (req, res, next) => {
 	knex('user')
 		.where({id: profileUsrId})
 		.then((user) => {
+			console.log(user);
 			knex('photo')
 				.where({user_id: profileUsrId})
 				.then((photos) => {
-					res.render(path.resolve('views/index'),{user: user, photos: photos, loggedUser: req.session.user});
+					res.render(path.resolve('views/index'),{user: user[0], photos: photos, loggedUser: req.session.user});
 				}).catch((err) => {
 					console.log("Something went wrong! Cannot find photos!", err);
 				});
