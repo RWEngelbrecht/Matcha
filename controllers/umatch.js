@@ -86,30 +86,28 @@ exports.getMatchSuggestions = (req, res, next) => {
 				.andWhere('age', '>=', currUser.agepreflower)
 				.andWhere('age', '<=', currUser.ageprefupper)
 				.orderBy('fame', 'desc')
-				.then(async (matches) => {
+				.then((matches) => {
 					if (matches.length === 0) {
 						console.log('No matches for you!');
 						res.redirect('/');
 					}
-					matches.forEach(async (match) => {
-						match.interests = [];
-						knex('interest')
-							.where({user_id: match.id})
-							.then((interests) => {
-								interests.forEach((interest) => {
-									match.interests.push(interest.interest);
-								});
-							}).then(() => {
-								possibleMatches.push(match)
-							}).then(() => {
-								var interestMatches = filters.getInterestMatches(currUser, possibleMatches);
-								var likeableMatches = filters.getLikeableMatches(likedUsers, interestMatches);
-								var filteredMatches = filters.FilterFrom(currUser, likeableMatches)
-								return filteredMatches;
-							}).then((filteredMatches) => {
-								res.render(path.resolve('views/suggestions'), {matches: filteredMatches, filters: filters.filterBy, loggedUser: currUser, user: currUser});
-							}).catch((err) => { throw err; });
-						});
+					knex('interest')
+						.select()
+						.then((interests) => {
+							matches.forEach((match) => {
+								match.interests = interests.filter(interest => interest.user_id === match.id);
+							});
+						})
+						.then(() => {
+							possibleMatches = matches;
+						}).then(() => {
+							var interestMatches = filters.getInterestMatches(currUser, possibleMatches);
+							var likeableMatches = filters.getLikeableMatches(likedUsers, interestMatches);
+							var filteredMatches = filters.FilterFrom(currUser, likeableMatches)
+							return filteredMatches;
+						}).then((filteredMatches) => {
+							res.render(path.resolve('views/suggestions'), {matches: filteredMatches, filters: filters.filterBy, loggedUser: currUser, user: currUser});
+						}).catch((err) => { throw err; });
 				}).catch((err) => { throw err; });
 		}).catch((err) => {
 			res.status(400).send(err);
@@ -172,44 +170,41 @@ exports.getMatches = (req, res, next) => {
 						liked.forEach(user => {
 							likedUserIDs.push(user.likedUser); // profiles that current user has liked
 						});
+						knex('blocked')
+							.where({blockBy: currUser.id})
+							.andWhere({blocked: currUser.id})
+							.then((blocked) => {
+								for (var block of blocked) {
+									blockedUsers.push(block.blocked);
+								}
+							})
+							.then(() => {
+								knex('user')
+									.whereNotIn('id', blockedUsers)
+									.whereIn('id', likedUserIDs)
+									.then((likedUsrs) => {
+										knex('like')
+											.where({likedUser: currUser.id})
+											.then((currLiked) => {
+												currLiked.forEach(likedBy => {
+													currUserLikedBy.push(likedBy.likeBy);
+												});
+												return currLiked;
+											})
+											.then((currLiked) => {
+												knex('user')
+													.whereIn('id', currUserLikedBy)
+													.then((currLikedBy) => {
+														var matched = filters.getMatched(currLiked, likedUsrs); // filtered out people who user hasn't liked
+																		//filter matched users that also liked current user from likedUsers
+														var notMatched = filters.filterMatches(likedUsrs, matched);
+														res.render(path.resolve('views/matches'), {likedMatches: notMatched, "matched": matched, user: currUser, likedBy: currLikedBy});
+													})
+											})
+									})
+							})
 					}
 				})
-				.then(() => {
-					knex('blocked')
-						.where({blockBy: currUser.id})
-						.andWhere({blocked: currUser.id})
-						.then((blocked) => {
-							for (var block of blocked) {
-								blockedUsers.push(block.blocked);
-							}
-						})
-						.then(() => {
-							knex('user')
-								.whereNotIn('id', blockedUsers)
-								.whereIn('id', likedUserIDs)
-								.then((likedUsrs) => {
-									knex('like')
-										.where({likedUser: currUser.id})
-										.then((currLiked) => {
-											currLiked.forEach(likedBy => {
-												currUserLikedBy.push(likedBy.likeBy);
-											});
-											return currLiked;
-										})
-										.then((currLiked) => {
-											knex('user')
-												.whereIn('id', currUserLikedBy)
-												.then((currLikedBy) => {
-													var matched = filters.getMatched(currLiked, likedUsrs); // filtered out people who user hasn't liked
-																	//filter matched users that also liked current user from likedUsers
-													var notMatched = filters.filterMatches(likedUsrs, matched);
-													res.render(path.resolve('views/matches'), {likedMatches: notMatched, "matched": matched, user: currUser, likedBy: currLikedBy});
-												})
-										})
-								})
-						})
-				})
-
 			})
 	// req.session.user = currUser;
 }
@@ -313,16 +308,22 @@ exports.block = (req, res) => {
 	knex('user')
 		.where({username: likedUsername})
 		.decrement({fame: 1})
-		.then((id) => {
-			knex('blocked')
-				.insert({blockBy: currUser.id, blocked: id})
+		.then(() => {
+			knex('user')
+				.where({username: likedUsername})
+				.then((likedUser) => {
+					knex('blocked')
+						.insert({blockBy: currUser.id, blocked: likedUser[0].id})
+						.catch((err) => { throw err; });
+					knex('like')
+						.where({likeBy: likedUser[0].id, likedUser: currUser.id})
+						.andWhere({likeBy: currUser.id, likedUser: likedUser[0].id})
+						.del()
+						.catch((err) => { throw err; });
+				})
+				.then(() => { res.redirect('/matches'); })
 				.catch((err) => { throw err; });
-			knex('like')
-				.where({likeBy: id, likedUser: currUser.id})
-				.catch((err) => { throw err; });
-		})
-		.then(() => { res.redirect('/matches'); })
-		.catch((err) => { throw err; });
+		}).catch((err) => { throw err; });
 }
 
 exports.getFilter = (req, res, next) => {
