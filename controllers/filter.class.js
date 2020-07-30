@@ -33,7 +33,7 @@ class Filter {
 		var matchInterests = [];
 		for (var i = 0; i < matches.length; i++) {
 			if (matches[i].interests != null) {
-				if (matches[i].interests.some(e => userInterests.indexOf(e) >= 0)) {
+				if (matches[i].interests.some(e => userInterests.indexOf(e.interest) >= 0)) {
 					matchInterests.push(matches[i]);
 				}
 			}
