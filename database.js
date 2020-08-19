@@ -108,6 +108,7 @@ async function createSchemas() {
 			table.integer('ageprefupper').notNullable()
 			table.string('about').notNullable()
 			table.string('verifkey').notNullable()
+			table.integer('notif').defaultTo(0);
 			table.boolean('verified').defaultTo(false)
 			table.integer('maxdist').defaultTo(50)
 			table.specificType('lastSeen', 'BIGINT').defaultTo(Date.now())
@@ -175,6 +176,17 @@ async function createSchemas() {
 		}).then(() => console.log('blocked table created'))
 			.catch((err) => { throw err; })
 			// .finally(() => { knex.destroy(); });
+	}
+	if (!await knex.schema.hasTable('message')) {
+		knex.schema.createTable('message', (table) => {
+			table.string('chatID').notNullable()
+			table.string('sentBy').notNullable()
+			table.string('sentTo').notNullable()
+			table.specificType('time', 'BIGINT').defaultTo(Date.now())
+			table.string('message').notNullable()
+			table.boolean('read').defaultTo(false)
+		}).then(() => console.log('message table created'))
+			.catch((err) => { throw err; });
 	}
 }
 
