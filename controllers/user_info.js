@@ -4,6 +4,7 @@ const swig	= require('../app.js');
 const Validate	= require('./validate.class');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const knex = require('../database');
 
 // Landing page for updating user information.
 exports.updateinfo = (req, res, next) => {
@@ -28,14 +29,13 @@ exports.postusername = (req, res, next) => {
 		return(res.redirect('/updateinfo'));
 	}
 	key = req.session.user.verifkey;
-    User.findOneAndUpdate({verifkey: key}, {$set:{username:req.body.new_username}}, {new: true}, function(err, doc){
-		if(err){
-			console.log("Something wrong when updating data!");
-		}
-		req.session.user = doc;
-	});
-	req.session.user.username = req.body.new_username;
-	return (res.redirect('/updateinfo'));
+	knex('user')
+  		.where({verifkey: key})
+		.update({ username:req.body.new_username})
+		.then(()=> {
+			req.session.user.username = req.body.new_username;
+			return (res.redirect('/updateinfo'));
+		})
 }
 // GET name & surname
 exports.getname = (req, res, next) => {
@@ -52,16 +52,15 @@ exports.postname = (req, res, next) => {
 		req.flash('error_msg', 'No special characters or numbers allowed');
 		return(res.redirect('/updateinfo'));
 	}
-    key = req.session.user.verifkey;
-    User.findOneAndUpdate({verifkey: key}, {$set:{firstname:req.body.new_firstname, surname:req.body.new_surname}}, {new: true},function(err, doc){
-		if(err){
-			console.log("Something wrong when updating data!");
-		}
-		console.log("Name & Surname updated successfully");
-	});
-	req.session.user.firstname = req.body.new_firstname;
-	req.session.user.surname = req.body.new_surname;
-	return (res.redirect('/updateinfo'));
+	key = req.session.user.verifkey;
+	knex('user')
+  		.where({verifkey: key})
+		.update({ firstname:req.body.new_firstname, surname:req.body.new_surname })
+		.then(()=> {
+			req.session.user.firstname = req.body.new_firstname;
+			req.session.user.surname = req.body.new_surname;
+			return (res.redirect('/updateinfo'));
+		})
 }
 // GET age, and age pref.
 exports.getage = (req, res, next) => {
@@ -79,20 +78,16 @@ exports.postage = (req, res, next) => {
 		req.flash('error_msg', 'only numbers please');
 		return(res.redirect('/updateinfo'));
 	}
-    key = req.session.user.verifkey;
-    User.findOneAndUpdate({verifkey: key}, {$set:{age:req.body.new_age, agepreflower:req.body.new_agelower, ageprefupper:req.body.new_ageupper}}, {new: true},function(err, doc){
-		if(err){
-			console.log("Something wrong when updating data!");
-		}
-		console.log("Age & Preferences updated successfully");
-	});
-	req.session.user.age = req.body.new_age;
-	console.log(req.session.user.age);
-	req.session.user.agepreflower = req.body.new_agelower;
-	console.log(req.session.user.agepreflower);
-	req.session.user.ageprefupper = req.body.new_ageupper;
-	console.log(req.session.user.ageprefupper);
-	return (res.redirect('/updateinfo'));
+	key = req.session.user.verifkey;
+	knex('user')
+  		.where({verifkey: key})
+		.update({ age:req.body.new_age, agepreflower:req.body.new_agelower, ageprefupper:req.body.new_ageupper })
+		.then(()=> {
+			req.session.user.age = req.body.new_age;
+			req.session.user.agepreflower = req.body.new_agelower;
+			req.session.user.ageprefupper = req.body.new_ageupper;
+			return (res.redirect('/updateinfo'));
+		})
 }
 // GET maxdist
 exports.getmaxdist = (req, res, next) => {
@@ -108,16 +103,14 @@ exports.postmaxdist = (req, res, next) => {
 	} else {
 		message = null;
     }
-    key = req.session.user.verifkey;
-    User.findOneAndUpdate({verifkey: key}, {$set:{maxdist:req.body.new_maxdist}}, {new: true},function(err, doc){
-		if(err){
-			console.log("Something wrong when updating data!");
-		}
-		console.log("Maximum Distance updated successfully");
-	});
-	req.session.user.maxdist = req.body.new_maxdist;
-	console.log(req.session.user.maxdist);
-	return (res.redirect('/updateinfo'));
+	key = req.session.user.verifkey;
+	knex('user')
+  		.where({verifkey: key})
+		.update({ maxdist:req.body.new_maxdist })
+		.then(()=> {
+			req.session.user.maxdist = req.body.new_maxdist;
+			return (res.redirect('/updateinfo'));
+		})
 }
 // GET email
 exports.getemail = (req, res, next) => {
@@ -133,44 +126,42 @@ exports.postemail = (req, res, next) => {
 		req.flash('error_msg', 'Invalid Email');
 		return(res.redirect('/updateinfo'));
 	}
-    key = req.session.user.verifkey;
-    User.findOneAndUpdate({verifkey: key}, {$set:{verified:0}}, {new: true},function(err, doc){
-		if(err){
-			console.log("Something wrong when updating data!");
-		}
-		console.log("No longer Verified");
-	});
-	User.findOneAndUpdate({verifkey: key}, {$set:{email:req.body.new_email}}, {new: true},function(err, doc){
-		if(err){
-			console.log("Something wrong when updating data!");
-		}
-		console.log("Email Updated Successfully");
-	});
-	var transporter = nodemailer.createTransport({
-		service: 'gmail',
-		auth: {
-			user: "wethinkcodematcha@gmail.com",
-			pass: "Matcha1matcha"
-		}
-	});
-	var mailOptions = {
-		from: 'wethinkcodematcha@gmail.com',
-		to: req.body.new_email,
-		subject: 'Confirm Your new email',
-		html: `
-		<h1>Click here to verify your new email!</h1>
-		<p>Click this <a href="http://localhost:8000/confirm?key=${key}">link</a> to confirm your account.</p>
-		`
-	};
-	transporter.sendMail(mailOptions, function(error, info){
-		if (error) {
-			console.log(error);
-		} else {
-			console.log('Email sent: ' + info.response);
-		}
-	});
-	req.session.user.email = req.body.new_email;
-	return (res.redirect('/updateinfo'));
+	key = req.session.user.verifkey;
+	knex('user')
+  		.where({verifkey: key})
+		.update({ verified:0 })
+		.then(()=> {
+			knex('user')
+  			.where({verifkey: key})
+			.update({ email:req.body.new_email})
+			.then(()=> {
+				var transporter = nodemailer.createTransport({
+					service: 'gmail',
+					auth: {
+						user: "wethinkcodematcha@gmail.com",
+						pass: "Matcha1matcha"
+					}
+				});
+				var mailOptions = {
+					from: 'wethinkcodematcha@gmail.com',
+					to: req.body.new_email,
+					subject: 'Confirm Your new email',
+					html: `
+					<h1>Click here to verify your new email!</h1>
+					<p>Click this <a href="http://localhost:8000/confirm?key=${key}">link</a> to confirm your account.</p>
+					`
+				};
+				transporter.sendMail(mailOptions, function(error, info){
+					if (error) {
+						console.log(error);
+					} else {
+						console.log('Email sent: ' + info.response);
+					}
+				});
+				req.session.user.email = req.body.new_email;
+				return (res.redirect('/updateinfo'));
+			})
+		})
 }
 // GET password
 exports.getpassword = (req, res, next) => {
@@ -192,14 +183,12 @@ exports.postpassword = (req, res, next) => {
 		hashpw = crypto.createHash('whirlpool').update(req.body.old_password).digest('hex');
 		newhashpw = crypto.createHash('whirlpool').update(req.body.new_password).digest('hex');
 		key = req.session.user.verifkey;
-		User.findOneAndUpdate({verifkey: key, password: hashpw}, {$set:{password: newhashpw}}, {new: true},function(err, doc){
-			if(err){
-				console.log("Something wrong when updating data!");
-			}
-			console.log("Password updated successfully");
-			// loggin the user out.
+		knex('user')
+  		.where({verifkey: key, password: hashpw})
+		.update({ password: newhashpw})
+		.then(()=> {
 			req.session.user = 0;
-		});
+		})
 	}
 	else {
 		req.flash('error_msg', 'Passwords do not match');
@@ -215,14 +204,13 @@ exports.getabout = (req, res, next) => {
 // POST about
 exports.postabout = (req, res, next) => {
 	key = req.session.user.verifkey;
-	User.findOneAndUpdate({verifkey: key}, {$set:{about:req.body.new_about}}, {new: true},function(err, doc){
-		if(err){
-			console.log("Something wrong when updating data!");
-		}
-		console.log("About me updated successfully");
-	});
-	req.session.user.about = req.body.new_about;
-	return (res.redirect('/updateinfo'));
+	knex('user')
+  		.where({verifkey: key})
+		.update({ about:req.body.new_about})
+		.then(()=> {
+			req.session.user.about = req.body.new_about;
+			return (res.redirect('/updateinfo'));
+		})
 }
 // GET location
 exports.getlocation = (req, res, next) => {
@@ -232,12 +220,11 @@ exports.getlocation = (req, res, next) => {
 exports.postlocation = (req, res, next) => {
 	key = req.session.user.verifkey;
 	var new_loc = [req.body.new_postal, req.body.new_city, req.body.new_province];
-	User.findOneAndUpdate({verifkey: key}, {$set:{location:new_loc}}, {new: true},function(err, doc){
-		if(err){
-			console.log("Something wrong when updating data!");
-		}
-		console.log("Location updated successfully");
-	});
-	req.session.user.location = new_loc;
-	return (res.redirect('/updateinfo'));
+	knex('user')
+  		.where({verifkey: key})
+		.update({ location:new_loc})
+		.then(()=> {
+			req.session.user.location = new_loc;
+			return (res.redirect('/updateinfo'));
+		})
 }
