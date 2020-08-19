@@ -2,6 +2,7 @@ const Message	= require("../models/messages.js");
 const User= require("../models/umod.js");
 const Likes = require('../models/likemod');
 const Notifications = require('../models/notifmod');
+const knex = require('../database');
 const nodemailer = require('nodemailer');
 const io = require('../app.js');
 
@@ -36,23 +37,41 @@ module.exports = function(connectedUsers) {
 
 		// adds email and socket id to connectedUsers arr on login
 		socket.on('login', function(data) {
-			User.findOne({email: data.email}, function(err, doc) {
-				if (err) throw error;
-				if (doc) {
-					var verif = 0;
-					user.user = doc.username;
-					user.socketId = socket.id;
-					for (var i in connectedUsers) {
-						if (connectedUsers[i].user == doc.username) {
-							connectedUsers[i].socketId = user.socketId;
-							verif = 1;
+			knex('user')
+				.where({email: data.email})
+				.then((user) => {
+					if (user.length > 0) {
+						var verif = 0;
+						user.user = doc.username;
+						user.socketId = socket.id;
+						for (var i in connectedUsers) {
+							if (connectedUsers[i].user == doc.username) {
+								connectedUsers[i].socketId = user.socketId;
+								verif = 1;
+							};
 						};
-					};
-					if (verif == 0) {
-						connectedUsers.push(user);
-					};
-				}
-			});
+						if (verif == 0) {
+							connectedUsers.push(user);
+						};
+					}
+				}).catch((err) => { throw err; });
+			// User.findOne({email: data.email}, function(err, doc) {
+			// 	if (err) throw error;
+			// 	if (doc) {
+			// 		var verif = 0;
+			// 		user.user = doc.username;
+			// 		user.socketId = socket.id;
+			// 		for (var i in connectedUsers) {
+			// 			if (connectedUsers[i].user == doc.username) {
+			// 				connectedUsers[i].socketId = user.socketId;
+			// 				verif = 1;
+			// 			};
+			// 		};
+			// 		if (verif == 0) {
+			// 			connectedUsers.push(user);
+			// 		};
+			// 	}
+			// });
 		});
 
 		// updates the connectedusers array to get the new socket id coming from client side
@@ -69,18 +88,29 @@ module.exports = function(connectedUsers) {
 				user.socketId = data.id
 				connectedUsers.push(user);
 			}
-			User.findOne({username: data.user}, (err, doc) => {
-				if (doc) {
-					if (doc.notif > 0 && data.page == "http://localhost:8000/") {
+			knex('user')
+				.where({username: data.user})
+				.then((user) => {
+					if (user.notif > 0 && data.page == "http://localhost:3000/") {
 						io.sockets.to(data.id).emit('new_notification', {message: "You have " + doc.notif + " notification/s, please check your email"});
-						User.findOneAndUpdate({username: data.user}, {$set: {notif: 0}}, (err, doc) => {
-							if (err) {
-								console.log(err);
-							}
-						})
-					};
-				};
-			})
+						knex('user')
+							.where({username: data.user})
+							.update({notif: 0})
+							.catch((err) => { throw err; });
+					}
+				}).catch((err) => { throw err; });
+			// User.findOne({username: data.user}, (err, doc) => {
+			// 	if (doc) {
+			// 		if (doc.notif > 0 && data.page == "http://localhost:8000/") {
+			// 			io.sockets.to(data.id).emit('new_notification', {message: "You have " + doc.notif + " notification/s, please check your email"});
+			// 			User.findOneAndUpdate({username: data.user}, {$set: {notif: 0}}, (err, doc) => {
+			// 				if (err) {
+			// 					console.log(err);
+			// 				}
+			// 			})
+			// 		};
+			// 	};
+			// })
 		})
 
 		// message handler
@@ -94,34 +124,59 @@ module.exports = function(connectedUsers) {
 					io.sockets.to(connectedUsers[i].socketId).emit('message_notification', {message: data.message, username: data.chatFrom, chatID: data.chatID});
 				}
 			}
-			User.findOne({username: data.chatTo}, (err, doc) => {
-				if (doc.loggedIn === false) {
-					sendEmail(doc.email, `You have a new message from ${data.chatFrom}`, "You have a new message");
-					var notification = new Notifications({
-						notifiedUser: doc.username,
-						notifType: "message",
-						notifBody: `You have a new message from ${data.chatFrom}`
-					});
-					notification.save(err => {
-						if (err) {
-							res.status(400).send(err);
-						}
-					});
-					var notifs = doc.notif + 1;
-					User.findOneAndUpdate({username: data.chatTo}, {$set:{notif: notifs}}, (err, doc) => {
-						if (err) {
-							console.log(err);
-						}
-					})
-				}
-			})
-			var newMessage = new Message({
+			knex('user')
+				.where({username: data.chatTo})
+				.then((user) => {
+					if (user.loggedIn == false) {
+						sendEmail(doc.email, `You have a new message from ${data.chatFrom}`, "You have a new message");
+						var notification = new Notifications({
+							notifiedUser: doc.username,
+							notifType: "message",
+							notifBody: `You have a new message from ${data.chatFrom}`
+						});
+						notification.save(err => {
+							if (err) {
+								res.status(400).send(err);
+							}
+						});
+						var notifs = doc.notif + 1;
+						knex('user')
+							.where({username: data.chatTo})
+							.update({notif: notifs})
+							.catch((err) => { throw err; });
+					}
+				}).catch((err) => { throw err; });
+			// User.findOne({username: data.chatTo}, (err, doc) => {
+			// 	if (doc.loggedIn === false) {
+			// 		sendEmail(doc.email, `You have a new message from ${data.chatFrom}`, "You have a new message");
+			// 		var notification = new Notifications({
+			// 			notifiedUser: doc.username,
+			// 			notifType: "message",
+			// 			notifBody: `You have a new message from ${data.chatFrom}`
+			// 		});
+			// 		notification.save(err => {
+			// 			if (err) {
+			// 				res.status(400).send(err);
+			// 			}
+			// 		});
+			// 		var notifs = doc.notif + 1;
+			// 		User.findOneAndUpdate({username: data.chatTo}, {$set:{notif: notifs}}, (err, doc) => {
+			// 			if (err) {
+			// 				console.log(err);
+			// 			}
+			// 		})
+			// 	}
+			// })
+			var newMessage = {
 				chatID: [data.chatFrom, data.chatTo].sort().join('-'),
 				sentBy: data.chatFrom,
 				sentTo: data.chatTo,
 				message: data.message
-			});
-			newMessage.save();
+			};
+			knex('message')
+				.insert(newMessage)
+				.catch((err) => { throw err; });
+			// newMessage.save();
 		});
 
 		// notif on like handler
