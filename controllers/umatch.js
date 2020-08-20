@@ -1,11 +1,7 @@
 const knex = require('../database');
-const User = require('../models/umod');
-const Likes = require('../models/likemod');
 const Filter = require('./filter.class')
 const path	= require('path');
 const nodemailer = require('nodemailer');
-const Notifications = require('../models/notifmod');
-const Message = require('../models/messages');
 var currUser;
 var filters = new Filter();
 
