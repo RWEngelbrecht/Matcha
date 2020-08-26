@@ -513,18 +513,23 @@ exports.getinterests = (req, res, next) => {
 // }
 exports.postinterests = (req, res, next) => {
 	const { interests } = req.body;
-	// req.session.user.interests = [];
+	// when req.body has 1 value, it is "String", if values >1, it is ["String"]
+	req.session.user.interests = [];
 	var currUser = req.session.user;
 	var updateInterests = [];
 	for (var interest of interests) {
-		if (!req.session.user.interests.includes(interest))
-			updateInterests.push({user_id: currUser.id, interest: interest});
+		updateInterests.push({user_id: currUser.id, interest: interest});
+		req.session.user.interests.push(interest);
 	}
+	console.log(updateInterests)
+	knex('interest')
+		.where({user_id: currUser.id})
+		.del()
+		.then(() => console.log("Interests deleted"))
 	knex('interest')
 		.insert(updateInterests)
 		.then(() => {
-			for (var interest in updateInterests)
-				req.session.user.interests.push(interest.interest);
+			console.log("req.session.user.interests", req.session.user.interests);
 		})
 		.finally(() => { return (res.redirect('/')); })
 		.catch((err) => console.log('Something went wrong when inserting interest!', err));
