@@ -3,6 +3,7 @@ const path      = require('path');
 const router	= express.Router();
 const Message	= require('../models/messages');
 const User      = require('../models/umod');
+const knex = require('../database');
 var from, to, chatID;
 
 
@@ -13,11 +14,14 @@ router.get('/messages', (req, res) => {
     }
 	var currUser = req.session.user;
 	// Message.find({$or: [{sentTo: currUser.username}, {sentBy: currUser.username}]}).distinct('chatID',(err, chats) => {
-        // wtf i need to figure out this query
-		var chatters = [];
-		var conversations = [];
+        knex('message')
+            .where({sentTo: currUser.username, sentBy: currUser.username})
+            .distinct('chatID')
+            .then((doc) => {
+                var chatters = [];
+		    var conversations = [];
 
-		chats.forEach(chat => {
+		    chats.forEach(chat => {
 			chatters = chat.split('-');
 			conversations.push({
                 id: chat,
@@ -25,10 +29,11 @@ router.get('/messages', (req, res) => {
                     return value != currUser.username;
                 })
 			});
-		});
+		    });
 		res.render(path.resolve('views/chat'), {chats: conversations, user: currUser});
-	});
-})
+    })
+		
+});
 
 
 router.get('/messages/:id', (req, res) => {
@@ -38,17 +43,20 @@ router.get('/messages/:id', (req, res) => {
     from = req.session.user.username;
     chatID = req.params.id;
     var chatters = req.params.id.split('-');
-    User.findOne({$and: [{username: {$in: chatters}}, {username: {$ne: from} }]})
-    .then(toUsr => {
-        to = toUsr.username;
-        Message.updateMany({chatID: chatID, sentTo: from}, {read:true}, (err, chat) => {
-            if (err) {
-                console.error(err);
-            }
-        });
-        Message.find({chatID: chatID}, (err, messages) => {
-            res.render(path.resolve('views/messages'), {messages: messages, chatFrom: from, chatTo: to, chatID: chatID, user: req.session.user});
-        });
+    // User.findOne({$and: [{username: {$in: chatters}}, {username: {$ne: from} }]})
+    knex('user')
+        .whereIn({username: chatters})
+        .andNotIn({username: [from]})
+        .then(toUsr => {
+            to = toUsr.username;
+            knex('message')
+                .where({chatID: chatID, sentTo: from})
+                .update({read:true})
+            knex('message')
+                .where({chatID: chatID})
+                .then((messages) => {
+                    res.render(path.resolve('views/messages'), {messages: messages, chatFrom: from, chatTo: to, chatID: chatID, user: req.session.user});          
+                })
     });
 });
 
