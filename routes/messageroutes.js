@@ -12,8 +12,8 @@ router.get('/messages', (req, res) => {
         res.redirect('/login');
     }
 	var currUser = req.session.user;
-	Message.find({$or: [{sentTo: currUser.username}, {sentBy: currUser.username}]}).distinct('chatID',(err, chats) => {
-
+	// Message.find({$or: [{sentTo: currUser.username}, {sentBy: currUser.username}]}).distinct('chatID',(err, chats) => {
+        // wtf i need to figure out this query
 		var chatters = [];
 		var conversations = [];
 

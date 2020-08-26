@@ -108,7 +108,7 @@ async function createSchemas() {
 			table.integer('ageprefupper').notNullable()
 			table.string('about').notNullable()
 			table.string('verifkey').notNullable()
-			table.integer('notif').defaultTo(0);
+			table.integer('notif').defaultTo(0)
 			table.boolean('verified').defaultTo(false)
 			table.integer('maxdist').defaultTo(50)
 			table.specificType('lastSeen', 'BIGINT').defaultTo(Date.now())
