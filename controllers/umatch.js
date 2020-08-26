@@ -72,39 +72,40 @@ exports.getMatchSuggestions = (req, res, next) => {
 					for (var block of blocked) {
 						blockedUsers.push(block.blocked);
 					}
-				}).catch((err) => { throw err; })
-		})
-		.then(() => {
-			knex('user')
-				.whereNotIn('id', blockedUsers)
-				.andWhereNot({id: currUser.id})
-				.andWhere({gender: currUser.genderpref, genderpref: currUser.gender})
-				.andWhere('age', '>=', currUser.agepreflower)
-				.andWhere('age', '<=', currUser.ageprefupper)
-				.orderBy('fame', 'desc')
-				.then((matches) => {
-					if (matches.length === 0) {
-						console.log('No matches for you!');
-						res.redirect('/');
-					}
-					knex('interest')
-						.select()
-						.then((interests) => {
-							matches.forEach((match) => {
-								match.interests = interests.filter(interest => interest.user_id === match.id);
-							});
-						})
-						.then(() => {
-							possibleMatches = matches;
-						}).then(() => {
-							var interestMatches = filters.getInterestMatches(currUser, possibleMatches);
-							var likeableMatches = filters.getLikeableMatches(likedUsers, interestMatches);
-							var filteredMatches = filters.FilterFrom(currUser, likeableMatches)
-							return filteredMatches;
-						}).then((filteredMatches) => {
-							res.render(path.resolve('views/suggestions'), {matches: filteredMatches, filters: filters.filterBy, loggedUser: currUser, user: currUser});
+				})
+				.then(() => {
+					knex('user')
+						.whereNotIn('id', blockedUsers)
+						.andWhereNot({id: currUser.id})
+						.andWhere({gender: currUser.genderpref, genderpref: currUser.gender})
+						.andWhere('age', '>=', currUser.agepreflower)
+						.andWhere('age', '<=', currUser.ageprefupper)
+						.orderBy('fame', 'desc')
+						.then((matches) => {
+							if (matches.length === 0) {
+								console.log('No matches for you!');
+								res.redirect('/');
+							} else {
+								knex('interest')
+									.select()
+									.then((interests) => {
+										matches.forEach((match) => {
+											match.interests = interests.filter(interest => interest.user_id === match.id);
+										});
+									})
+									.then(() => {
+										possibleMatches = matches;
+									}).then(() => {
+										var interestMatches = filters.getInterestMatches(currUser, possibleMatches);
+										var likeableMatches = filters.getLikeableMatches(likedUsers, interestMatches);
+										var filteredMatches = filters.FilterFrom(currUser, likeableMatches)
+										return filteredMatches;
+									}).then((filteredMatches) => {
+										res.render(path.resolve('views/suggestions'), {matches: filteredMatches, filters: filters.filterBy, loggedUser: currUser, user: currUser});
+									}).catch((err) => { throw err; });
+							}
 						}).catch((err) => { throw err; });
-				}).catch((err) => { throw err; });
+				}).catch((err) => { throw err; })
 		}).catch((err) => {
 			res.status(400).send(err);
 		});
@@ -168,7 +169,7 @@ exports.getMatches = (req, res, next) => {
 						});
 						knex('blocked')
 							.where({blockBy: currUser.id})
-							.andWhere({blocked: currUser.id})
+							.orWhere({blocked: currUser.id})
 							.then((blocked) => {
 								for (var block of blocked) {
 									blockedUsers.push(block.blocked);
