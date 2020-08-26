@@ -484,7 +484,9 @@ exports.getinterests = (req, res, next) => {
 		knex('interest')
 			.where({user_id: req.session.user.id})
 			.then((rows) => {
-				var interests = rows;
+				var interests = rows.map((val) => {
+					return val.interest;
+				});
 				var all_interests = all_pos_interests;
 				return (res.render(path.resolve('views/interests'), {interests, all_interests}));
 			}).catch((err) => {
@@ -511,15 +513,21 @@ exports.getinterests = (req, res, next) => {
 // }
 exports.postinterests = (req, res, next) => {
 	const { interests } = req.body;
-	req.session.user.interests = [];
+	// req.session.user.interests = [];
 	var currUser = req.session.user;
+	var updateInterests = [];
 	for (var interest of interests) {
-		knex('interest')
-			.insert({user_id: currUser.id, interest: interest})
-			.then(() => { req.session.user.interests.push(interest) })
-			.catch((err) => console.log('Something went wrong when inserting interest!', err));
+		if (!req.session.user.interests.includes(interest))
+			updateInterests.push({user_id: currUser.id, interest: interest});
 	}
-	return (res.redirect('/'));
+	knex('interest')
+		.insert(updateInterests)
+		.then(() => {
+			for (var interest in updateInterests)
+				req.session.user.interests.push(interest.interest);
+		})
+		.finally(() => { return (res.redirect('/')); })
+		.catch((err) => console.log('Something went wrong when inserting interest!', err));
 }
 
 // exports.getProfile = (req, res, next) => {
