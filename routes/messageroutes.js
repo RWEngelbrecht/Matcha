@@ -15,20 +15,22 @@ router.get('/messages', (req, res) => {
 	var currUser = req.session.user;
 	// Message.find({$or: [{sentTo: currUser.username}, {sentBy: currUser.username}]}).distinct('chatID',(err, chats) => {
         knex('message')
-            .where({sentTo: currUser.username, sentBy: currUser.username})
+            .where({sentTo: currUser.username})
+            .orWhere({sentBy: currUser.username})
             .distinct('chatID')
             .then((doc) => {
+                console.log("HERE " + JSON.stringify(doc))
                 var chatters = [];
-		    var conversations = [];
+		        var conversations = [];
 
-		    chats.forEach(chat => {
-			chatters = chat.split('-');
-			conversations.push({
-                id: chat,
-                chatTo: chatters.filter(function(value) {
-                    return value != currUser.username;
-                })
-			});
+		        doc.forEach(chat => {
+			    chatters = chat.chatID.split('-');
+			    conversations.push({
+                    id: chat.chatID,
+                    chatTo: chatters.filter(function(value) {
+                        return value != currUser.username;
+                    })
+			    });
 		    });
 		res.render(path.resolve('views/chat'), {chats: conversations, user: currUser});
     })
@@ -51,7 +53,7 @@ router.get('/messages/:id', (req, res) => {
     knex('user')
         .where({username: chatters[0]})
         .then(toUsr => {
-            to = toUsr.username;
+            to = toUsr[0].username;
             knex('message')
                 .where({chatID: chatID, sentTo: from})
                 .update({read:true})

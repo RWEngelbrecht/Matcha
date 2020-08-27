@@ -82,6 +82,8 @@ module.exports = function(connectedUsers) {
 
 		// message handler
 		socket.on('new_message', (data) => {
+			console.log("HERE")
+			console.log(data)
 			for (var i in connectedUsers) {
 				if (connectedUsers[i].user === data.chatFrom && data.message != '') {
 					io.sockets.to(connectedUsers[i].socketId).emit('new_message', {message: data.message, username: data.chatFrom, chatID: data.chatID});
@@ -96,18 +98,16 @@ module.exports = function(connectedUsers) {
 				// User.findOne({username: data.chatTo}, (err, doc) => {
 				if (doc.loggedIn === false) {
 					sendEmail(doc.email, `You have a new message from ${data.chatFrom}`, "You have a new message");
-					var notifs = doc.notif + 1;	
+					var notifs = doc.notif + 1;
+					knex('user').where({username: data.chatTo}).update({notif: notifs})	
 				}
-			})
-			.then(() => {
-				knex('user').where({username: data.chatTo}).update({notif: notifs})
 			})
 			knex('message')
 			.insert({ chatID: [data.chatFrom, data.chatTo].sort().join('-'),
 				sentBy: data.chatFrom,
 				sentTo: data.chatTo,
 				message: data.message
-		 	})
+		 	}).then(() => {})
 		});
 
 		// notif on like handler
