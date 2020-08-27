@@ -1,7 +1,3 @@
-const Message	= require("../models/messages.js");
-const User= require("../models/umod.js");
-const Likes = require('../models/likemod');
-const Notifications = require('../models/notifmod');
 const nodemailer = require('nodemailer');
 const io = require('../app.js');
 const knex = require("../database.js");
@@ -113,7 +109,6 @@ module.exports = function(connectedUsers) {
 		// notif on like handler
 		socket.on('new_like', (data) => {
 			knex('user')
-			// broken
   				.where({ usernamers: data.liked })
   				.then(user_likes => {
 					var match = 0;

@@ -240,7 +240,6 @@ class Filter {
 		} else {
 			resolve (filteredMatches);
 		}
-		// return (filteredMatches);
 	})
 	}
 }

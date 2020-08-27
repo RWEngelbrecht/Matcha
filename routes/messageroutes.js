@@ -13,9 +13,8 @@ router.get('/messages', (req, res) => {
         res.redirect('/login');
     }
     else {
-	    var currUser = req.session.user;
-	    // Message.find({$or: [{sentTo: currUser.username}, {sentBy: currUser.username}]}).distinct('chatID',(err, chats) => {
-            knex('message')
+        var currUser = req.session.user;
+        knex('message')
                 .where({sentTo: currUser.username})
                 .orWhere({sentBy: currUser.username})
                 .distinct('chatID')
@@ -50,7 +49,6 @@ router.get('/messages/:id', (req, res) => {
     if (index > -1) {
        chatters.splice(index, 1);
     }
-    // User.findOne({$and: [{username: {$in: chatters}}, {username: {$ne: from} }]})
     knex('user')
         .where({username: chatters[0]})
         .then(toUsr => {
