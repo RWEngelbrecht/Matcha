@@ -43,10 +43,13 @@ router.get('/messages/:id', (req, res) => {
     from = req.session.user.username;
     chatID = req.params.id;
     var chatters = req.params.id.split('-');
+    var index = chatters.indexOf(from);
+    if (index > -1) {
+       chatters.splice(index, 1);
+    }
     // User.findOne({$and: [{username: {$in: chatters}}, {username: {$ne: from} }]})
     knex('user')
-        .whereIn({username: chatters})
-        .andNotIn({username: [from]})
+        .where({username: chatters[0]})
         .then(toUsr => {
             to = toUsr.username;
             knex('message')

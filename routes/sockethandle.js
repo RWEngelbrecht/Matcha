@@ -96,16 +96,6 @@ module.exports = function(connectedUsers) {
 				// User.findOne({username: data.chatTo}, (err, doc) => {
 				if (doc.loggedIn === false) {
 					sendEmail(doc.email, `You have a new message from ${data.chatFrom}`, "You have a new message");
-					var notification = new Notifications({
-						notifiedUser: doc.username,
-						notifType: "message",
-						notifBody: `You have a new message from ${data.chatFrom}`
-					});
-					notification.save(err => {
-						if (err) {
-							res.status(400).send(err);
-						}
-					});
 					var notifs = doc.notif + 1;	
 				}
 			})
