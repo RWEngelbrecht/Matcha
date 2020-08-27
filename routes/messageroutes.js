@@ -12,29 +12,30 @@ router.get('/messages', (req, res) => {
     if (req.session.user == 0 || !req.session.user) {
         res.redirect('/login');
     }
-	var currUser = req.session.user;
-	// Message.find({$or: [{sentTo: currUser.username}, {sentBy: currUser.username}]}).distinct('chatID',(err, chats) => {
-        knex('message')
-            .where({sentTo: currUser.username})
-            .orWhere({sentBy: currUser.username})
-            .distinct('chatID')
-            .then((doc) => {
-                console.log("HERE " + JSON.stringify(doc))
-                var chatters = [];
-		        var conversations = [];
+    else {
+	    var currUser = req.session.user;
+	    // Message.find({$or: [{sentTo: currUser.username}, {sentBy: currUser.username}]}).distinct('chatID',(err, chats) => {
+            knex('message')
+                .where({sentTo: currUser.username})
+                .orWhere({sentBy: currUser.username})
+                .distinct('chatID')
+                .then((doc) => {
+                    console.log("HERE " + JSON.stringify(doc))
+                    var chatters = [];
+	    	        var conversations = [];
 
-		        doc.forEach(chat => {
-			    chatters = chat.chatID.split('-');
-			    conversations.push({
-                    id: chat.chatID,
-                    chatTo: chatters.filter(function(value) {
-                        return value != currUser.username;
-                    })
-			    });
-		    });
-		res.render(path.resolve('views/chat'), {chats: conversations, user: currUser});
-    })
-		
+	    	        doc.forEach(chat => {
+	    		    chatters = chat.chatID.split('-');
+	    		    conversations.push({
+                        id: chat.chatID,
+                        chatTo: chatters.filter(function(value) {
+                            return value != currUser.username;
+                        })
+	    		    });
+	    	    });
+	    	res.render(path.resolve('views/chat'), {chats: conversations, user: currUser});
+        })
+    }
 });
 
 
