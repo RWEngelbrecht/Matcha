@@ -7,6 +7,7 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const iplocation = require("iplocation").default;
 const fs = require('fs');
+const { type } = require('os');
 global.loc = [];
 var all_pos_interests = [
 	'Octopi / Octopuses / Octopodes',
@@ -513,15 +514,19 @@ exports.getinterests = (req, res, next) => {
 // }
 exports.postinterests = (req, res, next) => {
 	const { interests } = req.body;
-	// when req.body has 1 value, it is "String", if values >1, it is ["String"]
+	// when req.body has 1 value, it is "String", if values >1, it is ["String", "String"]
 	req.session.user.interests = [];
 	var currUser = req.session.user;
 	var updateInterests = [];
-	for (var interest of interests) {
-		updateInterests.push({user_id: currUser.id, interest: interest});
-		req.session.user.interests.push(interest);
+	if (Array.isArray(interests)) {
+		for (var interest of interests) {
+			updateInterests.push({user_id: currUser.id, interest: interest});
+			req.session.user.interests.push(interest);
+		}
+	} else {
+		updateInterests.push({user_id: currUser.id, interest: interests});
+		req.session.user.interests.push(interests);
 	}
-	console.log(updateInterests)
 	knex('interest')
 		.where({user_id: currUser.id})
 		.del()
