@@ -1,9 +1,7 @@
-const Message	= require("../models/messages.js");
-const User= require("../models/umod.js");
-const Likes = require('../models/likemod');
-const Notifications = require('../models/notifmod');
 const nodemailer = require('nodemailer');
 const io = require('../app.js');
+const knex = require("../database.js");
+const Knex = require("knex");
 
 function sendEmail(to, message, subject) {
 
@@ -36,9 +34,8 @@ module.exports = function(connectedUsers) {
 
 		// adds email and socket id to connectedUsers arr on login
 		socket.on('login', function(data) {
-			User.findOne({email: data.email}, function(err, doc) {
-				if (err) throw error;
-				if (doc) {
+			knex.select('username').from('user').where({email: data.email})
+				.then(doc => {
 					var verif = 0;
 					user.user = doc.username;
 					user.socketId = socket.id;
@@ -51,8 +48,7 @@ module.exports = function(connectedUsers) {
 					if (verif == 0) {
 						connectedUsers.push(user);
 					};
-				}
-			});
+				});
 		});
 
 		// updates the connectedusers array to get the new socket id coming from client side
@@ -69,22 +65,21 @@ module.exports = function(connectedUsers) {
 				user.socketId = data.id
 				connectedUsers.push(user);
 			}
-			User.findOne({username: data.user}, (err, doc) => {
-				if (doc) {
-					if (doc.notif > 0 && data.page == "http://localhost:8000/") {
+			knex.select('notif').from('user').where({username: data.user})
+				.then(doc => {
+					if (doc.notif > 0 && data.page == "http://localhost:3001/") {
 						io.sockets.to(data.id).emit('new_notification', {message: "You have " + doc.notif + " notification/s, please check your email"});
-						User.findOneAndUpdate({username: data.user}, {$set: {notif: 0}}, (err, doc) => {
-							if (err) {
-								console.log(err);
-							}
-						})
+						knex('user')
+  							.where({username: data.user})
+							.update({ notif: 0})
 					};
-				};
-			})
+				})
 		})
 
 		// message handler
 		socket.on('new_message', (data) => {
+			console.log("HERE")
+			console.log(data)
 			for (var i in connectedUsers) {
 				if (connectedUsers[i].user === data.chatFrom && data.message != '') {
 					io.sockets.to(connectedUsers[i].socketId).emit('new_message', {message: data.message, username: data.chatFrom, chatID: data.chatID});
@@ -94,126 +89,83 @@ module.exports = function(connectedUsers) {
 					io.sockets.to(connectedUsers[i].socketId).emit('message_notification', {message: data.message, username: data.chatFrom, chatID: data.chatID});
 				}
 			}
-			User.findOne({username: data.chatTo}, (err, doc) => {
+			knex.select('loggedIn', 'email', 'username').from('user').where({username: data.chatTo})
+			.then(doc => {
+				// User.findOne({username: data.chatTo}, (err, doc) => {
 				if (doc.loggedIn === false) {
 					sendEmail(doc.email, `You have a new message from ${data.chatFrom}`, "You have a new message");
-					var notification = new Notifications({
-						notifiedUser: doc.username,
-						notifType: "message",
-						notifBody: `You have a new message from ${data.chatFrom}`
-					});
-					notification.save(err => {
-						if (err) {
-							res.status(400).send(err);
-						}
-					});
 					var notifs = doc.notif + 1;
-					User.findOneAndUpdate({username: data.chatTo}, {$set:{notif: notifs}}, (err, doc) => {
-						if (err) {
-							console.log(err);
-						}
-					})
+					knex('user').where({username: data.chatTo}).update({notif: notifs})	
 				}
 			})
-			var newMessage = new Message({
-				chatID: [data.chatFrom, data.chatTo].sort().join('-'),
+			knex('message')
+			.insert({ chatID: [data.chatFrom, data.chatTo].sort().join('-'),
 				sentBy: data.chatFrom,
 				sentTo: data.chatTo,
 				message: data.message
-			});
-			newMessage.save();
+		 	}).then(() => {})
 		});
 
 		// notif on like handler
 		socket.on('new_like', (data) => {
-			Likes.find({liker: data.liked}, (err, user_likes) => {
-				var match = 0;
-				user_likes.forEach(user => {
+			knex('user')
+  				.where({ usernamers: data.liked })
+  				.then(user_likes => {
+					var match = 0;
+					user_likes.forEach(user => {
 					if (user.liked === data.liker) {
-						// you have a match
-						User.findOne({username: data.liked}, function (err, doc){
-							var notifs = doc.notif + 1
-							if (doc.loggedIn === false) {
-								var notification = new Notifications({
-									notifiedUser: doc.username,
-									notifType: "like",
-									notifBody: `You have a new match with ${data.liker}`
-								});
-								notification.save(err => {
-									if (err) {
-										res.status(400).send(err);
-									}
-								});
-								User.findOneAndUpdate({username: data.liked}, {$set:{notif: notifs}}, function(err, doc) {
-									if (err) {
-										console.log(err);
-									}
-								});
-								sendEmail(doc.email, `You have a new match with ${data.liker}`, "You have a new match");
-							}
+						knex('like')
+  							.where({username: data.liked})
+							.then((doc) => {
+								var notifs = doc.notif + 1
+								knex('user')
+								.where({username: data.liked})
+								.update({notif: notifs})
+								.then(() => {
+									sendEmail(doc.email, `You have a new match with ${data.liker}`, "You have a new match");
+							})
 						})
 						for(var i in connectedUsers) {
 							if (connectedUsers[i].user === data.liked) {
 								io.sockets.to(connectedUsers[i].socketId).emit('new_notification', {message: "You have a new match with", user: data.liker});
 							}
 						}
-					}
-				});
+					}	  
+				})
 				if (match === 0) {
-					User.findOne({username: data.liked}, function (err, doc){
+					knex('user')
+					.where({username: data.liked})
+					.then((doc) => {
 						var notifs = doc.notif + 1
-						if (doc.loggedIn === false) {
-							var notification = new Notifications({
-								notifiedUser: doc.username,
-								notifType: "like",
-								notifBody: `You have been liked by ${data.liker}`
-							});
-							notification.save(err => {
-								if (err) {
-									res.status(400).send(err);
-								}
-							});
-							User.findOneAndUpdate({username: data.liked}, {$set:{notif: notifs}}, function(err, doc) {
-								if (err) {
-									console.log(err);
-								}
-							});
-							sendEmail(doc.email, `You have been liked by ${data.liker}`, "You have a new like");
-						}
+						knex('user')
+							.where({username: data.liked})
+							.update({notif: notifs})
+							.then(() => {
+								sendEmail(doc.email, `You have been liked by ${data.liker}`, "You have a new like");
+						})
 					})
 					for(var i in connectedUsers) {
 						if (connectedUsers[i].user === data.liked) {
 							io.sockets.to(connectedUsers[i].socketId).emit('new_notification', {message: "You have been liked by", user: data.liker});
 						}
 					}
-				};
+				}
 			});
 		});
 
 		// listen for a new view
 		socket.on('new_view', (data) => {
-			console.log("Connected Users-->", connectedUsers);
-			console.log("DATA -->", data);
-			User.findOne({username: data.viewed}, (err, doc) => {
-				var notifs = doc.notif + 1
-				if (doc.loggedIn === false) {
-					var notification = new Notifications({
-						notifiedUser: doc.username,
-						notifType: "view",
-						notifBody: `You have been viewed ${data.viewer}`
-					});
-					notification.save(err => {
-						if (err) {
-							res.status(400).send(err);
-						}
-					});
-					User.findOneAndUpdate({username: data.liked}, {$set:{notif: notifs}}, function(err, doc) {
-						if (err) {
-							console.log(err);
-						}
-					});
-					sendEmail(doc.email, `You have been viewed by ${data.viewer}`, "You have been viewed");
-				}
+			knex('user')
+				.where({username: data.viewed})
+				.then((doc) => {
+					var notifs = doc.notif + 1
+					knew('user')
+						.where({username: data.viewed})
+						.update({notif: notifs})
+						.then(() => {
+							sendEmail(doc.email, `You have been viewed by ${data.viewer}`, "You have been viewed");
+						})
+				})
 				var exist = 0;
 				doc.viewedBy.forEach(eye => {
 					if (eye === data.viewer) {
@@ -221,18 +173,14 @@ module.exports = function(connectedUsers) {
 					}
 				});
 				if (exist === 0) {
-					User.findOneAndUpdate({username: data.liked}, {$push:{likedBy: data.viewer}}, (err, doc) => {
-						if (err) {
-							console.log(err);
-						}
-					})
+					knex('like')
+					.insert({ liked: data.liked, likedUser: data.liked, liker: data.viewer, likeBy: data.viewer})
+				}
+				for(var i in connectedUsers) {
+					if (connectedUsers[i].user === data.viewed) {
+						io.sockets.to(connectedUsers[i].socketId).emit('new_notification', {message: "You have been viewed by", user: data.viewer});
+					}
 				}
 			});
-			for(var i in connectedUsers) {
-				if (connectedUsers[i].user === data.viewed) {
-					io.sockets.to(connectedUsers[i].socketId).emit('new_notification', {message: "You have been viewed by", user: data.viewer});
-				}
-			}
 		})
-	});
 }

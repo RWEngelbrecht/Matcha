@@ -1,4 +1,3 @@
-const User	= require('../models/umod');
 const _     = require('underscore');
 
 class Order {
@@ -20,7 +19,7 @@ class Order {
                     temp = users[i];
                     users[i] = users[i + 1];
                     users[i + 1] = temp;
-                    i = 0; 
+                    i = 0;
                 }
                 i++;
             }
@@ -31,7 +30,7 @@ class Order {
             }
         });
     };
-    
+
     OrderByAgeAsc(users) {
         return new Promise(function(resolve, reject) {
             var i = 0, temp = [];
@@ -40,7 +39,7 @@ class Order {
                     temp = users[i];
                     users[i] = users[i + 1];
                     users[i + 1] = temp;
-                    i = 0; 
+                    i = 0;
                 }
                 i++;
             }
@@ -61,7 +60,7 @@ class Order {
                     temp = users[i];
                     users[i] = users[i + 1];
                     users[i + 1] = temp;
-                    i = 0; 
+                    i = 0;
                 }
                 i++;
             }
@@ -81,7 +80,7 @@ class Order {
                     temp = users[i];
                     users[i] = users[i + 1];
                     users[i + 1] = temp;
-                    i = 0; 
+                    i = 0;
                 }
                 i++;
             }
@@ -101,7 +100,7 @@ class Order {
                     temp = users[i];
                     users[i] = users[i + 1];
                     users[i + 1] = temp;
-                    i = 0; 
+                    i = 0;
                 }
                 i++;
             }

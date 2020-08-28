@@ -33,7 +33,7 @@ class Filter {
 		var matchInterests = [];
 		for (var i = 0; i < matches.length; i++) {
 			if (matches[i].interests != null) {
-				if (matches[i].interests.some(e => userInterests.indexOf(e) >= 0)) {
+				if (matches[i].interests.some(e => userInterests.indexOf(e.interest) >= 0)) {
 					matchInterests.push(matches[i]);
 				}
 			}
@@ -56,14 +56,14 @@ class Filter {
 
 		var matchIds = [];
 		matches.forEach(match => {
-			matchIds.push(match._id.toString());
+			matchIds.push(match.id.toString());
 		});
 
 		var likeable = _.difference(matchIds, likedIds);
 		var matchLikeable = [];
 
 		matches.forEach(match => {
-			if (likeable.includes(match._id.toString())) {
+			if (likeable.includes(match.id.toString())) {
 				matchLikeable.push(match);
 			}
 		});
@@ -85,14 +85,14 @@ class Filter {
 
 		var likedMatchIds = [];
 		likedMatches.forEach(match => {
-			likedMatchIds.push(match._id.toString());
+			likedMatchIds.push(match.id.toString());
 		});
 
 		var matched = _.intersection(likedMatchIds, likers);
 		var matchedUsers = [];
 
 		likedMatches.forEach(match => {
-			if (matched.includes(match._id.toString())) {
+			if (matched.includes(match.id.toString())) {
 				matchedUsers.push(match);
 			}
 		});
@@ -161,7 +161,7 @@ class Filter {
 			else if (element.interests.some(r => filterby['interestsFilter'].indexOf(r)  >= 0) && filterby['interestsFilter'] != '')
 				filteredMatches.push(element);
 		});
-		var sortBy = new Sort(user._id, user.interests);
+		var sortBy = new Sort(user.id, user.interests);
 		var ret = [];
 		if (orderby == 1) {
 			if (filter == 1) {
@@ -240,22 +240,9 @@ class Filter {
 		} else {
 			resolve (filteredMatches);
 		}
-		// return (filteredMatches);
 	})
 	}
 }
 
 module.exports = Filter;
 
-
-
-	// test = new Order(req.session.user._id, req.session.user.interests);
-	// me = test.OrderByNBInterests();
-	// me.then(function(result) {
-    //     userDetails = result;
-    //     console.log("Initialized user details");
-    //     // Use user details from here
-    //     console.log(userDetails)
-    // }, function(err) {
-    //     console.log(err);
-	// });
