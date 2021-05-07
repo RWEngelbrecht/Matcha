@@ -41,7 +41,7 @@
     "sweetalert2": "^9.4.3",
     "swig": "^1.4.2",
     "sync": "^0.2.5",
-    "underscore": "^1.10.2"
+    "underscore": "^1.12.1"
   },
   "devDependencies": {},
   "scripts": {
